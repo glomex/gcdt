@@ -80,10 +80,11 @@ def deploy_cmd(**tooldata):
     folders_from_file = config['bundling'].get('folders')
     subnet_ids = config['lambda'].get('vpc', {}).get('subnetIds', None)
     security_groups = config['lambda'].get('vpc', {}).get('securityGroups', None)
-    artifact_bucket = config['deployment'].get('artifactBucket', None)
+    artifact_bucket = config.get('deployment', {}).get('artifactBucket', None)
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
     settings = config['lambda'].get('settings', None)
+    print('moin moin from main')
     exit_code = deploy_lambda(
         awsclient, lambda_name, role_arn, handler_filename,
         lambda_handler, folders_from_file,
