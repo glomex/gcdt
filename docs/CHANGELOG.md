@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.1.1] - sometime in the near future
+## [0.1.5] - 2017-04-26
 ### Added
 - FEATURE plugin version info in version cmd and datadog (#250)
+
+## [0.1.4] - 2017-04-07
+### Added
+- FEATURE gcdt package publicly available on PyPi (#250)
 
 ## [0.1.0] - 2017-04-04
 ### Added
