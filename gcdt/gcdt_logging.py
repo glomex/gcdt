@@ -43,12 +43,12 @@ logging_config = {
         }
     },
     'loggers': {
-        'gcdt': {
-            'level': 'INFO',
+        '': {
+            'level': 'ERROR',
             'handlers': ['default'],
             'propagate': 0
         },
-        'gcdt_plugins': {
+        'gcdt': {
             'level': 'INFO',
             'handlers': ['default'],
             'propagate': 0
@@ -56,6 +56,14 @@ logging_config = {
     },
     'disable_existing_loggers': False
 }
+
+
+def getLogger(name):
+    """This is used by gcdt plugins to get a logger with the right level."""
+    logger = logging.getLogger(name)
+    # note: the level might be adjusted via '-v' option
+    logger.setLevel(logging_config['loggers']['gcdt']['level'])
+    return logger
 
 
 # TODO: I do not think this is used??
