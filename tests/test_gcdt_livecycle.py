@@ -6,8 +6,7 @@ import textwrap
 import pytest
 import mock
 
-from gcdt.gcdt_lifecycle import main, lifecycle, check_vpn_connection, \
-    _load_hooks
+from gcdt.gcdt_lifecycle import main, lifecycle, _load_hooks
 from gcdt.kumo_main import DOC
 from gcdt import gcdt_signals
 from gcdt_testtools.helpers import create_tempfile
@@ -163,15 +162,6 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
     mocked_check_gcdt_update.assert_called_once()
     mocked_are_credentials_still_valid.called_once_with('my_awsclient')
     mocked_cmd_dispatch.called_once_with('my_awsclient')
-
-
-@mock.patch('gcdt.gcdt_lifecycle.requests.get',
-            return_value={'status_code' == 404})
-def test_check_vpn_connection(mocked_requests_get):
-    assert check_vpn_connection('foo.bar') is False
-    mocked_requests_get.assert_called_once_with(
-        'foo.bar',
-        timeout=1.0)
 
 
 def test_load_hooks():
