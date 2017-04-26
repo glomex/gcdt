@@ -3,7 +3,7 @@ botocore==1.5.43
 s3transfer==0.1.10
 pybars3==0.9.1
 blinker==1.4
-regex==2017.2.8
+regex==2017.4.23
 ba>=0.1.15
 
 # Other dependencies
