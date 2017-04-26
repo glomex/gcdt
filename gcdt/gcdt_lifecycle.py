@@ -27,6 +27,22 @@ from .gcdt_signals import check_hook_mechanism_is_intact, \
 log = logging.getLogger(__name__)
 
 
+def check_vpn_connection(reposerver):
+    """Check whether we can connect to VPN for version check.
+    :return: True / False
+    """
+    try:
+        request = requests.get(reposerver, timeout=1.0)
+        if request.status_code == 200:
+            return True
+        else:
+            return False
+    except Exception:
+        #requests.exceptions.ConnectTimeout:
+        #requests.exceptions.ConnectionError
+        return False
+
+
 def _load_hooks(path):
     """Load hook module and register signals.
 
@@ -50,6 +66,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     """Tool lifecycle which provides hooks into the different stages of the
     command execution. See signals for hook details.
     """
+    log.debug('### init')
     load_plugins()
     context = get_context(awsclient, env, tool, command, arguments)
     # every tool needs a awsclient so we provide this via the context
@@ -62,17 +79,19 @@ def lifecycle(awsclient, env, tool, command, arguments):
 
     ## initialized
     gcdt_signals.initialized.send(context)
-    if 'error' in context:
-        log.error(context['error'])
-        gcdt_signals.error.send((context, {}))
-        return 1
-
+    log.debug('### initialized')
     check_gcdt_update()
 
     config = deepcopy(DEFAULT_CONFIG)
+    # TODO move this to glomex-checks plugin!
+    #if not check_vpn_connection(config['reposerver']):
+    #    print(colored.red('Can not connect to VPN please activate your VPN!'))
+    #    return 1
 
     gcdt_signals.config_read_init.send((context, config))
+    log.debug('### config_read_init')
     gcdt_signals.config_read_finalized.send((context, config))
+    log.debug('### config_read_finalized')
     # TODO we might want to be able to override config via env variables?
     # here would be the right place to do this
     if 'hookfile' in config:
@@ -82,13 +101,17 @@ def lifecycle(awsclient, env, tool, command, arguments):
     ## lookup
     # credential retrieval should be done using lookups
     gcdt_signals.lookup_init.send((context, config))
+    log.debug('### lookup_init')
     gcdt_signals.lookup_finalized.send((context, config))
     log.debug('### config after lookup:')
+    log.debug('### lookup_finalized')
     log.debug(config)
 
     ## config validation
     gcdt_signals.config_validation_init.send((context, config))
+    log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
+    log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)
     if are_credentials_still_valid(awsclient):
@@ -100,14 +123,18 @@ def lifecycle(awsclient, env, tool, command, arguments):
 
     ## bundle step
     gcdt_signals.bundle_pre.send((context, config))
+    log.debug('### bundle_pre')
     gcdt_signals.bundle_init.send((context, config))
+    log.debug('### bundle_init')
     gcdt_signals.bundle_finalized.send((context, config))
+    log.debug('### bundle_finalized')
     if 'error' in context:
         gcdt_signals.error.send((context, config))
         return 1
 
     ## dispatch command providing context and config (= tooldata)
     gcdt_signals.command_init.send((context, config))
+    log.debug('### command_init')
     try:
         exit_code = cmd.dispatch(arguments,
                                  context=context,
@@ -121,10 +148,12 @@ def lifecycle(awsclient, env, tool, command, arguments):
         return 1
 
     gcdt_signals.command_finalized.send((context, config))
+    log.debug('### command_finalized')
 
     # TODO reporting (in case you want to get a summary / output to the user)
 
     gcdt_signals.finalized.send(context)
+    log.debug('### finalized')
     return 0
 
 
