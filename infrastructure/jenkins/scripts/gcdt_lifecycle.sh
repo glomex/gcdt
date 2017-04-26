@@ -44,6 +44,11 @@ export WORKSPACE=$(pwd)
 export BUILD_TAG=GCDT_PR$ghprbPullId
 export ENV=DEV
 
+
+# install gcdt plugins and dependencies
+pip install -r requirements_dev.txt
+
+
 #######
 ## kumo
 ./infrastructure/ci/jenkins_cloudformation.sh
