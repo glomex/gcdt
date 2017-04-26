@@ -20,7 +20,6 @@ hardcoded values.
 
 
 DEFAULT_CONFIG = {
-    'reposerver': 'https://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/packages',
     'ramuda': {
         'settings_file': 'settings.json'
     }

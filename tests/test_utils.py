@@ -6,15 +6,24 @@ from nose.tools import assert_equal
 import pytest
 
 from gcdt.utils import version, __version__, retries,  \
-    get_command, dict_merge, get_env
+    get_command, dict_merge, get_env, get_context
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
-from . import here
 
 
 def test_version(capsys):
     version()
     out, err = capsys.readouterr()
-    assert out.strip() == 'gcdt version %s' % __version__
+    assert out.strip().startswith('gcdt version %s' % __version__)
+
+
+# would love to use logging for that...
+#def test_version(caplog):
+#    # https://github.com/eisensheng/pytest-catchlog
+#    version()
+#
+#    record_tuples = list(caplog.records)
+#    assert record_tuples[0].getMessage().startswith('gcdt version ')
+#    assert record_tuples[0].levelno == logging.INFO
 
 
 def test_retries_backoff():
@@ -130,5 +139,19 @@ def test_get_env(preserve_env):
     assert get_env() == 'none_sense'
 
 
+def test_get_context():
+    context = get_context('awsclient', 'env', 'tool', 'command',
+                          arguments={'foo': 'bar'})
+
+    assert context['_awsclient'] == 'awsclient'
+    assert context['env'] == 'env'
+    assert context['tool'] == 'tool'
+    assert context['command'] == 'command'
+    assert context['_arguments'] == {'foo': 'bar'}
+    assert 'gcdt-bundler' in context['plugins']
+    assert 'gcdt-lookups' in context['plugins']
+
+
 # TODO get_outputs_for_stack
 # TODO test_make_command
+

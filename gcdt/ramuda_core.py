@@ -255,7 +255,6 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
     :param zipfile:
     :return: exit_code
     """
-    print('moin from ramuda')
     if lambda_exists(awsclient, function_name):
         function_version = _update_lambda(awsclient, function_name,
                                           handler_filename,

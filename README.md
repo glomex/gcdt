@@ -53,6 +53,7 @@ gcdt needs at least some gcdt-glugins so you should want to install these togeth
 gcdt
 gcdt-say-hello
 gcdt-config-reader
+gcdt-bundler
 gcdt-slack-integration
 gcdt-datadog-integration
 gcdt-gen-serverless

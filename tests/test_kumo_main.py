@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 import os
 import pytest
 import regex
+import logging
 
 from gcdt.kumo_main import version_cmd, list_cmd, preview_cmd, dot_cmd, \
     generate_cmd, deploy_cmd, delete_cmd, load_template

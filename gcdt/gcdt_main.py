@@ -9,7 +9,7 @@ from . import utils
 from . import gcdt_lifecycle
 from .gcdt_cmd_dispatcher import cmd
 from banana.router import Router
-from banana.routes import run
+#from banana.routes import run
 from whaaaaat import color_print as cp
 
 

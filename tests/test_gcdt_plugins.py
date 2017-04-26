@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 
 import mock
 
-from gcdt.gcdt_plugins import load_plugins
+from gcdt.gcdt_plugins import load_plugins, get_plugin_versions
 from gcdt.gcdt_signals import check_hook_mechanism_is_intact
 
 
@@ -35,3 +35,10 @@ def test_check_hook_mechanism_is_intact_detects_missing():
             pass
 
     assert check_hook_mechanism_is_intact(_dummy) is False
+
+
+def test_get_plugin_versions():
+    # 'gcdt-bundler' and 'gcdt-lookups are dev requirements so this be fine
+    versions = get_plugin_versions()
+    assert 'gcdt-bundler' in versions
+    assert 'gcdt-lookups' in versions

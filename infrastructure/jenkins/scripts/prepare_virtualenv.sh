@@ -3,7 +3,7 @@
 # prepare virtualenv
 
 ## 
-echo "\n## initialize"
+echo "\n## initialize (prepare_virtualenv.sh)"
 export PATH=/usr/local/bin:$PATH
 virtualenv --clear venv
 virtualenv -p /usr/bin/python2.7 --no-site-packages venv

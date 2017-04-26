@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
-# Build python package and upload to PyPi
+# Build python package and upload to private PyPi
+echo "\n## build and upload (build_package.sh)"
+export PATH=/usr/local/bin:$PATH
 
 # build the package and publish to repo server
 ./venv/bin/python setup.py sdist --dist-dir dist/

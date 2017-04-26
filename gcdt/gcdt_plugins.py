@@ -28,3 +28,13 @@ def load_plugins(group='gcdt10'):
                 plugin.register()   # register the plugin so it listens to gcdt_signals
         else:
             log.warning('No valid hook configuration: %s. Not using hooks!', plugin)
+
+
+def get_plugin_versions(group='gcdt10'):
+    """Load and register installed gcdt plugins.
+    """
+    versions = {}
+    for ep in pkg_resources.iter_entry_points(group, name=None):
+        versions[ep.dist.project_name] = ep.dist.version
+
+    return versions

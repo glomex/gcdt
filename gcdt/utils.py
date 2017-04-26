@@ -8,15 +8,24 @@ from time import sleep
 import os
 from clint.textui import prompt, colored
 
-from gcdt import __version__
-from gcdt.package_utils import get_package_versions
+from . import __version__
+from .package_utils import get_package_versions
+from .gcdt_plugins import get_plugin_versions
 
 log = logging.getLogger(__name__)
 
 
 def version():
-    """Print version of gcdt tools."""
-    print("gcdt version %s" % __version__)
+    """Print version of gcdt tools and plugins."""
+    print('gcdt version %s' % __version__)
+    print('gcdt plugins:')
+    for p, v in get_plugin_versions().items():
+        print(' * %s version %s' % (p, v))
+    generators = get_plugin_versions('gcdtgen10')
+    if generators:
+        print('gcdt scaffolding generators:')
+        for p, v in generators.items():
+            print(' * %s version %s' % (p, v))
 
 
 def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
@@ -118,12 +127,14 @@ def get_context(awsclient, env, tool, command, arguments=None):
     if arguments is None:
         arguments = {}
     context = {
+        '_awsclient': awsclient,
         'env': env,
         'tool': tool,
         'command': command,
         '_arguments': arguments,  # TODO clean up arguments -> args
         'version': __version__,
-        'user': _get_user()
+        'user': _get_user(),
+        'plugins': get_plugin_versions().keys()
     }
 
     return context
@@ -187,6 +198,7 @@ def dict_merge(a, b, path=None):
 
 # TODO test this properly!
 # TODO use logging
+# TODO move to gcdt-checks!
 def are_credentials_still_valid(awsclient):
     """Check whether the credentials have expired.
 

@@ -2,9 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.1.0] - 2017-04-04
+## [0.1.5] - 2017-04-26
 ### Added
-- FEATURE open source (#255)
+- FEATURE gcdt plugin version info in version cmd and datadog (#250)
+- FEATURE use gcdt plugins in E2E test lifecycle (#250) 
+
+## [0.1.4] - 2017-04-07
+### Added
+- FEATURE gcdt package publicly available on PyPi (#250)
+
+## [0.1.0] - 2017-04-05
+### Added
+- FEATURE open source on Github (#255)
 - FEATURE moved build jobs to new infra jenkins (#255)
 
 ## [0.0.84] - 2017-03-30
