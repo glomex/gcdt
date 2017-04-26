@@ -2,6 +2,7 @@
 
 # execute lifecycle for gcdt tools on the infra-dev stack via gcdt CLI
 # this script is supposed to run within the Jenkins gcdt pull request builder
+echo "\n## E2E lifecycle (gcdt_lifecycle.sh)"
 
 
 # create temp folder
