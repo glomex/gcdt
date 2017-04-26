@@ -84,7 +84,6 @@ def deploy_cmd(**tooldata):
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
     settings = config['lambda'].get('settings', None)
-    print('moin moin from main')
     exit_code = deploy_lambda(
         awsclient, lambda_name, role_arn, handler_filename,
         lambda_handler, folders_from_file,

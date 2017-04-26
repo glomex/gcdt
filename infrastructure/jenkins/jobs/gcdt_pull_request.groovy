@@ -8,7 +8,8 @@ def branchToCheckout = InfraUtilities.getBranch()
 
 out.println(branchToCheckout)
 
-def credentialsToCheckout = "glomex-sre-deploy"
+//def credentialsToCheckout = "glomex-sre-deploy"
+def credentialsToCheckout = "github-jenkins_username-password"
 def baseFolder = "infrastructure/jenkins"
 def artifactBucket = "glomex-infra-reposerver-prod"
 def venvScript = baseFolder + "/scripts/prepare_virtualenv.sh"
