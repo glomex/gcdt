@@ -1,60 +1,59 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/7f30c200-f2d0-11e6-860e-503abe701c29",
-                "Tags": [],
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/ed74c090-2b4c-11e7-900b-500c6e859e2b", 
+                "Tags": [], 
                 "Outputs": [
                     {
-                        "Description": "InstanceId of the newly created EC2 instance",
-                        "OutputKey": "InstanceName",
-                        "OutputValue": "gcdt-test-tenkai-deployment_CT24POM"
-                    },
+                        "Description": "InstanceId of the newly created EC2 instance", 
+                        "OutputKey": "InstanceName", 
+                        "OutputValue": "gcdt-test-tenkai-deployment_T05LM5V"
+                    }, 
                     {
-                        "Description": "Name of the App",
-                        "OutputKey": "ApplicationName",
-                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-LH6CX03D08A3"
-                    },
+                        "Description": "Name of the App", 
+                        "OutputKey": "ApplicationName", 
+                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-1SX7WDNMK5UT4"
+                    }, 
                     {
-                        "Description": "InstanceId of the newly created EC2 instance",
-                        "OutputKey": "InstanceId",
-                        "OutputValue": "i-08f20452dcb2e993e"
-                    },
+                        "Description": "InstanceId of the newly created EC2 instance", 
+                        "OutputKey": "InstanceId", 
+                        "OutputValue": "i-0cb784e1b9332f31e"
+                    }, 
                     {
-                        "Description": "Name of the DeploymentGroup",
-                        "OutputKey": "DeploymentGroupName",
-                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-ILDV2U3ZFV8Y"
+                        "Description": "Name of the DeploymentGroup", 
+                        "OutputKey": "DeploymentGroupName", 
+                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-3386SMMX1C47"
                     }
-                ],
-                "StackStatusReason": "User Initiated",
+                ], 
                 "CreationTime": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 18,
-                    "microsecond": 248000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 13
-                },
+                    "hour": 13, 
+                    "__class__": "datetime", 
+                    "month": 4, 
+                    "second": 5, 
+                    "microsecond": 953000, 
+                    "year": 2017, 
+                    "day": 27, 
+                    "minute": 25
+                }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
-                ],
-                "StackName": "gcdt-test-tenkai-deploy",
-                "NotificationARNs": [],
-                "StackStatus": "DELETE_IN_PROGRESS",
+                ], 
+                "StackName": "gcdt-test-tenkai-deploy", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
                 "DisableRollback": false
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "468867bc-f2d1-11e6-8638-8f54db62d3dc",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "6bb94786-2b4d-11e7-b444-fbc829255bb3", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "468867bc-f2d1-11e6-8638-8f54db62d3dc",
-                "date": "Tue, 14 Feb 2017 16:18:52 GMT",
-                "content-length": "1896",
+                "x-amzn-requestid": "6bb94786-2b4d-11e7-b444-fbc829255bb3", 
+                "date": "Thu, 27 Apr 2017 13:28:37 GMT", 
+                "content-length": "1832", 
                 "content-type": "text/xml"
             }
         }

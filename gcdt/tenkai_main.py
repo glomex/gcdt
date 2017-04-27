@@ -13,11 +13,12 @@ from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
 
 DOC = '''Usage:
-        tenkai bundle
-        tenkai deploy
+        tenkai bundle [-v]
+        tenkai deploy [-v]
         tenkai version
 
 -h --help           show this
+-v --verbose        show debug messages
 '''
 
 
@@ -63,7 +64,6 @@ def deploy_cmd(**tooldata):
 @cmd(spec=['bundle'])
 def bundle_cmd(**tooldata):
     context = tooldata.get('context')
-    #print('created bundle at %s' % bundle_revision())
     print('created bundle at %s' % context['_bundle_file'])
 
 

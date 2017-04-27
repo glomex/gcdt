@@ -4,6 +4,7 @@ This module abstracts the botocore session and clients
 to provide a simpler interface.
 """
 from __future__ import unicode_literals, print_function
+from botocore.exceptions import ClientError  # used in plugins
 
 
 class AWSClient(object):

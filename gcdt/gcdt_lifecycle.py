@@ -89,6 +89,11 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.config_validation_init.send((context, config))
     log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
+    if tool not in config:
+        context['error'] = 'Configuration missing for \'%s\'.' % tool
+        log.error(context['error'])
+        gcdt_signals.error.send((context, config))
+        return 1
     log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)
@@ -118,8 +123,10 @@ def lifecycle(awsclient, env, tool, command, arguments):
                                  context=context,
                                  config=config[tool])
     except Exception as e:
-        print(str(e))
-        context['error'] = str(e)
+        log.exception(e)
+        log.debug(e.message, exc_info=True)  # this adds the traceback
+        context['error'] = str(e.message)
+        log.error(context['error'])
         exit_code = 1
     if exit_code:
         gcdt_signals.error.send((context, config))

@@ -1,60 +1,60 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "14b1c56e-f2d1-11e6-85e5-7d251b1b088b",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "8b0bc5bc-2b4d-11e7-af81-935b0d4beb14", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "14b1c56e-f2d1-11e6-85e5-7d251b1b088b",
-                "content-length": "999",
+                "x-amzn-requestid": "8b0bc5bc-2b4d-11e7-af81-935b0d4beb14", 
+                "content-length": "1033", 
                 "content-type": "application/x-amz-json-1.1"
             }
-        },
+        }, 
         "deploymentInfo": {
-            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-LH6CX03D08A3",
-            "status": "InProgress",
+            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-1SX7WDNMK5UT4", 
+            "status": "InProgress", 
             "deploymentOverview": {
-                "Skipped": 0,
-                "Succeeded": 0,
-                "Failed": 0,
-                "Ready": 0,
-                "InProgress": 1,
+                "Skipped": 0, 
+                "Succeeded": 1, 
+                "Failed": 0, 
+                "Ready": 0, 
+                "InProgress": 0, 
                 "Pending": 0
-            },
-            "description": "deploy with tenkai",
-            "deploymentConfigName": "CodeDeployDefault.AllAtOnce",
-            "creator": "user",
-            "deploymentId": "d-2DWF3L8HK",
-            "ignoreApplicationStopFailures": true,
+            }, 
+            "description": "deploy with tenkai", 
+            "deploymentConfigName": "CodeDeployDefault.AllAtOnce", 
+            "creator": "user", 
+            "deploymentId": "d-QGFU900TL", 
+            "ignoreApplicationStopFailures": true, 
             "autoRollbackConfiguration": {
                 "enabled": false
-            },
+            }, 
             "deploymentStyle": {
-                "deploymentType": "IN_PLACE",
+                "deploymentType": "IN_PLACE", 
                 "deploymentOption": "WITHOUT_TRAFFIC_CONTROL"
-            },
-            "updateOutdatedInstancesOnly": false,
-            "instanceTerminationWaitTimeStarted": false,
-            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-ILDV2U3ZFV8Y",
+            }, 
+            "updateOutdatedInstancesOnly": false, 
+            "instanceTerminationWaitTimeStarted": false, 
+            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-3386SMMX1C47", 
             "createTime": {
-                "hour": 17,
-                "__class__": "datetime",
-                "month": 2,
-                "second": 37,
-                "microsecond": 189000,
-                "year": 2017,
-                "day": 14,
-                "minute": 16
-            },
+                "hour": 15, 
+                "__class__": "datetime", 
+                "month": 4, 
+                "second": 38, 
+                "microsecond": 677000, 
+                "year": 2017, 
+                "day": 27, 
+                "minute": 28
+            }, 
             "revision": {
-                "revisionType": "S3",
+                "revisionType": "S3", 
                 "s3Location": {
-                    "bundleType": "tgz",
-                    "version": "2AAJFYs6o_1KRIn8OPJEj3Wt8MKM_xeb",
-                    "bucket": "7finity-infra-dev-deployment",
-                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-LH6CX03D08A3/bundle.tar.gz",
-                    "eTag": "\"c47e3826c1c1aab2445d90c2a3e77c4b\""
+                    "bundleType": "tgz", 
+                    "version": "bUOKPmLmxKlb.MMeva1kAYe4U6nHl50.", 
+                    "bucket": "7finity-infra-dev-deployment", 
+                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-1SX7WDNMK5UT4/bundle.tar.gz", 
+                    "eTag": "\"6144b0d5963e46a928e6f28393694224\""
                 }
             }
         }

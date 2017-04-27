@@ -305,7 +305,7 @@ def _generate_parameters(conf):
     return parameter_list
 
 
-def _stack_exists(awsclient, stackName):
+def stack_exists(awsclient, stackName):
     # TODO handle failure based on API call limit
     client = awsclient.get_client('cloudformation')
     try:
@@ -327,7 +327,7 @@ def deploy_stack(awsclient, conf, cloudformation, override_stack_policy=False):
     """
     stackname = _get_stack_name(conf)
     parameters = _generate_parameters(conf)
-    if _stack_exists(awsclient, stackname):
+    if stack_exists(awsclient, stackname):
         exit_code = _update_stack(awsclient, conf, cloudformation,
                                   parameters, override_stack_policy)
     else:

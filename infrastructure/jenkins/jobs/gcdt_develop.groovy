@@ -13,10 +13,10 @@ def baseFolder = "infrastructure/jenkins"
 def buildScript = baseFolder + "/scripts/build_develop.sh"
 
 def packageName = 'gcdt'
-def jobName = "gcdt/" + packageName + "-bump-patch-level"
+def jobName = "gcdt/gcdt/" + packageName + "-bump-patch-level"
 def repository = "glomex/gcdt"
 
-folder("gcdt") {
+folder("gcdt/gcdt") {
 }
 
 
