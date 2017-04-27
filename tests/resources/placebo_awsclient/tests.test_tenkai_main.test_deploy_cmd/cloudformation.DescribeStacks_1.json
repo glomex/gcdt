@@ -1,21 +1,21 @@
 {
-    "status_code": 400,
+    "status_code": 400, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 400,
-            "RequestId": "7ef1962f-f2d0-11e6-8037-0dfba0579a7d",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "ed479639-2b4c-11e7-9835-e5d86d126ae5", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "7ef1962f-f2d0-11e6-8037-0dfba0579a7d",
-                "date": "Tue, 14 Feb 2017 16:13:17 GMT",
-                "content-length": "309",
-                "content-type": "text/xml",
+                "x-amzn-requestid": "ed479639-2b4c-11e7-9835-e5d86d126ae5", 
+                "date": "Thu, 27 Apr 2017 13:25:05 GMT", 
+                "content-length": "309", 
+                "content-type": "text/xml", 
                 "connection": "close"
             }
-        },
+        }, 
         "Error": {
-            "Message": "Stack with id gcdt-test-tenkai-deploy does not exist",
-            "Code": "ValidationError",
+            "Message": "Stack with id gcdt-test-tenkai-deploy does not exist", 
+            "Code": "ValidationError", 
             "Type": "Sender"
         }
     }

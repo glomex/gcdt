@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.8] - 2017-04-27
+### Added
+- FEATURE improve exception handling + proper error message for missing config (#285) 
+
+## [0.1.7] - 2017-04-27
+### Added
+- FEATURE check AWS Lambda runtime in ramuda config (#254) 
+
 ## [0.1.6] - 2017-04-26
 ### Added
 - FEATURE getLogger helper to be used by gcdt-plugins (#213) 
