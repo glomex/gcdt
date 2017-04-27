@@ -21,7 +21,8 @@ hardcoded values.
 
 DEFAULT_CONFIG = {
     'ramuda': {
-        'settings_file': 'settings.json'
+        'settings_file': 'settings.json',
+        'runtime': ['python2.7', 'nodejs4.3']
     }
 }
 

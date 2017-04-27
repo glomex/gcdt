@@ -15,6 +15,7 @@ from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
     wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
     cleanup_bundle
 from .gcdt_cmd_dispatcher import cmd
+from .gcdt_defaults import DEFAULT_CONFIG
 from . import gcdt_lifecycle
 
 
@@ -83,6 +84,8 @@ def deploy_cmd(**tooldata):
     artifact_bucket = config.get('deployment', {}).get('artifactBucket', None)
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
+    if runtime:
+        assert runtime in DEFAULT_CONFIG['ramuda']['runtime']
     settings = config['lambda'].get('settings', None)
     exit_code = deploy_lambda(
         awsclient, lambda_name, role_arn, handler_filename,
