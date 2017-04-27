@@ -15,7 +15,7 @@ This user guide assumes that you know the AWS services you want to automate so w
 
 ### gcdt software version
 
-This guide covers gcdt version '0.1.6'.
+This guide covers gcdt version '0.1.7'.
 
 
 ### Related documents
