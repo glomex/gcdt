@@ -16,10 +16,10 @@ def buildScript = baseFolder + "/scripts/build_package.sh"
 def lifecycleScript = baseFolder + "/scripts/gcdt_lifecycle.sh"
 
 def packageName = 'gcdt'
-def jobName = "gcdt/" + packageName + "_pull_request"
+def jobName = "gcdt/gcdt/" + packageName + "_pull_request"
 def repository = "glomex/gcdt"
 
-folder("gcdt") {
+folder("gcdt/gcdt") {
 }
 
 job(jobName) {
