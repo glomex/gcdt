@@ -90,8 +90,6 @@ job(jobName) {
         colorizeOutput()
 
         credentialsBinding {
-            //usernamePassword('GIT_CREDENTIALS',
-            //        'glomex-sre-deploy')
             usernamePassword('GIT_CREDENTIALS', credentialsToCheckout)
         }
     }
