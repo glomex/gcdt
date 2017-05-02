@@ -15,3 +15,4 @@ troposphere>=1.9.0
 tabulate==0.7.5
 pyspin==1.0.2
 pip>=9.0.1
+funcsigs>=1.0.2

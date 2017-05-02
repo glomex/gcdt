@@ -174,7 +174,7 @@ def test_ping_cmd(awsclient, vendored_folder, temp_lambda, capsys):
 
 def test_bundle_cmd(capsys, temp_folder):
     tooldata = {
-        'context': {'_zipfile': 'some_file'}
+        'context': {'_zipfile': b'some_file'}
     }
     bundle_cmd(**tooldata)
     out, err = capsys.readouterr()

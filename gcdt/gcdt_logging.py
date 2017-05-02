@@ -11,18 +11,18 @@ class GcdtFormatter(logging.Formatter):
     For WARN and ERROR output <level>: <msg>.
     Note: gcdt does NOT have a logfile!
     """
+    # http://stackoverflow.com/questions/14844970/modifying-logging-message-format-based-on-message-logging-level-in-python3
     # TODO this would be the central place to add colors. e.g. yellow for WARN
     # and red for ERROR
     # was: '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    FORMATS = {
-        logging.DEBUG: "DEBUG: %(module)s: %(lineno)d: %(message)s",
-        logging.INFO: "%(message)s",
-        'DEFAULT': "%(levelname)s: %(message)s"
-    }
-
     def format(self, record):
-        self._fmt = self.FORMATS.get(record.levelno, self.FORMATS['DEFAULT'])
-        return logging.Formatter.format(self, record)
+        FORMATS = {
+            logging.DEBUG: "DEBUG: %(module)s: %(lineno)d: %(message)s",
+            logging.INFO: "%(message)s"
+        }
+        format = FORMATS.get(record.levelno, "%(levelname)s: %(message)s")
+        record.message = record.getMessage()
+        return format % record.__dict__
 
 
 # use logging.DictConfig which is the most convenient and hackable way

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+from funcsigs import signature  # python3 only: from inspect import signature
 import imp
 import json
 import random
@@ -142,7 +143,11 @@ def _call_hook(awsclient, config, stack_name, parameters, cloudformation,
         message = 'Executing %s...' % hook.replace('_', ' ')
     print(colored.green(message))
     hook_func = getattr(cloudformation, hook)
-    if not hook_func.func_code.co_argcount:
+    sig = signature(hook_func)
+    params = sig.parameters
+
+    #if not hook_func.func_code.co_argcount:
+    if len(params) == 0:
         hook_func()  # for compatibility with existing templates
     else:
         # new call for templates with parametrized hooks
@@ -178,7 +183,7 @@ def _json2table(data):
     filter_terms = ['ResponseMetadata']
     table = []
     try:
-        for k, v in filter(lambda (k, v): k not in filter_terms, data.iteritems()):
+        for k, v in filter(lambda k, v: k not in filter_terms, data.iteritems()):
             table.append([k, str(v)])
         return tabulate(table, tablefmt='fancy_grid')
     except Exception:
@@ -295,7 +300,8 @@ def _generate_parameters(conf):
     # this looks weird since it should work only on the 'cloudformation' config
     #for item in conf.iterkeys():
     #    for key in conf[item].iterkeys():
-    for key in conf['cloudformation'].iterkeys():
+    #for key in conf['cloudformation'].iterkeys():
+    for key in conf['cloudformation'].keys():
         if key not in ['StackName', 'TemplateBody', 'ArtifactBucket']:
             raw_parameters.append(key)
     for param in raw_parameters:

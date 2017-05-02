@@ -53,7 +53,7 @@ def random_string():
     an awsclient then this function is altered so you get reproducible results
     that will work with your recorded placebo json files (see helpers_aws.py).
     """
-    return ''.join([random.choice(string.ascii_lowercase) for i in xrange(6)])
+    return ''.join([random.choice(string.ascii_lowercase) for i in range(6)])
 
 
 # TODO find out how to automatically load the gcdt_testtools fixtures

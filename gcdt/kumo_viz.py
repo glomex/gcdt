@@ -3,8 +3,16 @@
 from __future__ import unicode_literals, print_function
 import sys
 from numbers import Number
-from compiler.ast import flatten
 import subprocess
+
+from .utils import flatten  # python3 replacement for from compiler.ast import flatten
+
+PY3 = sys.version_info[0] >= 3
+
+if PY3:
+    basestring = str
+    unicode = str
+
 
 # based on original version from https://github.com/benbc/cloud-formation-viz
 # Author: Ben Butler-Cole
@@ -57,7 +65,7 @@ def _analyze_sg(elem):
     #    }
     known_sg = []
     open_sg = []
-    for item, details in elem.iteritems():
+    for item, details in elem.items():
         # item: ElasticLoadBalancer
         # details: {u'Type': u'AWS::ElasticLoadBalancing::LoadBalancer',
         #  u'Properties': {u'Scheme': u'internet-facing',...
@@ -94,7 +102,7 @@ def _handle_pseudo_params(edges):
     for e in edges:
         if e['from'].startswith(u'AWS::'):
             params.add(e['from'])
-    graph['nodes'].extend({'name': n} for n in params)
+    graph['nodes'].extend({'name': n} for n in sorted(params))
     return graph
 
 
@@ -128,7 +136,7 @@ def _get_fillcolor(resource_type, properties, known_sg=[], open_sg=[]):
 def _extract_graph(name, elem, known_sg=[], open_sg=[]):
     graph = {'name': name, 'nodes': [], 'edges': [], 'subgraphs': []}
     edges = []
-    for item, details in elem.iteritems():
+    for item, details in elem.items():
         # item: ElasticLoadBalancer
         # details: {u'Type': u'AWS::ElasticLoadBalancing::LoadBalancer',
         #  u'Properties': {u'Scheme': u'internet-facing',...
@@ -144,7 +152,6 @@ def _extract_graph(name, elem, known_sg=[], open_sg=[]):
                     if fillcolor:
                         node['fillcolor'] = fillcolor
         graph['nodes'].append(node)
-        # edges.extend(flatten(find_refs(item, details)))
         edges.extend(flatten(_find_refs(item, details)))
     return graph, edges
 
@@ -152,19 +159,19 @@ def _extract_graph(name, elem, known_sg=[], open_sg=[]):
 def _extract_graph_terminals(name, elem, values={}):
     graph = {'name': name, 'nodes': [], 'edges': [], 'subgraphs': []}
     edges = []
-    for item, details in elem.iteritems():
+    for item, details in elem.items():
         node = {'name': item}
         if item in values:
             node['value'] = values[item]
         graph['nodes'].append(node)
-        edges.extend(flatten(_find_refs(item, details)))
+        edges.extend(sorted(flatten(_find_refs(item, details))))
     return graph, edges
 
 
 def _find_refs(context, elem):
     if isinstance(elem, dict):
         refs = []
-        for k, v in elem.iteritems():
+        for k, v in elem.items():
             if unicode(k) == unicode('Ref'):
                 assert isinstance(v, basestring), 'Expected a string: %s' % v
                 refs.append({'from': v, 'to': context})
@@ -175,7 +182,7 @@ def _find_refs(context, elem):
                 refs.extend(_find_refs(context, v))
         return refs
     elif isinstance(elem, list):
-        return map(lambda e: _find_refs(context, e), elem)
+        return list(map(lambda e: _find_refs(context, e), elem))
     elif isinstance(elem, basestring):
         return []
     elif isinstance(elem, bool):

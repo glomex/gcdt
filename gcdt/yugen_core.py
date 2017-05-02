@@ -590,7 +590,7 @@ def _json2table(data):
     filter_terms = ['ResponseMetadata']
     table = []
     try:
-        for k, v in filter(lambda (k, v): k not in filter_terms,
+        for k, v in filter(lambda k, v: k not in filter_terms,
                            data.iteritems()):
             table.append([k, str(v)])
         return tabulate(table, tablefmt='fancy_grid')
@@ -623,8 +623,8 @@ def _api_exists(awsclient, api_name):
 def _api_by_name(awsclient, api_name):
     client_api = awsclient.get_client('apigateway')
     filtered_rest_apis = \
-        filter(lambda api: True if api['name'] == api_name else False,
-               client_api.get_rest_apis()['items'])
+        list(filter(lambda api: True if api['name'] == api_name else False,
+               client_api.get_rest_apis()['items']))
     if len(filtered_rest_apis) > 1:
         raise Exception(
             'more than one API with that name found. Clean up manually first')

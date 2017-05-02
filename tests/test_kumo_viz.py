@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import json
-from StringIO import StringIO
+from collections import OrderedDict
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from nose.tools import assert_equal
 import nose
@@ -18,15 +22,15 @@ def test_cfn_viz():
         'resources/sample_kumo_viz/expected.dot')
 
     with open(template_path, 'r') as tfile:
-        template = json.loads(tfile.read())
+        template = json.loads(tfile.read(), object_pairs_hook=OrderedDict)
 
     out = StringIO()
-    cfn_viz(template, parameters={'KeyName': 'abc123'}, out=out)
+    cfn_viz(template, parameters=OrderedDict([('KeyName', 'abc123')]), out=out)
 
     with open(dot_path, 'r') as dfile:
         expected_dot = dfile.read()
 
-    assert_equal(str(out.getvalue()), expected_dot)
+    assert str(out.getvalue()) == expected_dot
 
 
 def test_cfn_viz_problem():
@@ -43,7 +47,7 @@ def test_cfn_viz_problem():
     #    'resources/sample_kumo_viz/expected.dot')
 
     with open(template_path, 'r') as tfile:
-        template = json.loads(tfile.read())
+        template = json.loads(tfile.read(), object_pairs_hook=OrderedDict)
 
     out = StringIO()
     cfn_viz(template, parameters={'KeyName': 'abc123'}, out=out)
@@ -60,7 +64,7 @@ def test_analyze_sg():
         'resources/sample_kumo_viz/ELBStickinessSample.template')
 
     with open(template_path, 'r') as tfile:
-        template = json.loads(tfile.read())
+        template = json.loads(tfile.read(), object_pairs_hook=OrderedDict)
 
     known_sg, open_sg = _analyze_sg(template['Resources'])
     nose.tools.assert_in('InstanceSecurityGroup', known_sg)

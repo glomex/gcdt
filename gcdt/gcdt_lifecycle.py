@@ -124,8 +124,8 @@ def lifecycle(awsclient, env, tool, command, arguments):
                                  config=config[tool])
     except Exception as e:
         log.exception(e)
-        log.debug(e.message, exc_info=True)  # this adds the traceback
-        context['error'] = str(e.message)
+        log.debug(str(e), exc_info=True)  # this adds the traceback
+        context['error'] = str(e)
         log.error(context['error'])
         exit_code = 1
     if exit_code:
