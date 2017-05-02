@@ -225,32 +225,11 @@ def are_credentials_still_valid(awsclient):
     return 0
 
 
-# http://stackoverflow.com/questions/16176742/python-3-replacement-for-deprecated-compiler-ast-flatten-function
-#def flatten(iterable):
-#    for el in iterable:
-#        if isinstance(el, collections.Iterable) and not isinstance(el, str):
-#            #yield from flatten(el)
-#            for subel in flatten(el):
-#                yield el
-#        else:
-#            yield el
-
-#def flatten(x):
-#    result = []
-#    for el in x:
-#        if isinstance(x, collections.Iterable) and not isinstance(el, str):
-#            result.extend(flatten(el))
-#        else:
-#            result.append(el)
-#    return result
-
-
 # http://code.activestate.com/recipes/578948-flattening-an-arbitrarily-nested-list-in-python/
 def flatten(lis):
     """Given a list, possibly nested to any level, return it flattened."""
     new_lis = []
     for item in lis:
-        #if type(item) == type([]):
         if isinstance(item, collections.Sequence) and not isinstance(item, basestring):
             new_lis.extend(flatten(item))
         else:
