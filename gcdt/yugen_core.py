@@ -144,7 +144,7 @@ def create_api_key(awsclient, api_name, api_key_name):
         enabled=True
     )
 
-    print(_json2table(response))
+    #print(_json2table(response))
 
     print('Add this api key \'%s\' to your api.conf' % response['id'])
     return response['id']
