@@ -15,8 +15,12 @@ To see available commands, call this:
 ```bash
 $ tenkai
 Usage:
-        tenkai deploy
+        tenkai bundle [-v]
+        tenkai deploy [-v]
         tenkai version
+
+-h --help           show this
+-v --verbose        show debug messages
 ```
 
 #### deploy
