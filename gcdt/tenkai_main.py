@@ -71,7 +71,7 @@ def main():
     # TODO: register bundle with bundle signals
     sys.exit(
         gcdt_lifecycle.main(DOC, 'tenkai',
-                            dispatch_only=['version', 'bundle'])
+                            dispatch_only=['version'])
     )
 
 

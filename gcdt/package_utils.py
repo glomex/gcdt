@@ -37,7 +37,7 @@ def get_package_versions(package):
     packages = [get_dist(package)]
     dists = list_command.iter_packages_latest_infos(packages, options)
     try:
-        dist = dists.next()
+        dist = next(dists)
         return dist.parsed_version, dist.latest_version
     except StopIteration:
         return None, None

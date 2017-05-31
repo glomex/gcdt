@@ -14,6 +14,12 @@ from tabulate import tabulate
 from . import utils
 
 
+PY3 = sys.version_info[0] >= 3
+
+if PY3:
+    unicode = str
+
+
 log = logging.getLogger(__name__)
 
 
@@ -63,10 +69,9 @@ def json2table(json):
     filter_terms = ['ResponseMetadata']
     table = []
     try:
-        for k, v in filter(lambda (k, v): k not in filter_terms,
-                           json.iteritems()):
+        for k in filter(lambda k: k not in filter_terms, json.keys()):
             table.append([k.encode('ascii', 'ignore'),
-                          str(v).encode('ascii', 'ignore')])
+                         str(json[k]).encode('ascii', 'ignore')])
         return tabulate(table, tablefmt='fancy_grid')
     except Exception as e:
         print(e)
@@ -181,7 +186,7 @@ def s3_upload(awsclient, deploy_bucket, zipfile, lambda_name):
 
     if not zipfile:
         return
-    local_hash = create_sha256_urlsafe(zipfile)
+    local_hash = str(create_sha256_urlsafe(zipfile))
 
     # ramuda/eu-west-1/<lambda_name>/<local_hash>.zip
     dest_key = 'ramuda/%s/%s/%s.zip' % (region, lambda_name, local_hash)

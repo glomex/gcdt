@@ -6,7 +6,7 @@ gcdt provides tools for traditional compute services and also managed serverless
 
 [glomex](http://www.glomex.com/) – The Global Media Exchange – is a provider of a global, open marketplace for premium video content as well as a technical service provider for the entire value chain of online video marketing.
 
-gcdt and userguide are released under [BSD-3 License](http://github.com/glomex/glomex-cloud-deployment-tools/LICENSE.md).
+gcdt and userguide are released under [MIT License](http://github.com/glomex/gcdt/LICENSE).
 
 The gcdt userguide starts with this introduction, then provides an overview on gcdt like a guided tour on how gcdt is structured and what it offers to you. The following parts each covers one gcdt tool. The remaining parts go into more technical topics like developing gcdt or using it as library to build your own tools based on gcdt.
 
@@ -15,7 +15,7 @@ This user guide assumes that you know the AWS services you want to automate so w
 
 ### gcdt software version
 
-This guide covers gcdt version '0.1.10'.
+This guide covers gcdt version '0.1.389'.
 
 
 ### Related documents

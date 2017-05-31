@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import logging
+import sys
 import getpass
 import subprocess
 from time import sleep
+import collections
 
 import os
 from clint.textui import prompt, colored
@@ -11,8 +12,15 @@ from clint.textui import prompt, colored
 from . import __version__
 from .package_utils import get_package_versions
 from .gcdt_plugins import get_plugin_versions
+from .gcdt_logging import getLogger
 
-log = logging.getLogger(__name__)
+PY3 = sys.version_info[0] >= 3
+
+if PY3:
+    basestring = str
+
+
+log = getLogger(__name__)
 
 
 def version():
@@ -63,8 +71,9 @@ def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
     def dec(func):
         def f2(*args, **kwargs):
             mydelay = delay
-            tries = range(max_tries)
-            tries.reverse()
+            #tries = range(max_tries)
+            #tries.reverse()
+            tries = range(max_tries-1, -1, -1)
             for tries_remaining in tries:
                 try:
                     return func(*args, **kwargs)
@@ -146,7 +155,8 @@ def get_command(arguments):
     :param arguments parsed by docopt:
     :return: command
     """
-    return [k for k, v in arguments.iteritems()
+    #return [k for k, v in arguments.iteritems()
+    return [k for k, v in arguments.items()
             if not k.startswith('-') and v is True][0]
 
 
@@ -213,3 +223,15 @@ def are_credentials_still_valid(awsclient):
         print(e)
         return 1
     return 0
+
+
+# http://code.activestate.com/recipes/578948-flattening-an-arbitrarily-nested-list-in-python/
+def flatten(lis):
+    """Given a list, possibly nested to any level, return it flattened."""
+    new_lis = []
+    for item in lis:
+        if isinstance(item, collections.Sequence) and not isinstance(item, basestring):
+            new_lis.extend(flatten(item))
+        else:
+            new_lis.append(item)
+    return new_lis

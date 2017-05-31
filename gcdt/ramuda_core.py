@@ -104,7 +104,7 @@ def _get_previous_version(awsclient, function_name, alias_name):
             request_more_versions = False
         else:
             marker = response['Marker']
-        versions = map(_get_version_from_response, response['Versions'])
+        versions = list(map(_get_version_from_response, response['Versions']))
         versions.append(max_version)
         max_version = max(versions)
     return str(max(0, max_version - 1))

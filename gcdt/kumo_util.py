@@ -3,9 +3,16 @@
 templates or from other external code.
 """
 from __future__ import unicode_literals, print_function
+import sys
 
 import troposphere
 from troposphere.cloudformation import AWSCustomObject
+
+
+PY3 = sys.version_info[0] >= 3
+
+if PY3:
+    basestring = str
 
 
 class StackLookup(object):
