@@ -83,7 +83,8 @@ cd $WORKSPACE/sample_api
 
 echo "$ yugen apikey-create jenkins-yugen-testkey"
 yugen apikey-create jenkins-yugen-testkey | tee apikey.txt
-key=`cat apikey.txt | grep -oP '(?<=│ id              │ )\w+(?= +│)'`
+#key=`cat apikey.txt | grep -oP '(?<=│ id              │ )\w+(?= +│)'`
+key=$(cat apikey.txt | grep -oP "api key '\K(.+)(?=' to your api.conf)")
 
 echo "adding key to conf file: $key"
 sed -i -e "s/apiKey = \"\w*\"/apiKey = \"${key}\"/g" api_dev.conf
