@@ -6,6 +6,8 @@ import random
 import shutil
 import string
 from tempfile import NamedTemporaryFile, mkdtemp
+import io
+from zipfile import ZipFile
 
 import pytest
 
@@ -16,16 +18,18 @@ class Bunch:
         self.__dict__.update(kwds)
 
 
-def create_tempfile(contents):
+def create_tempfile(contents, dir=None, suffix=""):
     """Helper to create a named temporary file with contents.
     Note: caller has responsibility to clean up the temp file!
 
     :param contents: define the contents of the temporary file
+    :param dir: as for mkstemp
+    :param suffix: as for mkstemp
     :return: filename of the temporary file
     """
 
     # helper to create a named temp file
-    tf = NamedTemporaryFile(delete=False)
+    tf = NamedTemporaryFile(delete=False, dir=dir, suffix=suffix)
     with open(tf.name, 'w') as tfile:
         tfile.write(contents)
 
@@ -53,7 +57,7 @@ def random_string():
     an awsclient then this function is altered so you get reproducible results
     that will work with your recorded placebo json files (see helpers_aws.py).
     """
-    return ''.join([random.choice(string.ascii_lowercase) for i in xrange(6)])
+    return ''.join([random.choice(string.ascii_lowercase) for i in range(6)])
 
 
 # TODO find out how to automatically load the gcdt_testtools fixtures
@@ -164,3 +168,11 @@ def vts(request, vts_recorder):
     vts_recorder.setup(**param)
     request.addfinalizer(vts_recorder.teardown)
     return vts_recorder
+
+
+def list_zip(input_zip):
+    """list zip_bytes content."""
+    # use string as buffer
+    input_zip = ZipFile(io.BytesIO(input_zip))
+    for name in input_zip.namelist():
+        yield name

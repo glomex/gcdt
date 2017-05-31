@@ -8,6 +8,7 @@ to AWS cloud.
 from __future__ import unicode_literals, print_function
 import os
 import sys
+from collections import OrderedDict
 import json
 from tempfile import NamedTemporaryFile
 
@@ -56,8 +57,8 @@ def version_cmd():
 def dot_cmd(**tooldata):
     conf = tooldata.get('config')
     cloudformation = load_template()
-    with NamedTemporaryFile(delete=False) as temp_dot:
-        cfn_viz(json.loads(cloudformation.generate_template()),
+    with NamedTemporaryFile(delete=False, mode='w') as temp_dot:
+        cfn_viz(json.loads(cloudformation.generate_template(), object_pairs_hook=OrderedDict),
                 parameters=conf,
                 out=temp_dot)
         temp_dot.close()

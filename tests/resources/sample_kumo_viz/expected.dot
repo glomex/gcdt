@@ -22,9 +22,9 @@ labeljust=l;
 node [shape=box];
 node [style="filled,rounded"]
 rank=source
-"SSHLocation"
-"KeyName"[label=<KeyName<BR /><FONT POINT-SIZE="8">[=abc123]</FONT>>]
 "InstanceType"
+"KeyName"[label=<KeyName<BR /><FONT POINT-SIZE="8">[=abc123]</FONT>>]
+"SSHLocation"
 }
 subgraph "Outputs" {
 labeljust=l;
@@ -36,35 +36,35 @@ rank=sink
 subgraph "Pseudo Parameters" {
 labeljust=l;
 node [shape=ellipse];
-"AWS::StackName"
 "AWS::Region"
 "AWS::StackId"
+"AWS::StackName"
 }
 "EC2Instance1" -> "ElasticLoadBalancer";
 "EC2Instance2" -> "ElasticLoadBalancer";
-"AWS::StackName" -> "EC2Instance1";
 "AWS::Region" -> "EC2Instance1";
-"AWS::StackName" -> "EC2Instance1";
-"AWS::Region" -> "EC2Instance1";
-"KeyName" -> "EC2Instance1";
-"InstanceSecurityGroup" -> "EC2Instance1";
-"InstanceType" -> "EC2Instance1";
-"AWS::Region" -> "EC2Instance1";
-"InstanceType" -> "EC2Instance1";
 "AWS::StackId" -> "EC2Instance1";
 "AWS::Region" -> "EC2Instance1";
 "AWS::StackName" -> "EC2Instance1";
 "AWS::Region" -> "EC2Instance1";
+"InstanceSecurityGroup" -> "EC2Instance1";
+"KeyName" -> "EC2Instance1";
+"InstanceType" -> "EC2Instance1";
 "AWS::Region" -> "EC2Instance1";
-"AWS::StackName" -> "EC2Instance2";
-"AWS::Region" -> "EC2Instance2";
-"AWS::StackName" -> "EC2Instance2";
-"AWS::Region" -> "EC2Instance2";
-"KeyName" -> "EC2Instance2";
+"InstanceType" -> "EC2Instance1";
+"AWS::StackName" -> "EC2Instance1";
+"AWS::Region" -> "EC2Instance1";
+"AWS::StackName" -> "EC2Instance1";
+"AWS::Region" -> "EC2Instance1";
 "InstanceSecurityGroup" -> "EC2Instance2";
+"KeyName" -> "EC2Instance2";
 "InstanceType" -> "EC2Instance2";
 "AWS::Region" -> "EC2Instance2";
 "InstanceType" -> "EC2Instance2";
+"AWS::StackName" -> "EC2Instance2";
+"AWS::Region" -> "EC2Instance2";
+"AWS::StackName" -> "EC2Instance2";
+"AWS::Region" -> "EC2Instance2";
 "SSHLocation" -> "InstanceSecurityGroup";
 "ElasticLoadBalancer" -> "URL";
 }

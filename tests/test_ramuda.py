@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+import sys
 import logging
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 import json
 import time
 
 from s3transfer.subscribers import BaseSubscriber
-from nose.tools import assert_true, assert_false, assert_equal, \
-    assert_regexp_matches
+from nose.tools import assert_regexp_matches
 import pytest
 
 from gcdt.ramuda_core import cleanup_bundle, bundle_lambda
@@ -23,6 +26,7 @@ from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
 from . import here
 
 
+PY3 = sys.version_info[0] >= 3
 log = logging.getLogger(__name__)
 
 
@@ -45,11 +49,11 @@ def test_unit():
 
 
 def test_aggregate_datapoints():
-    assert_equal(aggregate_datapoints(
+    assert aggregate_datapoints(
         [{'Sum': 0.1}, {'Sum': 0.1}, {'Sum': 0.1}, {'Sum': 0.1}, {'Sum': 0.1},
-         {'Sum': 0.1}]), 0)
-    assert_equal(aggregate_datapoints(
-        [{'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}]), 4)
+         {'Sum': 0.1}]) == 0
+    assert aggregate_datapoints(
+        [{'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}]) == 4
 
 
 def test_json2table():
@@ -60,7 +64,7 @@ def test_json2table():
     }
     expected = u'\u2552\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2564\u2550\u2550\u2550\u2550\u2550\u2550\u2555\n\u2502 sth    \u2502 here \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 number \u2502 1.1  \u2502\n\u2558\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2567\u2550\u2550\u2550\u2550\u2550\u2550\u255b'
     actual = json2table(data)
-    assert_equal(actual, expected)
+    assert actual == expected
 
 
 def test_json2table_create_lambda_response():
@@ -82,8 +86,10 @@ def test_json2table_create_lambda_response():
     expected_file = here('resources/expected/expected_json2table.txt')
     with open(expected_file) as efile:
         expected = efile.read()
-    actual = json2table(response).encode('utf-8')
-    assert_equal(actual, expected)
+        if not PY3:
+            expected = expected.decode('utf-8')
+    actual = json2table(response)  #.encode('utf-8')
+    assert actual == expected
 
 
 def test_json2table_exception():
@@ -93,43 +99,43 @@ def test_json2table_exception():
         'ResponseMetadata': 'bla'
     })
     actual = json2table(data)
-    assert_equal(actual, data)
+    assert actual == data
 
 
 def test_create_sha256():
     actual = create_sha256('Meine Oma fährt im Hühnerstall Motorrad')
-    expected = 'SM6siXnsKAmQuG5egM0MYKgUU60nLFxUVeEvTcN4OFI='
-    assert_equal(actual, expected)
+    expected = b'SM6siXnsKAmQuG5egM0MYKgUU60nLFxUVeEvTcN4OFI='
+    assert actual == expected
 
 
 def test_create_sha256_urlsafe():
     actual = create_sha256_urlsafe('Meine Oma fährt im Hühnerstall Motorrad')
-    expected = 'SM6siXnsKAmQuG5egM0MYKgUU60nLFxUVeEvTcN4OFI='
+    expected = b'SM6siXnsKAmQuG5egM0MYKgUU60nLFxUVeEvTcN4OFI='
     assert actual == expected
 
 
 def test_create_sha256_urlsafe_2():
     code = r'PK\x03\x04\x14\x00\x00\x00\x08\x00zg+JQ\xbbI\xd6\xba\x8e\x00\x00\x8dx\x02\x00\x0c\x00\x00\x00pyparsing.py\xec\xbd\xfb...\xa4\x81%\xdd\x01\x00handler_no_ping.pyPK\x05\x06\x00\x00\x00\x00\x1f\x00\x1f\x00\xcf\x08\x00\x00Y\xde\x01\x00\x00\x00'
     actual = create_sha256_urlsafe(code)
-    expected = 'MH2eL07LPCviHtWFuiKxBgonjp3NEY-xzrIXBBssPiQ='
+    expected = b'MH2eL07LPCviHtWFuiKxBgonjp3NEY-xzrIXBBssPiQ='
     assert actual == expected
 
 
 def test_create_s3_arn():
     s3_arn = create_aws_s3_arn('dp-dev-not-existing')
-    assert_equal(s3_arn, 'arn:aws:s3:::dp-dev-not-existing')
+    assert s3_arn == 'arn:aws:s3:::dp-dev-not-existing'
 
 
 def test_get_bucket_name_from_s3_arn():
     s3_arn = 'arn:aws:s3:::test-bucket-dp-723'
     bucket_name = get_bucket_from_s3_arn(s3_arn)
-    assert_equal(bucket_name, 'test-bucket-dp-723')
+    assert bucket_name == 'test-bucket-dp-723'
 
 
 def test_get_rule_name_from_event_arn():
     rule_arn = 'arn:aws:events:eu-west-1:111537987451:rule/dp-preprod-test-dp-723-T1_fun2'
     rule_name = get_rule_name_from_event_arn(rule_arn)
-    assert_equal(rule_name, 'dp-preprod-test-dp-723-T1_fun2')
+    assert rule_name == 'dp-preprod-test-dp-723-T1_fun2'
 
 
 def test_list_of_dicts():
@@ -147,10 +153,8 @@ def test_list_of_dicts():
         {"key1" : "value1"},
         {"key2" : "value2"},
     ]
-    equals_1 = list_of_dict_equals(list_1, list_2)
-    assert_true(equals_1)
-    equals_2 = list_of_dict_equals(list_1, list_3)
-    assert_false(equals_2)
+    assert list_of_dict_equals(list_1, list_2) is True
+    assert list_of_dict_equals(list_1, list_3) is False
 
 
 def test_build_filter_rules():
@@ -165,7 +169,7 @@ def test_build_filter_rules():
          'Value': '.gz'}
     ]
     match = list_of_dict_equals(rules, rules_hardcoded)
-    assert_true(match)
+    assert match is True
 
 
 def test_progress_percentage(cleanup_tempfiles):
@@ -201,12 +205,9 @@ def test_progress_percentage(cleanup_tempfiles):
 
 
 def test_bundle_lambda(temp_folder, capsys):
-    zipfile = 'that was easy__'
+    zipfile = b'that was easy__'
     exit_code = bundle_lambda(zipfile)
     assert exit_code == 0
     assert os.path.isfile('bundle.zip')
     out, err = capsys.readouterr()
     assert out == 'Finished - a bundle.zip is waiting for you...\n'
-
-
-

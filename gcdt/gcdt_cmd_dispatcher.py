@@ -55,15 +55,15 @@ class cmd(object):
         for spec, func in cls._specs:
             # if command and arguments.get(command) and match(args):
             args = []  # specified args in order of appearance
-            options = filter(lambda k: k.startswith('-') and
+            options = list(filter(lambda k: k.startswith('-') and
                                        (arguments[k] or k in spec),
-                             arguments.keys())
-            cmds = filter(lambda k: not (k.startswith('-') or
+                             arguments.keys()))
+            cmds = list(filter(lambda k: not (k.startswith('-') or
                                          k.startswith('<')) and arguments[k],
-                          arguments.keys())
-            args_spec = filter(lambda k: k.startswith('<'), spec)
-            cmd_spec = filter(lambda k: not (k.startswith('-') or
-                                             k.startswith('<')), spec)
+                          arguments.keys()))
+            args_spec = list(filter(lambda k: k.startswith('<'), spec))
+            cmd_spec = list(filter(lambda k: not (k.startswith('-') or
+                                             k.startswith('<')), spec))
             for element in spec:
                 if element.startswith('-'):
                     # element is an option
@@ -104,9 +104,9 @@ def get_command(arguments):
     :param arguments:
     :return: command
     """
-    cmds = filter(lambda k: not (k.startswith('-') or
+    cmds = list(filter(lambda k: not (k.startswith('-') or
                                  k.startswith('<')) and arguments[k],
-                  arguments.keys())
+                  arguments.keys()))
     if len(cmds) != 1:
         raise Exception('invalid command line!')
     return cmds[0]

@@ -2,11 +2,10 @@
 from __future__ import unicode_literals, print_function
 import os
 
-from nose.tools import assert_equal
 import pytest
 
 from gcdt.utils import version, __version__, retries,  \
-    get_command, dict_merge, get_env, get_context
+    get_command, dict_merge, get_env, get_context, flatten
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
 
 
@@ -30,9 +29,9 @@ def test_retries_backoff():
     state = {'r': 0, 'h': 0, 'backoff': 2, 'tries': 5, 'mydelay': 0.1}
 
     def a_hook(tries_remaining, e, delay):
-        assert_equal(tries_remaining, state['tries'] - state['r'])
-        assert_equal(e.message, 'test retries!')
-        assert_equal(delay, state['mydelay'])
+        assert tries_remaining == (state['tries'] - state['r'])
+        assert str(e) == 'test retries!'
+        assert delay == state['mydelay']
         state['mydelay'] *= state['backoff']
         state['h'] += 1
 
@@ -43,7 +42,7 @@ def test_retries_backoff():
             raise Exception('test retries!')
 
     works_after_four_tries()
-    assert_equal(state['r'], 5)
+    assert state['r'] == 5
 
 
 def test_retries_until_it_works():
@@ -59,17 +58,17 @@ def test_retries_until_it_works():
             x = 5/0
 
     works_after_four_tries()
-    assert_equal(state['r'], 5)
-    assert_equal(state['h'], 4)
+    assert state['r'] == 5
+    assert state['h'] == 4
 
 
 def test_retries_raises_exception():
     state = {'r': 0, 'h': 0, 'tries': 5}
 
     def a_hook(tries_remaining, e, delay):
-        assert_equal(tries_remaining, state['tries']-state['r'])
-        assert_equal(e.message, 'integer division or modulo by zero')
-        assert_equal(delay, 0.0)
+        assert tries_remaining == (state['tries'] - state['r'])
+        assert str(e) in ['division by zero', 'integer division or modulo by zero']
+        assert delay == 0.0
         state['h'] += 1
 
     @retries(state['tries'], delay=0,
@@ -85,8 +84,8 @@ def test_retries_raises_exception():
     else:
         raise Exception("Failed to Raise ZeroDivisionError")
 
-    assert_equal(state['r'], 5)
-    assert_equal(state['h'], 4)
+    assert state['r'] == 5
+    assert state['h'] == 4
 
 
 def test_command_version():
@@ -96,7 +95,7 @@ def test_command_version():
         'delete': False,
         'version': True
     }
-    assert_equal(get_command(arguments), 'version')
+    assert get_command(arguments) == 'version'
 
 
 def test_command_delete_f():
@@ -106,7 +105,7 @@ def test_command_delete_f():
         'delete': True,
         'version': False
     }
-    assert_equal(get_command(arguments), 'delete')
+    assert get_command(arguments) == 'delete'
 
 
 def test_dict_merge():
@@ -150,6 +149,11 @@ def test_get_context():
     assert context['_arguments'] == {'foo': 'bar'}
     assert 'gcdt-bundler' in context['plugins']
     assert 'gcdt-lookups' in context['plugins']
+
+
+def test_flatten():
+    actual = flatten(['junk', ['nested stuff'], [], [[]] ])
+    assert actual == ['junk', 'nested stuff']
 
 
 # TODO get_outputs_for_stack
