@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.390] - 2017-05-31
+### Added
+- FEATURE prepare for nodejs6.10 runtime (PR 293)
+
 ## [0.1.8] - 2017-04-27
 ### Added
 - FEATURE improve exception handling (#285)
