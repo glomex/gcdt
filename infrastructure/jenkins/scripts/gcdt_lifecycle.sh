@@ -51,12 +51,12 @@ pip install -r requirements_dev.txt
 
 #######
 ## kumo
-./infrastructure/ci/jenkins_cloudformation.sh
+./infrastructure/jenkins/jenkins_cloudformation.sh
 
 
 #######
 ## tenkai
-./infrastructure/ci/jenkins_codedeploy.sh
+./infrastructure/jenkins/jenkins_codedeploy.sh
 
 ## check if the application works
 sleep 180
@@ -83,7 +83,6 @@ cd $WORKSPACE/sample_api
 
 echo "$ yugen apikey-create jenkins-yugen-testkey"
 yugen apikey-create jenkins-yugen-testkey | tee apikey.txt
-#key=`cat apikey.txt | grep -oP '(?<=│ id              │ )\w+(?= +│)'`
 key=$(cat apikey.txt | grep -oP "api key '\K(.+)(?=' to your api.conf)")
 
 echo "adding key to conf file: $key"

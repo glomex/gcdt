@@ -158,3 +158,6 @@ viz_sample/*
 _build
 tests/resources/dot_file/*
 docs/snippets/*
+node_modules
+*.zip
+nodeenv

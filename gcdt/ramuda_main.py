@@ -29,8 +29,8 @@ from . import gcdt_lifecycle
 # creating docopt parameters and usage help
 DOC = '''Usage:
         ramuda clean
-        ramuda bundle [-v]
-        ramuda deploy [-v]
+        ramuda bundle [--keep] [-v]
+        ramuda deploy [--keep] [-v]
         ramuda list
         ramuda metrics <lambda>
         ramuda info
@@ -44,6 +44,7 @@ DOC = '''Usage:
 Options:
 -h --help           show this
 -v --verbose        show debug messages
+--keep              keep (reuse) installed packages
 '''
 
 
@@ -64,9 +65,10 @@ def list_cmd(**tooldata):
     return list_functions(awsclient)
 
 
-@cmd(spec=['deploy'])
-def deploy_cmd(**tooldata):
+@cmd(spec=['deploy', '--keep'])
+def deploy_cmd(keep, **tooldata):
     context = tooldata.get('context')
+    context['keep'] = keep or DEFAULT_CONFIG['ramuda']['keep']
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
     fail_deployment_on_unsuccessful_ping = \
@@ -166,8 +168,8 @@ def unwire_cmd(**tooldata):
     return exit_code
 
 
-@cmd(spec=['bundle'])
-def bundle_cmd(**tooldata):
+@cmd(spec=['bundle', '--keep'])
+def bundle_cmd(keep, **tooldata):
     context = tooldata.get('context')
     return bundle_lambda(context['_zipfile'])
 

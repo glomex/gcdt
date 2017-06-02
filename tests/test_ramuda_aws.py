@@ -208,7 +208,8 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
 @pytest.mark.aws
 @check_preconditions
 @check_npm_precondition
-def test_create_lambda_nodejs(awsclient, temp_folder, cleanup_lambdas,
+@pytest.mark.parametrize('runtime', ['nodejs4.3', 'nodejs6.10'])
+def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas,
                               cleanup_roles):
     log.info('running test_create_lambda_nodejs')
     # copy package.json and settings_dev.conf from sample
@@ -233,7 +234,7 @@ def test_create_lambda_nodejs(awsclient, temp_folder, cleanup_lambdas,
 
     config = {
         "lambda": {
-            "runtime": "nodejs4.3",
+            "runtime": runtime,  # "nodejs4.3",
             "name": "infra-dev-sample-lambda-jobr1",
             "description": "lambda test for ramuda",
             "role": "'unused'",

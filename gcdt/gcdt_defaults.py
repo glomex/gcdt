@@ -22,8 +22,9 @@ hardcoded values.
 DEFAULT_CONFIG = {
     'ramuda': {
         'settings_file': 'settings.json',
-        'runtime': ['python2.7', 'nodejs4.3', 'nodejs6.10'],
-        'python_bundle_venv_dir': '.gcdt/venv'
+        'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],
+        'python_bundle_venv_dir': '.gcdt/venv',
+        'keep': False
     }
 }
 
