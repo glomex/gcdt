@@ -48,6 +48,11 @@ logging_config = {
             'handlers': ['default'],
             'propagate': 0
         },
+        '3rd_party': {
+            'level': 'ERROR',
+            'handlers': ['default'],
+            'propagate': 0
+        },
         'gcdt': {
             'level': 'INFO',
             'handlers': ['default'],

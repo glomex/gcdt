@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.391] - 2017-06-02
+### Added
+- FEATURE support for nodejs6.10 + python3.6 runtimes
+- FEATURE specify folders (source & target) for tenkai bundles
+- FEATURE ramuda '--keep' option to speed up your dev cycles
+
 ## [0.1.390] - 2017-05-31
 ### Added
 - FEATURE prepare for nodejs6.10 runtime (PR 293)

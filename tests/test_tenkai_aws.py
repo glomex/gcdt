@@ -79,7 +79,7 @@ def test_tenkai_exit_codes(cleanup_stack_tenkai, awsclient):
         './resources/sample_codedeploy_app/not_working')
     working_deploy_dir = here('./resources/sample_codedeploy_app/working')
     os.chdir(not_working_deploy_dir)
-    #bundle_file = bundle_revision()
+    folders = [{'source': 'codedeploy', 'target': ''}]
 
     # test deployment which should exit with exit code 1
     deploy_id_1 = tenkai_deploy(
@@ -88,7 +88,7 @@ def test_tenkai_exit_codes(cleanup_stack_tenkai, awsclient):
         deployment_group,
         'CodeDeployDefault.AllAtOnce',
         '7finity-infra-dev-deployment',
-        bundle_revision()
+        bundle_revision(folders)
     )
     exit_code = deployment_status(awsclient, deploy_id_1)
     assert exit_code == 1
@@ -101,7 +101,7 @@ def test_tenkai_exit_codes(cleanup_stack_tenkai, awsclient):
         deployment_group,
         'CodeDeployDefault.AllAtOnce',
         '7finity-infra-dev-deployment',
-        bundle_revision()
+        bundle_revision(folders)
     )
     exit_code = deployment_status(awsclient, deploy_id_2)
     assert exit_code == 0

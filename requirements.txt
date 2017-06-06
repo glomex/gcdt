@@ -9,7 +9,7 @@ ba>=0.1.15
 # Other dependencies
 clint==0.5.1
 docopt==0.6.2
-pathspec==0.3.4
+pathspec==0.5.2
 awacs==0.6.0
 troposphere>=1.9.0
 tabulate==0.7.5

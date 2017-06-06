@@ -138,9 +138,10 @@ def test_deploy_delete_cmds(awsclient, vendored_folder, cleanup_roles,
     }
 
     tooldata = get_tooldata(awsclient, 'ramuda', 'deploy', config=config)
+    tooldata['context']['_arguments'] = {'--keep': False}
 
     bundle((tooldata['context'], {'ramuda': tooldata['config']}))
-    deploy_cmd(**tooldata)
+    deploy_cmd(False, **tooldata)
 
     # now we use the delete cmd to remove the lambda function
     tooldata['context']['command'] = 'delete'
@@ -176,6 +177,7 @@ def test_bundle_cmd(capsys, temp_folder):
     tooldata = {
         'context': {'_zipfile': b'some_file'}
     }
-    bundle_cmd(**tooldata)
+    tooldata['context']['_arguments'] = {'--keep': False}
+    bundle_cmd(False, **tooldata)
     out, err = capsys.readouterr()
     assert out == 'Finished - a bundle.zip is waiting for you...\n'

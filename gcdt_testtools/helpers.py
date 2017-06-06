@@ -95,27 +95,6 @@ def random_file():
     os.unlink(filename)
 
 
-def _npm_check():
-    # Make sure the npm tool is installed.
-    # returns false if missing
-    try:
-        subprocess.call(["npm", "--version"])
-    except OSError as e:
-        if e.errno == os.errno.ENOENT:
-            return True
-        else:
-            # Something else went wrong while trying to run `npm`
-            raise
-    return False
-
-
-# skipif helper check_npm
-check_npm_precondition = pytest.mark.skipif(
-    _npm_check(),
-    reason="You need to install npm (see gcdt docs)."
-)
-
-
 def _dot_check():
     # Make sure the dot / graphviz tool is installed.
     # returns false if missing
