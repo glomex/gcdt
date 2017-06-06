@@ -171,9 +171,9 @@ export ENV=DEV
 ```
 
 
-### NodeJs runtime
+### runtime support
 
-With `gcdt version 0.0.75` ramuda supports the `nodejs4.3` runtime.
+gcdt supports the `nodejs4.3`, `nodejs6.10`, `python27`, `python36` runtimes.
 
 Add the runtime config to the `lambda` section of your gcdt configuration. 
 

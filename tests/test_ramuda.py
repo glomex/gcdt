@@ -22,7 +22,7 @@ from gcdt.ramuda_utils import unit, \
     list_of_dict_equals, create_aws_s3_arn, get_rule_name_from_event_arn, \
     get_bucket_from_s3_arn, build_filter_rules, create_sha256_urlsafe
 from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
-    cleanup_tempfiles, check_npm_precondition
+    cleanup_tempfiles
 from . import here
 
 

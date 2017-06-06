@@ -50,9 +50,8 @@ def test_deploy_cmd(awsclient, sample_codedeploy_app,
                     sample_codedeploy_app_working_folder):
     tooldata = get_tooldata(awsclient, 'tenkai', 'deploy')
     # gcdt-plugins are installed anyway so this is ok
-    folders = [{'source': 'codedeploy', 'target': ''}]
     # TODO alternatively prepare a stock bundle.zip!
-    tooldata['context']['_bundle_file'] = bundle_revision(folders)
+    tooldata['context']['_bundle_file'] = bundle_revision()
     deploy_cmd(**tooldata)
 
 
