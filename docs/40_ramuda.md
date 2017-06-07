@@ -173,7 +173,7 @@ export ENV=DEV
 
 ### runtime support
 
-gcdt supports the `nodejs4.3`, `nodejs6.10`, `python27`, `python36` runtimes.
+gcdt supports the `nodejs4.3`, `nodejs6.10`, `python2.7`, `python3.6` runtimes.
 
 Add the runtime config to the `lambda` section of your gcdt configuration. 
 
@@ -188,6 +188,7 @@ At this point the following features are implemented:
 * deployment (the nodejs4.3 lambda function is setup with the nodejs4.3 runtime)
 * configuration (bundles `settings_<env>.conf` file for your environments)
 * nodejs support is tested by our automated gcdt testsuite
+* if no runtime is defined gcdt uses the default runtime `python2.7`
 
 Note: for this to work you need to **have npm installed** on the machine you want to run the ramuda bundling!
 
