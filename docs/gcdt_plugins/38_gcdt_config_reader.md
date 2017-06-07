@@ -33,3 +33,25 @@ def generate_config():
 ```
 
 You can also use hooks in the python config files. Just implement the `register`, `deregister` like they are described in the plugin section to make that work.
+
+
+### gcdtignore patterns
+
+gcdt supports multiple ways of ignoring files from bundling. The file format of pattern files is the same as gitignore files. This means you can use wildcards to exclude files from bundling like for example `*.pyc`. This is currently relevant for the gcdt tools `tenkai` and `ramuda`.
+
+The following files are supported:
+
+* .ramudaignore - in the user home directory
+* .gcdtignore - in the current directory
+* .npmignore - in the current directory
+
+Alternatively you can provide the ignore pattern with your `gcdt_<env>.json` config file:
+
+``` js
+{
+    "gcdtignore": ["*.pyc", "trash"]
+    ...
+}
+```
+
+On a more technical note: all ignore patterns you provide are consolidated by the config reader and provided to plugins and tools as `config['gcdtignore']`.
