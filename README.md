@@ -47,7 +47,7 @@ The easiest way to install gcdt is via pip and virtualenv.
 
 ### Defining which gcdt-plugins to use
 
-gcdt needs at least some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a `requirements_dev.txt` file:
+gcdt needs at least some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a `requirements_gcdt.txt` file:
 
 ``` text
 gcdt
@@ -59,7 +59,7 @@ gcdt-datadog-integration
 gcdt-gen-serverless
 ```
 
-This is also a best practice to use the `requirements_dev.txt` file on your build server.
+This is also a best practice to use the `requirements_gcdt.txt` file on your build server.
 
 
 ### Prepare virtualenv
@@ -84,7 +84,7 @@ $ source ./venv/bin/activate
 Install the dependencies into venv:
 
 ``` bash
-$ pip install -r requirements_dev.txt
+$ pip install -r requirements_gcdt.txt
 ```
 
 Now you can start using gcdt:
@@ -92,6 +92,8 @@ Now you can start using gcdt:
 ``` bash
 $ gcdt version
 ```
+
+BTW, `gcdt version` shows you all the versions of gcdt and installed plugins. So you can use this to quickly check which plugins are installed. 
 
 
 ## Contributing

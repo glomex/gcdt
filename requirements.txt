@@ -1,5 +1,5 @@
 # Dependencies have to be in sync with other packages (gcdt, glomex-credstash, gcdt-plugins)
-botocore==1.5.43
+botocore==1.5.64
 s3transfer==0.1.10
 pybars3==0.9.1
 blinker==1.4

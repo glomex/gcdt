@@ -16,7 +16,7 @@ The gcdt plugin mechanism also encapsulates the plugin code in a way that it is 
 
 Plugins are maintained as standard python packages. Just install plugins you want via `pip install <plugin_name>`. Same idea applies to removing plugins from a project setup. Using `pip uninstall <plugin_name>` removes the plugin.
 
-A more sophisticated way of doing that which goes well with CI/CD is to simply add your gcdt plugins to your projects `requirements_dev.txt` file. Especially if you need more tools and plugins this makes setting up your CI environment easy and reproducible. `pip install -r requirements.txt -r requirments_dev.txt` installs all the packages you need for your service and for developing it.
+A more sophisticated way of doing that which goes well with CI/CD is to simply add your gcdt plugins to your projects `requirements_gcdt.txt` file. Especially if you need more tools and plugins this makes setting up your CI environment easy and reproducible. `pip install -r requirements.txt -r requirments_dev.txt` installs all the packages you need for your service and for developing it.
 
 
 ### Plugin configuration
