@@ -275,7 +275,7 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
                                           artifact_bucket, zipfile,
                                           runtime=runtime)
     pong = ping(awsclient, function_name, version=function_version)
-    if 'alive' in pong:
+    if 'alive' in str(pong):
         print(colored.green('Great you\'re already accepting a ping ' +
                             'in your Lambda function'))
     elif fail_deployment_on_unsuccessful_ping and not 'alive' in pong:
@@ -319,8 +319,10 @@ def _create_lambda(awsclient, function_name, role, handler_filename,
     elif artifact_bucket and zipfile:
         log.debug('create with artifact bucket...')
         # print 'uploading bundle to s3'
+        log.debug('uploading artifact...')
         dest_key, e_tag, version_id = \
             s3_upload(awsclient, artifact_bucket, zipfile, function_name)
+        log.debug('call create_function')
         # print dest_key, e_tag, version_id
         response = client_lambda.create_function(
             FunctionName=function_name,
@@ -341,6 +343,7 @@ def _create_lambda(awsclient, function_name, role, handler_filename,
         log.debug('no zipfile and no artifact_bucket -> nothing to do!')
         # no zipfile and no artifact_bucket -> nothing to do!
         return
+    log.debug('lambda create completed...')
 
     function_version = response['Version']
     print(json2table(response))
@@ -365,7 +368,7 @@ def _update_lambda(awsclient, function_name, handler_filename,
                    security_groups=None, artifact_bucket=None,
                    zipfile=None
                    ):
-    log.debug('update lambda function: %s' % function_name)
+    log.debug('update lambda function: %s', function_name)
     _update_lambda_function_code(awsclient, function_name,
                                  artifact_bucket=artifact_bucket,
                                  zipfile=zipfile
@@ -437,6 +440,7 @@ def _update_lambda_configuration(awsclient, function_name, role,
                                  handler_function,
                                  description, timeout, memory, subnet_ids=None,
                                  security_groups=None):
+    log.debug('update lambda configuration for function: %s' % function_name)
     client_lambda = awsclient.get_client('lambda')
     if subnet_ids and security_groups:
         # print ('found vpc config')
@@ -1067,6 +1071,7 @@ def ping(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
     :param version:
     :return: ping response payload
     """
+    log.debug('sending ping to lambda function: %s', function_name)
     client_lambda = awsclient.get_client('lambda')
     payload = '{"ramuda_action": "ping"}'  # default to ping event
 
@@ -1086,4 +1091,5 @@ def ping(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
         )
 
     results = response['Payload'].read()  # payload is a 'StreamingBody'
+    log.debug('ping completed')
     return results
