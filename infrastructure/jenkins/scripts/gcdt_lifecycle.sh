@@ -111,7 +111,7 @@ yugen apikey-delete
 # python3.6 lifecycle steps
 cd $folder
 virtualenv --clear venv3
-virtualenv -p /usr/bin/python3.6 --no-site-packages venv3
+virtualenv -p /usr/local/bin/python3.6 --no-site-packages venv3
 
 # create pip.conf file so we get PR version from reposerver
 echo "[global]
