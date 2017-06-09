@@ -25,6 +25,9 @@ DEFAULT_CONFIG = {
         'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],
         'python_bundle_venv_dir': '.gcdt/venv',
         'keep': False
+    },
+    'tenkai': {
+        'stack_output_file': 'stack_output.yml'
     }
 }
 
