@@ -196,9 +196,9 @@ def ping_cmd(lambda_name, version=None, **tooldata):
                         version=version)
     else:
         response = ping(awsclient, lambda_name)
-    if response == '"alive"':
+    if 'alive' in str(response):
         print('Cool, your lambda function did respond to ping with %s.' %
-              response)
+              str(response))
     else:
         print(colored.red('Your lambda function did not respond to ping.'))
         return 1

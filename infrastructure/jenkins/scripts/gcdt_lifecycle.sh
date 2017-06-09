@@ -21,7 +21,7 @@ username=${GIT_CREDENTIALS%:*}
 password=${GIT_CREDENTIALS#*:}
 git clone https://${username}:${password}@github.com/glomex/gcdt-sample-stack.git
 
-# prepare virtualenv
+# prepare virtualenvs
 virtualenv --clear venv
 virtualenv -p /usr/bin/python2.7 --no-site-packages venv
 
@@ -46,7 +46,7 @@ export ENV=DEV
 
 
 # install gcdt plugins and dependencies
-pip install -r requirements_dev.txt
+pip install -r requirements_gcdt.txt
 
 
 #######
@@ -105,6 +105,37 @@ yugen delete -f
 
 echo "$ yugen apikey-delete"
 yugen apikey-delete
+
+
+#######
+# python3.6 lifecycle steps
+cd $folder
+virtualenv --clear venv3
+virtualenv -p /usr/bin/python3.6 --no-site-packages venv3
+
+# create pip.conf file so we get PR version from reposerver
+echo "[global]
+timeout = 20
+extra-index-url = https://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/packages
+trusted-host = reposerver-prod-eu-west-1.infra.glomex.cloud" >> ./venv3/pip.conf
+
+# install the gcdt PR package
+source ./venv3/bin/activate
+pip install gcdt==PR$ghprbPullId
+
+# install the sample stacks
+cd gcdt-sample-stack
+pip install -r requirements_gcdt.txt
+
+
+#######
+# ramuda lifecycle
+cd $WORKSPACE/sample_lambda
+ramuda bundle
+ramuda deploy
+ramuda ping jenkins-gcdt-lifecycle-for-ramuda
+ramuda metrics jenkins-gcdt-lifecycle-for-ramuda
+ramuda delete -f jenkins-gcdt-lifecycle-for-ramuda
 
 
 #######

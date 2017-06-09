@@ -148,6 +148,7 @@ set_qa
 set_dp
 set_vvs
 set_infra
+set_infra3
 set_infra_prod
 howto.txt
 build_pr.sh
