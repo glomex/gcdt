@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.394] - 2017-06-09
+### Added
+- FEATURE add stack_output.yml to tenkai bundle artifact (#266)
+
 ## [0.1.393] - 2017-06-09
 ### Added
 - FEATURE ramuda works with python3.6
