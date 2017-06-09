@@ -40,13 +40,14 @@ The grouping is not enforced by packaging but to have a std. within an organizat
 A little opinionated but pretty common:
 
 * `requirements.txt` tools and packages your service directly depends on
-* `requirements_dev.txt` tools and packages you need to develop and test your service
+* `requirements_def.txt` tools and packages you need to develop and test your service
+* `requirements_gcdt.txt` gcdt and gcdt plugins you use to deploy your service to AWS
 * `requirements_docs.txt` tools you need to write and build your documentation
 
 TODO: document version schema
 
-* add gcdt to your requirements_dev.txt
-* add the plugins you use to requirements_dev.txt
+* add gcdt to your requirements_gcdt.txt
+* add the plugins you use to requirements_gcdt.txt
 
 
 ### Installation

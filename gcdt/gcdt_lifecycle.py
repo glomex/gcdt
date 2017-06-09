@@ -64,7 +64,9 @@ def lifecycle(awsclient, env, tool, command, arguments):
     log.debug('### initialized')
     check_gcdt_update()
 
-    config = deepcopy(DEFAULT_CONFIG)
+    # config is "assembled" by config_reader NOT here!
+    #config = deepcopy(DEFAULT_CONFIG)
+    config = {}
 
     gcdt_signals.config_read_init.send((context, config))
     log.debug('### config_read_init')
@@ -83,6 +85,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.lookup_finalized.send((context, config))
     log.debug('### config after lookup:')
     log.debug('### lookup_finalized')
+    log.debug('### config:')
     log.debug(config)
 
     ## config validation

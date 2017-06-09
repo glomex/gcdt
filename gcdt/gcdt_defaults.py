@@ -18,7 +18,7 @@ hardcoded values.
 }
 '''
 
-
+# note: as a convention this does NOT go into config!
 DEFAULT_CONFIG = {
     'ramuda': {
         'settings_file': 'settings.json',
