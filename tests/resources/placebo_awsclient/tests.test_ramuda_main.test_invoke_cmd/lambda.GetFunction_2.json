@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_glmnhs-747e30e5-bf53-4a52-a067-fb7abccc65b6?X-Amz-Security-Token=FQoDYXdzELz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDJwR0FXEcGxU%2FpDRLiK3A602P3jx%2BmC3c5JM0sWASPOmcJIgIOe6n9di5k6BgoF5OoM9rFaN3SMtf3ohdJptUfJt%2BT49yMH%2BrudN0ofRWXKHudI2KIwaT0E%2BaDQIsQQV9n96peGlsrlGLAXYcfzyx%2BlvlfItdX1QXiOZ8LdNuhTHscrcN9FYPOWMhngtVb1AZUxkBtlkFgKnNWsmYq5g0TTfQHmCpJ1qwny1Z3d7kc%2BDnkZ%2BT%2FIiCj0SlQYMgo8pYUGm40uqmlpq%2FZN7VwHIPNuF%2FvSdzdW86jrTjN%2BnhczFsmvwqEcuvxBDVROdd7b3o6a0iuKjmUzaPzHvBLyWZL%2FJ9RCBNW6tfpXGVa7J7bBR2w8VZbvQPQON5LPGgWyTa6ZWUxtJfOT%2FgRcPOL6cWbaiQFsQLgVMImsYSrTymGtztYWan0cB2ahQhAvsjU7aTQJPbWiXt9%2BCzhmLQGAdvnNG0N7ZRGYFbfoel32sgX402a4z2BGhH3iUN2vKM5HTahtn6wWDVlTYQ1%2FAJ23xs6vD%2FNQfG4zter%2BOfGwne9AGCbEJQdJ541cV6xzJF8oODiEafhJEQAuYW3IIM6AA%2BzOZJN0oRHooofH5yQU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170612T125330Z&X-Amz-SignedHeaders=host&X-Amz-Expires=599&X-Amz-Credential=ASIAINOWHUOGT6YMDGDA%2F20170612%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=5ebc03d7e1ef12e8631c2bea4697b41290dca9d666cd91ccedaf8605e0906fe3"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "dqrh6HPAuggirsPEpydXjuF9OjrB/Bo7wsbj2Xk6byA=", 
+            "FunctionName": "jenkins_test_glmnhs", 
+            "MemorySize": 128, 
+            "CodeSize": 3666287, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_glmnhs", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_glmnhs_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-06-12T12:53:20.177+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "22e37c1d-4f6e-11e7-b21e-57ff13519d1c", 
+            "HTTPHeaders": {
+                "date": "Mon, 12 Jun 2017 12:53:30 GMT", 
+                "x-amzn-requestid": "22e37c1d-4f6e-11e7-b21e-57ff13519d1c", 
+                "content-length": "1810", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

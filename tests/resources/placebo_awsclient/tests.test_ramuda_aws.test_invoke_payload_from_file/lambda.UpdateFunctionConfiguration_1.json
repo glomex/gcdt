@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "S36FiYRsMSDUot3NJ6+UyZIwkHi3Wi6M4gAdwmTKZtE=", 
+        "FunctionName": "jenkins_test_obsfxr", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "8779e029-4f3d-11e7-85fa-712d283901af", 
+            "HTTPHeaders": {
+                "date": "Mon, 12 Jun 2017 07:05:33 GMT", 
+                "x-amzn-requestid": "8779e029-4f3d-11e7-85fa-712d283901af", 
+                "content-length": "607", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3665363, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_obsfxr", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_obsfxr_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-06-12T07:05:34.263+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

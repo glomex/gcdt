@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_dpecss-73cecf2a-6416-42d4-b2c2-5cb69f4a2fd8?X-Amz-Security-Token=FQoDYXdzELj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDNtkvHahQlI1tQVPyiK3A6bq%2BVR4bGKHU3sJhbV1qX5zL%2BylSBdxieGloUQ6KU33p2B58w%2BLJYDei1l1n%2FvWWAryC0TMVieNzdSLvx3Vm%2Fc9Gy1KXx8SItZC7RcH9r5Ds8aUlA9%2FulMp6oYhJ%2BrKBL0Y8QP2NpKnvoniuWH9Wz27ZgbcictDksNxnREWuKex%2Bn7jMyrFYiGdOEoop9cI%2BJS%2FM2hvVkL4%2BDxTfDK41UvIIi41ntotGVKoJhM3qqprEX%2FL8PB496SEer6PXaIas1pvce69MArUoZPic%2F0qUo2uh3bReCGw1XKxVjxhzWY3KFcmNQrDVdCfKLDclb2%2Fd269i%2Ff9cuVSpsJmJnVSNcR8Sr%2BY1ZNEANuR9cnslNf8tONzRwVhnSorMiIjp5nLT1qwHja5ou4sLe4E8gmRF1iteOngLDjeC31tuWTQcyzpvOxEZswQ5D5kHApWlbyKk92mrRbDMweJUrtaimtzmf8YF0IyhMPhN%2FYOVXJQHvmSlA0ly6OcmdouPe10wfdb%2BxH%2Fyz6whwS3h%2B9IH56MFZTjUFa4Jc4kqm5T33uwVIH3PwoIug7%2Bd3a1CPRrNplLKcXrIajkOFoo7%2Bb4yQU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170612T070707Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJ2S36HZT3TIORRTA%2F20170612%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=46704ffd5d5c79181624c3bc22a573d7958c1aad72a801a662088b484f88443a"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "BpffV5bAL57vFonMtd45niJ/VH9yMjumNX+xCbmGIvc=", 
+            "FunctionName": "jenkins_test_dpecss", 
+            "MemorySize": 128, 
+            "CodeSize": 3665287, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_dpecss", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_dpecss_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-06-12T07:06:57.196+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "bf4467d3-4f3d-11e7-a42b-c18ff1fb3bde", 
+            "HTTPHeaders": {
+                "date": "Mon, 12 Jun 2017 07:07:07 GMT", 
+                "x-amzn-requestid": "bf4467d3-4f3d-11e7-a42b-c18ff1fb3bde", 
+                "content-length": "1816", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}
