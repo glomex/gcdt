@@ -13,7 +13,7 @@ from clint.textui import colored
 from . import utils
 from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
     wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
-    cleanup_bundle
+    cleanup_bundle, invoke
 from .gcdt_cmd_dispatcher import cmd
 from .gcdt_defaults import DEFAULT_CONFIG
 from . import gcdt_lifecycle
@@ -39,12 +39,16 @@ DOC = '''Usage:
         ramuda delete [-v] -f <lambda>
         ramuda rollback [-v] <lambda> [<version>]
         ramuda ping [-v] <lambda> [<version>]
+        ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
         ramuda version
 
 Options:
--h --help           show this
--v --verbose        show debug messages
---keep              keep (reuse) installed packages
+-h --help               show this
+-v --verbose            show debug messages
+--keep                  keep (reuse) installed packages
+--payload=payload       '{"foo": "bar"}' or file://input.txt
+--invocation-type=type  Event, RequestResponse or DryRun
+--outfile=file          write the response to file
 '''
 
 
@@ -188,7 +192,7 @@ def rollback_cmd(lambda_name, version, **tooldata):
 
 @cmd(spec=['ping', '<lambda>', '<version>'])
 def ping_cmd(lambda_name, version=None, **tooldata):
-    version = None
+    #version = None
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
     if version:
@@ -202,6 +206,15 @@ def ping_cmd(lambda_name, version=None, **tooldata):
     else:
         print(colored.red('Your lambda function did not respond to ping.'))
         return 1
+
+
+@cmd(spec=['invoke', '<lambda>', '<version>', '--invocation-type', '--payload', '--outfile'])
+def invoke_cmd(lambda_name, version, itype, payload, outfile, **tooldata):
+    # samples
+    # $ ramuda invoke infra-dev-sample-lambda-unittest --payload='{"ramuda_action": "ping"}'
+    context = tooldata.get('context')
+    awsclient = context.get('_awsclient')
+    invoke(awsclient, lambda_name, payload, invocation_type=itype, version=version, outfile=outfile)
 
 
 def main():

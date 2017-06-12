@@ -16,15 +16,26 @@ To see available commands, call this:
 $ ramuda
 Usage:
         ramuda clean
-        ramuda bundle
-        ramuda deploy
+        ramuda bundle [--keep] [-v]
+        ramuda deploy [--keep] [-v]
         ramuda list
         ramuda metrics <lambda>
-        ramuda wire
-        ramuda unwire
-        ramuda delete -f <lambda>
-        ramuda rollback <lambda> [<version>]
+        ramuda info
+        ramuda wire [-v]
+        ramuda unwire [-v]
+        ramuda delete [-v] -f <lambda>
+        ramuda rollback [-v] <lambda> [<version>]
+        ramuda ping [-v] <lambda> [<version>]
+        ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
         ramuda version
+
+Options:
+-h --help               show this
+-v --verbose            show debug messages
+--keep                  keep (reuse) installed packages
+--payload=payload       '{"foo": "bar"}' or file://input.txt
+--invocation-type=type  Event, RequestResponse or DryRun
+--outfile=file          write the response to file
 ```
 #### clean
 removes local bundle files.
@@ -71,6 +82,26 @@ sets the active version to ACTIVE -1 or to a given version
 
 #### version
 will print the version of gcdt you are using
+
+#### invoke
+
+In this section, you invoke your Lambda function manually using the `ramuda invoke` command.
+
+``` bash
+$ ramuda invoke my_hello_world \
+--invocation-type RequestResponse \
+--payload '{"key1":"value1", "key2":"value2", "key3":"value3"}'
+```
+
+If you want you can save the payload to a file (for example, input.txt) and provide the file name as a parameter:
+
+``` bash
+$ ramuda invoke my_hello_world \
+--invocation-type RequestResponse \
+--payload file://input.txt
+```
+
+The preceding invoke command specifies RequestResponse as the invocation type, which returns a response immediately in response to the function execution. Alternatively, you can specify Event as the invocation type to invoke the function asynchronously.
 
 
 ### Folder Layout

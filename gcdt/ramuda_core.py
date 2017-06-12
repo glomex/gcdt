@@ -1072,24 +1072,62 @@ def ping(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
     :return: ping response payload
     """
     log.debug('sending ping to lambda function: %s', function_name)
-    client_lambda = awsclient.get_client('lambda')
     payload = '{"ramuda_action": "ping"}'  # default to ping event
+    # reuse invoke
+    return invoke(awsclient, function_name, payload, invocation_type=None,
+           alias_name=alias_name, version=version)
+
+
+def invoke(awsclient, function_name, payload, invocation_type=None,
+           alias_name=ALIAS_NAME, version=None, outfile=None):
+    """Send a ping request to a lambda function.
+
+    :param awsclient:
+    :param function_name:
+    :param payload:
+    :param invocation_type:
+    :param alias_name:
+    :param version:
+    :param outfile: write response to file
+    :return: ping response payload
+    """
+    log.debug('invoking lambda function: %s', function_name)
+    client_lambda = awsclient.get_client('lambda')
+    if invocation_type is None:
+        invocation_type = 'RequestResponse'
+    if payload.startswith('file:/'):
+        log.debug('reading payload from file: %s' % payload)
+        with open(payload[6:], 'r') as pfile:
+            payload = pfile.read()
 
     if version:
         response = client_lambda.invoke(
             FunctionName=function_name,
-            InvocationType='RequestResponse',
+            InvocationType=invocation_type,
             Payload=payload,
             Qualifier=version
         )
     else:
         response = client_lambda.invoke(
             FunctionName=function_name,
-            InvocationType='RequestResponse',
+            InvocationType=invocation_type,
             Payload=payload,
             Qualifier=alias_name
         )
 
     results = response['Payload'].read()  # payload is a 'StreamingBody'
-    log.debug('ping completed')
-    return results
+    if 'alive' in str(results):
+        print(str(results))
+        print('#####Cool, your lambda function did respond to ping with %s.' %
+              str(results))
+    else:
+        print(colored.red('Your lambda function did not respond to ping.'))
+    log.debug('invoke completed')
+    # write to file
+    if outfile:
+        with open(outfile, 'w') as ofile:
+            ofile.write(str(results))
+            ofile.flush()
+        return
+    else:
+        return results

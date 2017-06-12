@@ -14,7 +14,7 @@ from gcdt.ramuda_core import delete_lambda, deploy_lambda, ping, \
     _lambda_add_time_schedule_event_source, \
     wire, unwire, _lambda_add_invoke_permission, list_functions, \
     _update_lambda_configuration, get_metrics, rollback, _get_alias_version, \
-    info
+    info, invoke
 from gcdt.ramuda_utils import list_lambda_versions
 from gcdt_testtools import helpers
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
@@ -22,6 +22,7 @@ from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
     settings_requirements
 from gcdt_testtools.helpers_aws import temp_bucket, awsclient  # fixtures!
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
+from gcdt_testtools.helpers import create_tempfile
 from . import here
 
 
@@ -792,6 +793,41 @@ def test_ping(awsclient, vendored_folder, temp_lambda):
     # test has no ping
     response = ping(awsclient, lambda_name)
     assert response == '{"ramuda_action": "ping"}'
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_invoke_outfile(awsclient, vendored_folder, temp_lambda):
+    log.info('running test_invoke')
+
+    lambda_name = temp_lambda[0]
+    role_arn = temp_lambda[2]
+    outfile = create_tempfile('')
+    payload = '{"ramuda_action": "ping"}'  # default to ping event
+
+    response = invoke(awsclient, lambda_name, payload=payload, outfile=outfile)
+
+    with open(outfile, 'r') as ofile:
+        assert ofile.read() == '"alive"'
+
+    # cleanup
+    os.unlink(outfile)
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_invoke_payload_from_file(awsclient, vendored_folder, temp_lambda):
+    log.info('running test_invoke')
+
+    lambda_name = temp_lambda[0]
+    role_arn = temp_lambda[2]
+    payload_file = create_tempfile('{"ramuda_action": "ping"}')
+
+    response = invoke(awsclient, lambda_name, payload='file:/%s' % payload_file)
+    assert response == '"alive"'
+
+    # cleanup
+    os.unlink(payload_file)
 
 
 @pytest.mark.aws
