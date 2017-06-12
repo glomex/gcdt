@@ -2,12 +2,13 @@
 from __future__ import unicode_literals, print_function
 import os
 import logging
+from tempfile import NamedTemporaryFile
 
 import pytest
 from nose.tools import assert_regexp_matches
 
 from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
-    delete_cmd, metrics_cmd, ping_cmd, bundle_cmd
+    delete_cmd, metrics_cmd, ping_cmd, bundle_cmd, invoke_cmd
 from gcdt_bundler.bundler import bundle
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
@@ -171,6 +172,24 @@ def test_ping_cmd(awsclient, vendored_folder, temp_lambda, capsys):
     ping_cmd(lambda_name, **tooldata)
     out, err = capsys.readouterr()
     assert '"alive"' in out
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_invoke_cmd(awsclient, vendored_folder, temp_lambda):
+    log.info('running test_invoke_cmd')
+    tooldata = get_tooldata(awsclient, 'ramuda', 'invoke', config={})
+
+    lambda_name = temp_lambda[0]
+    outfile = NamedTemporaryFile(delete=False, dir=None, suffix='').name
+    invoke_cmd(lambda_name, None, None, '{"ramuda_action": "ping"}',
+               outfile, **tooldata)
+
+    with open(outfile, 'r') as ofile:
+        assert ofile.read() == '"alive"'
+
+    # cleanup
+    os.unlink(outfile)
 
 
 def test_bundle_cmd(capsys, temp_folder):

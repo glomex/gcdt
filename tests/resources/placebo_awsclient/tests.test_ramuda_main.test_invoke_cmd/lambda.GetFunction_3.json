@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_glmnhs-747e30e5-bf53-4a52-a067-fb7abccc65b6?X-Amz-Security-Token=FQoDYXdzEL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDC%2Be4BzgXaTvYctaSSK3AwtP74A3r2gjoLBbRr4uU3rGEVQ9N5iKUdM8Q73rmNE992By0Knvo5azf17YM9Gd7n%2FGg%2F7A%2F5MY7zaVndq3Jds9q%2FmQdpqira2rBVSpRYRHNAsl8pob1HyM%2FAsyif0ZhRDxuWLfhILT5FJIswMAxqVKzfxPcNl0JuhqurOo4xl8mux4eIVe2TzAbb2yTIF9H4Nto%2FteEYlu9%2BC0OcYBCdV0eCIZ7W%2BOuwvwh3oMDQAz8iu9aCWw6H4wVMIzpGEtbWVBQEOH1sr%2BE%2BOxC2wUbofpxKOpdTRmngNeA9ejRJot%2BADxdNVXP2Hmyqwj42Gvn7pVlrxMiTpt25QR4MyBofY1dxWKyjgxUI7PEJUeRDZMQTSztYIu7AGqK4Oap1%2BRPbxGmb8g7qS7hetGPWSXisb6AP3BO3r3Pq991VTbk0lrjZ0lg0KAm2ioMztRj8MIinuzuQg%2BMxWl53cWX1M4q6GuSjIL%2BIXz1GtUOEmcx97Ew%2BfppB4Len2z0yBSitL6vS9tLNvEH1t1iPeDp3Nq9Q3uNcEUjOQ3vb7pEGb3KHctKeqO0WOTJBZygl84QjSpLUk%2F%2B81eq3so0fL5yQU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170612T125330Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJELZFLMZNTD2QABA%2F20170612%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=400331e5a312a9f65bc45166e349d1d2473f1acd44513e86cd5495a54243d370"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "dqrh6HPAuggirsPEpydXjuF9OjrB/Bo7wsbj2Xk6byA=", 
+            "FunctionName": "jenkins_test_glmnhs", 
+            "MemorySize": 128, 
+            "CodeSize": 3666287, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_glmnhs", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_glmnhs_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-06-12T12:53:20.177+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "22eb1db6-4f6e-11e7-94f9-c35f9838f516", 
+            "HTTPHeaders": {
+                "date": "Mon, 12 Jun 2017 12:53:30 GMT", 
+                "x-amzn-requestid": "22eb1db6-4f6e-11e7-94f9-c35f9838f516", 
+                "content-length": "1808", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}
