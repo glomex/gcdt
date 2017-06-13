@@ -10,12 +10,15 @@ import os
 import sys
 from collections import OrderedDict
 import json
+import time
 from tempfile import NamedTemporaryFile
 
 from clint.textui import colored
+from pyspin.spin import Default, Spinner
+from tabulate import tabulate
 
 from . import utils
-from .kumo_core import print_parameter_diff, delete_stack, \
+from .kumo_core import get_parameter_diff, delete_stack, \
     deploy_stack, generate_template_file, list_stacks, create_change_set, \
     describe_change_set, load_cloudformation_template, call_pre_hook
 from .kumo_viz import cfn_viz, svg_output
@@ -75,7 +78,19 @@ def deploy_cmd(override, **tooldata):
 
     cloudformation = load_template()
     call_pre_hook(awsclient, cloudformation)
-    print_parameter_diff(awsclient, conf)
+
+    if get_parameter_diff(awsclient, conf):
+        print(colored.red('Parameters have changed. Waiting 10 seconds. \n'))
+        print('If parameters are unexpected you might want to exit now: control-c')
+        # Choose a spin style.
+        spin = Spinner(Default)
+        # Spin it now.
+        for i in range(100):
+            print(u'\r{0}'.format(spin.next()), end='')
+            sys.stdout.flush()
+            time.sleep(0.1)
+        print('\n')
+
     exit_code = deploy_stack(awsclient, conf, cloudformation,
                              override_stack_policy=override)
     return exit_code
@@ -110,7 +125,7 @@ def preview_cmd(**tooldata):
     conf = tooldata.get('config')
     awsclient = context.get('_awsclient')
     cloudformation = load_template()
-    print_parameter_diff(awsclient, conf)
+    get_parameter_diff(awsclient, conf)
     change_set, stack_name = create_change_set(awsclient, conf,
                                                cloudformation)
     describe_change_set(awsclient, change_set, stack_name)

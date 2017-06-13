@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.397] - 2017-06-13
+### Added
+- FIX [kumo] parameter diffing without params fails (#64)
+
 ## [0.1.396] - 2017-06-12
 ### Added
 - FEATURE ramuda invoke command (#246)

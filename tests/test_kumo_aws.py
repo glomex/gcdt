@@ -2,13 +2,12 @@
 from __future__ import unicode_literals, print_function
 import os
 
-#from pyhocon import ConfigFactory
-from nose.tools import assert_equal, assert_false, assert_is_not, \
+from nose.tools import assert_equal, assert_false, \
     assert_is_not_none, assert_true
 import pytest
 
 from gcdt.kumo_core import load_cloudformation_template, \
-    print_parameter_diff, deploy_stack, \
+    get_parameter_diff, deploy_stack, \
     delete_stack, create_change_set, _get_stack_name, describe_change_set, \
     _get_artifact_bucket, _s3_upload, _get_stack_state
 from gcdt.kumo_util import ensure_ebs_volume_tags_ec2_instance, \
@@ -181,16 +180,17 @@ def test_kumo_stack_lifecycle(awsclient, simple_cloudformation_stack):
     change_set_name, stackname = \
         create_change_set(awsclient, config_simple_stack,
                           cloudformation_simple_stack)
-    assert_equal(stackname, _get_stack_name(config_simple_stack))
-    assert_is_not(change_set_name, '')
+    assert stackname == _get_stack_name(config_simple_stack)
+    assert change_set_name != ''
     describe_change_set(awsclient, change_set_name, stackname)
 
     # update the stack
-    print_parameter_diff(awsclient, config_simple_stack)
+    changed = get_parameter_diff(awsclient, config_simple_stack)
+    assert not changed
     exit_code = deploy_stack(awsclient, config_simple_stack,
                              cloudformation_simple_stack,
                              override_stack_policy=False)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
 
 @pytest.mark.aws

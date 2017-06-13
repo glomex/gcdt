@@ -12,7 +12,6 @@ import logging
 import os
 import six
 from clint.textui import colored, prompt
-from pyspin.spin import Default, Spinner
 from tabulate import tabulate
 
 from .utils import get_env
@@ -58,8 +57,8 @@ def load_cloudformation_template(path=None):
     return None, False
 
 
-def print_parameter_diff(awsclient, config):
-    """print differences between local config and currently active config
+def get_parameter_diff(awsclient, config):
+    """get differences between local config and currently active config
     """
     client_cf = awsclient.get_client('cloudformation')
     try:
@@ -86,9 +85,10 @@ def print_parameter_diff(awsclient, config):
     if 'Parameters' in stack:
         for param in stack['Parameters']:
             try:
-                old = param['ParameterValue']
-                if ',' in old:
-                    old = old.split(',')
+                old = str(param['ParameterValue'])
+                # can not compare list with str!!
+                #if ',' in old:
+                #    old = old.split(',')
                 new = config['cloudformation'][param['ParameterKey']]
                 if old != new:
                     table.append([param['ParameterKey'], old, new])
@@ -98,16 +98,8 @@ def print_parameter_diff(awsclient, config):
 
     if changed > 0:
         print(tabulate(table, tablefmt='fancy_grid'))
-        print(colored.red('Parameters have changed. Waiting 10 seconds. \n'))
-        print('If parameters are unexpected you might want to exit now: control-c')
-        # Choose a spin style.
-        spin = Spinner(Default)
-        # Spin it now.
-        for i in range(100):
-            print(u'\r{0}'.format(spin.next()), end='')
-            sys.stdout.flush()
-            time.sleep(0.1)
-        print('\n')
+
+    return changed > 0
 
 
 def call_pre_hook(awsclient, cloudformation):
