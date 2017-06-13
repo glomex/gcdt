@@ -90,6 +90,7 @@ def deploy_cmd(keep, **tooldata):
     artifact_bucket = config.get('deployment', {}).get('artifactBucket', None)
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
+    environment = config['lambda'].get('environment', {})
     if runtime:
         assert runtime in DEFAULT_CONFIG['ramuda']['runtime']
     settings = config['lambda'].get('settings', None)
@@ -104,7 +105,8 @@ def deploy_cmd(keep, **tooldata):
         fail_deployment_on_unsuccessful_ping=
         fail_deployment_on_unsuccessful_ping,
         runtime=runtime,
-        settings=settings
+        settings=settings,
+        environment=environment
     )
     return exit_code
 
