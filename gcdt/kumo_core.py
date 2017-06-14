@@ -91,6 +91,11 @@ def get_parameter_diff(awsclient, config):
                 #    old = old.split(',')
                 new = config['cloudformation'][param['ParameterKey']]
                 if old != new:
+                    if old.startswith('***'):
+                        # parameter is configured with `NoEcho=True`
+                        # this means we can not really say if the value changed!!
+                        # for security reasons we block viewing the new value
+                        new = old
                     table.append([param['ParameterKey'], old, new])
                     changed += 1
             except Exception:
