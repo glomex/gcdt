@@ -1,0 +1,65 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/846eae20-528a-11e7-b35e-500c44f19ed2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-4y33judesy7e"
+                    }
+                ], 
+                "RoleARN": "arn:aws:iam::420189626185:role/unittest_qlrfeu_kumo", 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 11, 
+                    "__class__": "datetime", 
+                    "month": 6, 
+                    "second": 13, 
+                    "microsecond": 899000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 54
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "UPDATE_IN_PROGRESS", 
+                "DisableRollback": false, 
+                "LastUpdatedTime": {
+                    "hour": 11, 
+                    "__class__": "datetime", 
+                    "month": 6, 
+                    "second": 8, 
+                    "microsecond": 137000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 55
+                }
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "a5021160-528a-11e7-bb6d-f7d2d06b4643", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "a5021160-528a-11e7-bb6d-f7d2d06b4643", 
+                "date": "Fri, 16 Jun 2017 11:55:07 GMT", 
+                "content-length": "1641", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.1.397] - 2017-06-13
+## [0.1.398] - 2017-06-16
+### Added
+- FIX kumo use special role for cloudformation deployments (#162)
+
+## [0.1.397] - 2017-06-16
 ### Added
 - FIX kumo parameter diffing without params fails (#64)
 - FIX kumo parameter diffing flaws (#184)

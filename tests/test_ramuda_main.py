@@ -11,11 +11,11 @@ from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
     delete_cmd, metrics_cmd, ping_cmd, bundle_cmd, invoke_cmd
 from gcdt_bundler.bundler import bundle
 
-from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
+from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata, \
+    cleanup_roles
 from gcdt_testtools.helpers_aws import create_role_helper
 from gcdt_testtools.helpers_aws import awsclient, temp_bucket  # fixtures!
 from .test_ramuda_aws import vendored_folder, temp_lambda, cleanup_lambdas  # fixtures!
-from .test_ramuda_aws import cleanup_roles  # fixtures!
 from gcdt_testtools.helpers import temp_folder  # fixtures !
 from gcdt_testtools import helpers
 

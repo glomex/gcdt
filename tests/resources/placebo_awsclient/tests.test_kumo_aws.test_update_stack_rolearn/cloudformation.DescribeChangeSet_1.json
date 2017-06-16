@@ -1,0 +1,44 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/846eae20-528a-11e7-b35e-500c44f19ed2", 
+        "Status": "FAILED", 
+        "ChangeSetName": "ENGUVFSL", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "a455f2d1-528a-11e7-bb6d-f7d2d06b4643", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "a455f2d1-528a-11e7-bb6d-f7d2d06b4643", 
+                "date": "Fri, 16 Jun 2017 11:55:06 GMT", 
+                "content-length": "1208", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "Parameters": [
+            {
+                "ParameterValue": "t2.micro", 
+                "ParameterKey": "InstanceType"
+            }
+        ], 
+        "Changes": [], 
+        "CreationTime": {
+            "hour": 11, 
+            "__class__": "datetime", 
+            "month": 6, 
+            "second": 7, 
+            "microsecond": 250000, 
+            "year": 2017, 
+            "day": 16, 
+            "minute": 55
+        }, 
+        "StatusReason": "The submitted information didn't contain changes. Submit different information to create a change set.", 
+        "StackName": "infra-dev-kumo-sample-stack", 
+        "NotificationARNs": [], 
+        "Capabilities": [
+            "CAPABILITY_IAM"
+        ], 
+        "ExecutionStatus": "UNAVAILABLE", 
+        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/ENGUVFSL/39f29108-bff1-4623-aff8-f89173bf527b"
+    }
+}

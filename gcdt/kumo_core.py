@@ -42,7 +42,9 @@ def load_cloudformation_template(path=None):
             # use cfn template hooks
             if not check_hook_mechanism_is_intact(cloudformation):
                 # no hooks - do nothing
-                log.debug('No valid hook configuration: \'%s\'. Not using hooks!', path)
+                log.debug(
+                    'No valid hook configuration: \'%s\'. Not using hooks!',
+                    path)
             else:
                 if check_register_present(cloudformation):
                     # register the template hooks so they listen to gcdt_signals
@@ -71,7 +73,8 @@ def get_parameter_diff(awsclient, config):
             else:
                 return None
         else:
-            print('StackName is not configured, could not create parameter diff')
+            print(
+                'StackName is not configured, could not create parameter diff')
             return None
     except:
         # probably the stack is not existent
@@ -87,7 +90,7 @@ def get_parameter_diff(awsclient, config):
             try:
                 old = str(param['ParameterValue'])
                 # can not compare list with str!!
-                #if ',' in old:
+                # if ',' in old:
                 #    old = old.split(',')
                 new = config['cloudformation'][param['ParameterKey']]
                 if old != new:
@@ -99,7 +102,8 @@ def get_parameter_diff(awsclient, config):
                     table.append([param['ParameterKey'], old, new])
                     changed += 1
             except Exception:
-                print('Did not find %s in local config file' % param['ParameterKey'])
+                print('Did not find %s in local config file' % param[
+                    'ParameterKey'])
 
     if changed > 0:
         print(tabulate(table, tablefmt='fancy_grid'))
@@ -143,7 +147,7 @@ def _call_hook(awsclient, config, stack_name, parameters, cloudformation,
     sig = signature(hook_func)
     params = sig.parameters
 
-    #if not hook_func.func_code.co_argcount:
+    # if not hook_func.func_code.co_argcount:
     if len(params) == 0:
         hook_func()  # for compatibility with existing templates
     else:
@@ -180,7 +184,8 @@ def _json2table(data):
     filter_terms = ['ResponseMetadata']
     table = []
     try:
-        for k, v in filter(lambda k, v: k not in filter_terms, data.iteritems()):
+        for k, v in filter(lambda k, v: k not in filter_terms,
+                           data.iteritems()):
             table.append([k, str(v)])
         return tabulate(table, tablefmt='fancy_grid')
     except Exception:
@@ -251,8 +256,9 @@ def _poll_stack_events(awsclient, stackname, last_event=None):
                 except KeyError:
                     reason = ''
                 timestamp = str(event['Timestamp'])
-                message = '%-50s %-25s %-50s %-25s\n' % (resource_status, resource_id,
-                                                         reason, timestamp)
+                message = '%-50s %-25s %-50s %-25s\n' % (
+                    resource_status, resource_id,
+                    reason, timestamp)
                 if resource_status in failed_statuses:
                     print(colored.red(message))
                 elif resource_status in warning_statuses:
@@ -295,11 +301,11 @@ def _generate_parameters(conf):
     raw_parameters = []
     parameter_list = []
     # this looks weird since it should work only on the 'cloudformation' config
-    #for item in conf.iterkeys():
+    # for item in conf.iterkeys():
     #    for key in conf[item].iterkeys():
-    #for key in conf['cloudformation'].iterkeys():
+    # for key in conf['cloudformation'].iterkeys():
     for key in conf['cloudformation'].keys():
-        if key not in ['StackName', 'TemplateBody', 'ArtifactBucket']:
+        if key not in ['StackName', 'TemplateBody', 'ArtifactBucket', 'RoleARN']:
             raw_parameters.append(key)
     for param in raw_parameters:
         entry = _generate_parameter_entry(conf, param)
@@ -416,29 +422,27 @@ def _create_stack(awsclient, conf, cloudformation, parameters):
     # create stack with all the information we have
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
+    rolearn = conf['cloudformation'].get('RoleARN', None)
+
     _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                hook='pre_create_hook')
+
+    request = {
+        'StackName': stackname,
+        'Parameters': parameters,
+        'Capabilities': ['CAPABILITY_IAM'],
+        'StackPolicyBody': _get_stack_policy(cloudformation)
+    }
+
     if _get_artifact_bucket(conf):
-        response = client_cf.create_stack(
-            StackName=_get_stack_name(conf),
-            TemplateURL=_s3_upload(awsclient, conf, cloudformation),
-            Parameters=parameters,
-            Capabilities=[
-                'CAPABILITY_IAM',
-            ],
-            StackPolicyBody=_get_stack_policy(cloudformation),
-        )
+        request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
     else:
-        # if we have no artifacts bucket configured then upload the template directly
-        response = client_cf.create_stack(
-            StackName=_get_stack_name(conf),
-            TemplateBody=cloudformation.generate_template(),
-            Parameters=parameters,
-            Capabilities=[
-                'CAPABILITY_IAM',
-            ],
-            StackPolicyBody=_get_stack_policy(cloudformation),
-        )
+        request['TemplateBody'] = cloudformation.generate_template()
+
+    if rolearn:
+        request['RoleARN'] = rolearn
+
+    response = client_cf.create_stack(**request)
 
     exit_code = _poll_stack_events(awsclient, stackname)
     _call_hook(awsclient, conf, stackname, parameters, cloudformation,
@@ -450,7 +454,8 @@ def _create_stack(awsclient, conf, cloudformation, parameters):
 def _s3_upload(awsclient, conf, cloudformation):
     region = awsclient.get_client('s3').meta.region_name
     bucket = _get_artifact_bucket(conf)
-    dest_key = 'kumo/%s/%s-cloudformation.json' % (region, _get_stack_name(conf))
+    dest_key = 'kumo/%s/%s-cloudformation.json' % (
+        region, _get_stack_name(conf))
     source_file = generate_template_file(conf, cloudformation)
     upload_file_to_s3(awsclient, bucket, dest_key, source_file)
     s3url = 'https://s3-%s.amazonaws.com/%s/%s' % (region, bucket, dest_key)
@@ -463,40 +468,31 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
     exit_code = 0
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
+    rolearn = conf['cloudformation'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
+
     try:
         _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                    hook='pre_update_hook')
-        #try:
-        if _get_artifact_bucket(conf):
-            response = client_cf.update_stack(
-                StackName=_get_stack_name(conf),
-                TemplateURL=_s3_upload(awsclient, conf, cloudformation),
-                Parameters=parameters,
-                Capabilities=[
-                    'CAPABILITY_IAM',
-                ],
-                StackPolicyBody=_get_stack_policy(cloudformation),
-                StackPolicyDuringUpdateBody=_get_stack_policy_during_update(
-                    cloudformation,
-                    override_stack_policy)
+        request = {
+            'StackName': stackname,
+            'Parameters': parameters,
+            'Capabilities': ['CAPABILITY_IAM'],
+            'StackPolicyBody': _get_stack_policy(cloudformation),
+            'StackPolicyDuringUpdateBody': _get_stack_policy_during_update(
+                cloudformation, override_stack_policy),
+        }
 
-            )
+        if _get_artifact_bucket(conf):
+            request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation),
         else:
             # if we have no artifacts bucket configured then upload the template directly
-            #except ConfigMissingException:
-            response = client_cf.update_stack(
-                StackName=_get_stack_name(conf),
-                TemplateBody=cloudformation.generate_template(),
-                Parameters=parameters,
-                Capabilities=[
-                    'CAPABILITY_IAM',
-                ],
-                StackPolicyBody=_get_stack_policy(cloudformation),
-                StackPolicyDuringUpdateBody=_get_stack_policy_during_update(
-                    cloudformation,
-                    override_stack_policy)
-            )
+            request['TemplateBody'] = cloudformation.generate_template()
+
+        if rolearn:
+            request['RoleARN'] = rolearn
+
+        response = client_cf.update_stack(**request)
 
         exit_code = _poll_stack_events(awsclient, stackname, last_event)
         _call_hook(awsclient, conf, stackname, parameters, cloudformation,
@@ -540,7 +536,8 @@ def list_stacks(awsclient):
             'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED',
             'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
             'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS',
-            'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+            'UPDATE_ROLLBACK_FAILED',
+            'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
             'UPDATE_ROLLBACK_COMPLETE',
         ]
     )
@@ -589,7 +586,7 @@ def describe_change_set(awsclient, change_set_name, stack_name):
             ChangeSetName=change_set_name,
             StackName=stack_name)
         status = response['Status']
-        #print('##### %s' % status)
+        # print('##### %s' % status)
         if status == 'CREATE_COMPLETE':
             for change in response['Changes']:
                 print(_json2table(change['ResourceChange']))
@@ -612,5 +609,6 @@ def generate_template_file(conf, cloudformation):
     template_file_name = _get_stack_name(conf) + '-generated-cf-template.json'
     with open(template_file_name, 'w') as opened_file:
         opened_file.write(template_body)
-    print('wrote cf-template for %s to disk: %s' % (get_env(), template_file_name))
+    print('wrote cf-template for %s to disk: %s' % (
+        get_env(), template_file_name))
     return template_file_name

@@ -8,6 +8,7 @@ import logging
 
 import botocore.session
 import pytest
+from awacs.aws import Action, Allow, Policy, Principal, Statement
 from gcdt_bundler.bundler import _get_zipped_file
 from gcdt_lookups.lookups import _resolve_lookups
 
@@ -146,7 +147,7 @@ def delete_role_helper(awsclient, role_name):
         response = iam.delete_role(RoleName=role_name)
 
 
-def create_role_helper(awsclient, name, policies=None):
+def create_role_helper(awsclient, name, policies=None, principal_service=None):
     """Create a role with an optional inline policy """
     iam = awsclient.get_client('iam')
     policy_doc = {
@@ -159,6 +160,8 @@ def create_role_helper(awsclient, name, policies=None):
             },
         ]
     }
+    if principal_service:
+        policy_doc['Statement'][0]['Principal']['Service'] = principal_service
     roles = [r['RoleName'] for r in iam.list_roles()['Roles']]
     if name in roles:
         print('IAM role %s exists' % name)
@@ -355,3 +358,57 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
         'config': config
     }
     return tooldata
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def cleanup_roles(awsclient):
+    items = []
+    yield items
+    # cleanup
+    for i in items:
+        delete_role_helper(awsclient, i)
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def temp_cloudformation_policy(awsclient):
+    # policy: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html
+    '''
+    {
+        "Version":"2012-10-17",
+        "Statement":[{
+            "Effect":"Allow",
+            "Action":[
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStacks",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:GetTemplate",
+                "cloudformation:ValidateTemplate"
+            ],
+            "Resource":"*"
+        }]
+    }
+    '''
+    client_iam = awsclient.get_client('iam')
+    name = 'unittest_%s_cloudformation_policy' % helpers.random_string()
+    pd = Policy(
+        Version="2012-10-17",
+        Id=name,
+        Statement=[
+            Statement(
+                Effect=Allow,
+                Action=[Action('cloudformation', '*')],
+                Resource=['*']
+            ),
+        ],
+    )
+
+    response = client_iam.create_policy(
+        PolicyName=name,
+        PolicyDocument=pd.to_json()
+    )
+
+    yield response['Policy']['Arn']
+
+    # cleanup
+    client_iam.delete_policy(PolicyArn=response['Policy']['Arn'])
