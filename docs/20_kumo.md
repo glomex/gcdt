@@ -15,13 +15,16 @@ To see available commands, call kumo without any arguments:
 ```bash
 $ kumo
 Usage:
-        kumo deploy [--override-stack-policy]
-        kumo list
-        kumo delete -f
-        kumo generate
-        kumo preview
+        kumo deploy [--override-stack-policy] [-v]
+        kumo list [-v]
+        kumo delete -f [-v]
+        kumo generate [-v]
+        kumo preview [-v]
         kumo version
-        kumo dot
+        kumo dot [-v]
+
+-h --help           show this
+-v --verbose        show debug messages
 ```
 
 ### Commands
@@ -73,13 +76,29 @@ settings_dev.conf -> settings for dev in [hocon](https://github.com/typesafehub/
 
 settings_prod.conf -> settings for prod in [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md) format, needs to include all parameters for the cloudformation template + stack name
 
+
 #### Config file example
 
-```text
-cloudformation {
-  StackName = "sample-stack"
+``` js
+"cloudformation": {
+    "StackName": "sample-stack"
+    ...
 }
 ```
+
+
+#### Configuring RoleARN for a cloudformation stack
+
+There is a new Feature in CloudFormation which lets a User specify a Role which shall be used to execute the Stack. Docs can be found at http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html
+
+``` js
+"cloudformation": {
+    ...
+    "RoleARN": "arn:aws:iam::<your_account>:policy/<your_cloudformation_policy>"
+    ...
+}
+```
+
 
 #### Setting the ENV variable
 

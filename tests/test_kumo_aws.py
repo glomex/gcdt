@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+from copy import deepcopy
 
 from nose.tools import assert_equal, assert_false, \
     assert_is_not_none, assert_true
@@ -17,8 +18,11 @@ from gcdt.servicediscovery import get_outputs_for_stack
 from gcdt.s3 import prepare_artifacts_bucket
 from gcdt.gcdt_config_reader import read_json_config
 
-from gcdt_testtools.helpers_aws import check_preconditions
-from gcdt_testtools.helpers_aws import cleanup_buckets, awsclient  # fixtures!
+from gcdt_testtools.helpers_aws import check_preconditions, create_role_helper
+from gcdt_testtools.helpers_aws import cleanup_buckets, awsclient, \
+    cleanup_roles, temp_cloudformation_policy  # fixtures!
+from gcdt_testtools import helpers
+
 from . import here
 
 
@@ -139,6 +143,18 @@ def test_s3_upload(cleanup_buckets, awsclient):
 # most kumo-operations which rely on a stack on AWS can not be tested in isolation
 # since the stack creation for a simple stack takes some time we decided
 # to test the stack related operations together
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def cleanup_stack_simple_stack(awsclient):
+    """Remove the simple_stack stack to cleanup after test run.
+
+    This is intended to be called during test teardown"""
+    yield
+    # cleanup
+    exit_code = delete_stack(awsclient, config_simple_stack)
+    # check whether delete was completed!
+    assert_false(exit_code, 'delete_stack was not completed\n' +
+                 'please make sure to clean up the stack manually')
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'
@@ -302,3 +318,75 @@ def test_call_hook(awsclient, sample_cloudformation_stack_with_hooks):
     state = _get_stack_state(awsclient.get_client('cloudformation'),
                              sample_cloudformation_stack_with_hooks)
     assert state in ['CREATE_IN_PROGRESS', 'CREATE_COMPLETE']
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_create_stack_rolearn(
+        awsclient, cleanup_stack_simple_stack, temp_cloudformation_policy,
+        cleanup_roles):
+    # create a stack we use for the test lifecycle
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation.py')
+    )
+
+    # create role to use for cloudformation deployment
+    role = create_role_helper(
+        awsclient,
+        'unittest_%s_kumo' % helpers.random_string(),
+        policies=[
+            temp_cloudformation_policy,
+            'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        ],
+        principal_service=['cloudformation.amazonaws.com']
+    )
+    cleanup_roles.append(role['RoleName'])
+
+    config_rolearn = deepcopy(config_simple_stack)
+    config_rolearn['cloudformation']['RoleARN'] = role['Arn']
+
+    exit_code = deploy_stack(awsclient, config_rolearn,
+                             cloudformation_simple_stack,
+                             override_stack_policy=False)
+
+    assert exit_code == 0
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
+                              temp_cloudformation_policy, cleanup_roles):
+    # create a stack we use for the test lifecycle
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation.py')
+    )
+
+    # create role to use for cloudformation update
+    role = create_role_helper(
+        awsclient,
+        'unittest_%s_kumo' % helpers.random_string(),
+        policies=[
+            temp_cloudformation_policy,
+            'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        ],
+        principal_service=['cloudformation.amazonaws.com']
+    )
+    cleanup_roles.append(role['RoleName'])
+
+    config_rolearn = deepcopy(config_simple_stack)
+    config_rolearn['cloudformation']['RoleARN'] = role['Arn']
+
+    change_set_name, stackname = \
+        create_change_set(awsclient, config_rolearn,
+                          cloudformation_simple_stack)
+    assert stackname == _get_stack_name(config_rolearn)
+    assert change_set_name != ''
+    describe_change_set(awsclient, change_set_name, stackname)
+
+    # update the stack
+    changed = get_parameter_diff(awsclient, config_rolearn)
+    assert not changed
+    exit_code = deploy_stack(awsclient, config_rolearn,
+                             cloudformation_simple_stack,
+                             override_stack_policy=False)
+    assert exit_code == 0

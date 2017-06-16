@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
+
+import logging
 import shutil
 import time
-import logging
 
+import os
 import pytest
+from gcdt_bundler.bundler import _get_zipped_file
 from nose.tools import assert_equal, assert_greater_equal, \
     assert_in, assert_not_in, assert_regexp_matches
-from gcdt_bundler.bundler import _get_zipped_file
 
 from gcdt.ramuda_core import delete_lambda, deploy_lambda, ping, \
     _lambda_add_time_schedule_event_source, \
@@ -17,14 +18,14 @@ from gcdt.ramuda_core import delete_lambda, deploy_lambda, ping, \
     info, invoke
 from gcdt.ramuda_utils import list_lambda_versions
 from gcdt_testtools import helpers
+from gcdt_testtools.helpers import create_tempfile
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
     create_lambda_helper, create_lambda_role_helper, check_preconditions, \
     settings_requirements
-from gcdt_testtools.helpers_aws import temp_bucket, awsclient  # fixtures!
+from gcdt_testtools.helpers_aws import temp_bucket, awsclient, cleanup_roles  # fixtures!
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from gcdt_testtools.helpers import create_tempfile
 from . import here
-
 
 log = logging.getLogger(__name__)
 
@@ -73,15 +74,6 @@ def temp_lambda(awsclient):
     # cleanup
     delete_lambda(awsclient, lambda_name)
     delete_role_helper(awsclient, role_name)
-
-
-@pytest.fixture(scope='function')  # 'function' or 'module'
-def cleanup_roles(awsclient):
-    items = []
-    yield items
-    # cleanup
-    for i in items:
-        delete_role_helper(awsclient, i)
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'
