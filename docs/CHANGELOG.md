@@ -4,8 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.397] - 2017-06-13
 ### Added
-- FIX [kumo] parameter diffing without params fails (#64)
-- FIX [kumo] parameter diffing flaws (#184)
+- FIX kumo parameter diffing without params fails (#64)
+- FIX kumo parameter diffing flaws (#184)
 
 ## [0.1.396] - 2017-06-12
 ### Added
