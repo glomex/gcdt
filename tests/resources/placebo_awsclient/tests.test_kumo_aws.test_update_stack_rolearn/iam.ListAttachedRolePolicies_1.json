@@ -1,0 +1,27 @@
+{
+    "status_code": 200, 
+    "data": {
+        "AttachedPolicies": [
+            {
+                "PolicyName": "unittest_ktgfnp_cloudformation_policy", 
+                "PolicyArn": "arn:aws:iam::420189626185:policy/unittest_ktgfnp_cloudformation_policy"
+            }, 
+            {
+                "PolicyName": "AmazonS3FullAccess", 
+                "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+            }
+        ], 
+        "IsTruncated": false, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "ae6fdae9-528a-11e7-9910-794fe31bcd07", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "ae6fdae9-528a-11e7-9910-794fe31bcd07", 
+                "date": "Fri, 16 Jun 2017 11:55:24 GMT", 
+                "content-length": "744", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}
