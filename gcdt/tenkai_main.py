@@ -4,11 +4,12 @@
 """
 
 from __future__ import unicode_literals, print_function
+import os
 import sys
 
 from . import utils
 from .tenkai_core import deploy, deployment_status  # bundle_revision
-from gcdt.s3 import prepare_artifacts_bucket, upload_file_to_s3
+from gcdt.s3 import prepare_artifacts_bucket
 from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
 
@@ -59,6 +60,9 @@ def deploy_cmd(**tooldata):
     exit_code = deployment_status(awsclient, deployment)
     if exit_code:
         return 1
+    # remove bundle file
+    if context['_bundle_file'] and os.path.exists(context['_bundle_file']):
+        os.unlink(context['_bundle_file'])
 
 
 @cmd(spec=['bundle'])
