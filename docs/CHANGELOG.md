@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.399] - 2017-06-19
+### Added
+- FIX tenkai clean up /tmp files (#60)
+
 ## [0.1.398] - 2017-06-16
 ### Added
 - FIX kumo use special role for cloudformation deployments (#162)
