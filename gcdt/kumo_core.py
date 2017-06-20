@@ -305,7 +305,7 @@ def _generate_parameters(conf):
     #    for key in conf[item].iterkeys():
     # for key in conf['cloudformation'].iterkeys():
     for key in conf['cloudformation'].keys():
-        if key not in ['StackName', 'TemplateBody', 'ArtifactBucket', 'RoleARN']:
+        if key not in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
             raw_parameters.append(key)
     for param in raw_parameters:
         entry = _generate_parameter_entry(conf, param)
