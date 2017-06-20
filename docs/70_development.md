@@ -257,6 +257,11 @@ https://www.youtube.com/watch?v=pXhcPJK5cMc
 We decided to use docopt for out command line interface because it is simple and very flexible. In addition we developed a `dispatch mechanism` to ease the docopt usage and to make the gcdt CLI commands testable.
 
 
+#### Using Maya: Datetimes for Humans 
+
+We had some issues in the past using datetimes correctly across different timezones and locales. glomex SRE team took an initiative to improve the situation and we. We looked into pytz and maya. Maya had a convincing offering and is maintained by Kenneth Reitz so we decided to use it for datetime handling within gcdt.
+
+
 #### Plugin mechanism
 
 gcdt uses entry points similar to [pluggy](https://github.com/pytest-dev/pluggy) to find installed plugins
