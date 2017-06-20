@@ -153,7 +153,7 @@ def test_parameter_substitution_reserved_terms():
             'ConfigOne': 'value1',
             'StackName': 'value2',
             'TemplateBody': 'value3',
-            'ArtifactBucket': 'value4',
+            'artifactBucket': 'value4',
         }
     }
     expected = [

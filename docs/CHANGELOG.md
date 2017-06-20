@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.401] - 2017-06-20
+### Added
+- FIX kumo artifactBucket handling (#292)
+
 ## [0.1.400] - 2017-06-20
 ### Added
 - FIX datetime handling (#226)
