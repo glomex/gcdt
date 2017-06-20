@@ -1,9 +1,9 @@
 # Dependencies have to be in sync with other packages (gcdt, glomex-credstash, gcdt-plugins)
-botocore==1.5.64
+botocore==1.5.71
 s3transfer==0.1.10
 pybars3==0.9.1
 blinker==1.4
-regex==2017.4.23
+regex==2017.6.07
 ba>=0.1.15
 
 # Other dependencies
@@ -16,3 +16,4 @@ tabulate==0.7.5
 pyspin==1.0.2
 pip>=9.0.1
 funcsigs>=1.0.2
+maya==0.3.2

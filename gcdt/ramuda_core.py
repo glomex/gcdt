@@ -10,12 +10,13 @@ import os
 import shutil
 import uuid
 import time
-from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
 import json
 import logging
 
 from botocore.exceptions import ClientError as ClientError
 from clint.textui import colored
+import maya
 
 from gcdt.ramuda_utils import json2table, s3_upload, \
     lambda_exists, create_sha256, get_remote_code_hash, unit, \
@@ -490,8 +491,10 @@ def get_metrics(awsclient, name):
                     'Value': name
                 },
             ],
-            StartTime=datetime.now() + timedelta(days=-1),
-            EndTime=datetime.now(),
+            #StartTime=datetime.now() + timedelta(days=-1),
+            #EndTime=datetime.now(),
+            StartTime=maya.now().subtract(days=1).datetime(),
+            EndTime=maya.now().datetime(),
             Period=3600,
             Statistics=[
                 'Sum',
