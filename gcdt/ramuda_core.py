@@ -10,7 +10,6 @@ import os
 import shutil
 import uuid
 import time
-#from datetime import datetime, timedelta
 import json
 import logging
 
@@ -402,17 +401,17 @@ def _update_lambda_function_code(
         artifact_bucket=None,
         zipfile=None
         ):
+    log.debug('Updating existing AWS Lambda function...')
     client_lambda = awsclient.get_client('lambda')
     if not zipfile:
         return 1
     local_hash = create_sha256(zipfile)
-    # print ('getting remote hash')
+    log.debug('local_hash: %s', local_hash)
 
-    # print local_hash
     remote_hash = get_remote_code_hash(awsclient, function_name)
-    # print remote_hash
+    log.debug('remote_hash: %s', remote_hash)
     if local_hash == remote_hash:
-        print('Code hasn\'t changed - won\'t upload code bundle')
+        log.info('AWS Lambda code hasn\'t changed - won\'t upload code bundle')
     else:
         if not artifact_bucket:
             log.info('no stack bucket found')
@@ -441,7 +440,7 @@ def _update_lambda_configuration(awsclient, function_name, role,
                                  handler_function,
                                  description, timeout, memory, subnet_ids=None,
                                  security_groups=None):
-    log.debug('update lambda configuration for function: %s' % function_name)
+    log.info('Update AWS Lambda configuration for function: %s' % function_name)
     client_lambda = awsclient.get_client('lambda')
     if subnet_ids and security_groups:
         # print ('found vpc config')
@@ -1120,9 +1119,10 @@ def invoke(awsclient, function_name, payload, invocation_type=None,
 
     results = response['Payload'].read()  # payload is a 'StreamingBody'
     if 'alive' in str(results):
-        print(str(results))
-        print('#####Cool, your lambda function did respond to ping with %s.' %
-              str(results))
+        pass
+        # print(str(results))
+        # print('#####Cool, your lambda function did respond to ping with %s.' %
+        #      str(results))
     else:
         print(colored.red('Your lambda function did not respond to ping.'))
     log.debug('invoke completed')

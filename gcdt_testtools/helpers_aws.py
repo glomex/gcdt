@@ -9,7 +9,7 @@ import logging
 import botocore.session
 import pytest
 from awacs.aws import Action, Allow, Policy, Principal, Statement
-from gcdt_bundler.bundler import _get_zipped_file
+from gcdt_bundler.bundler import get_zipped_file
 from gcdt_lookups.lookups import _resolve_lookups
 
 from gcdt.ramuda_core import deploy_lambda
@@ -99,7 +99,7 @@ def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
     ]
     artifact_bucket = None
 
-    zipfile = _get_zipped_file(#awsclient,
+    zipfile = get_zipped_file(#awsclient,
         handler_filename,
         folders_from_file,
         #runtime=runtime,
@@ -217,7 +217,7 @@ check_preconditions = pytest.mark.skipif(
 
 
 def _playback_mode_check():
-    """Make sure the default AWS profile is set so the test can run on AWS."""
+    """Make sure the placebo mode is 'playback'."""
     if os.getenv('PLACEBO_MODE', '').lower() in ['record', 'normal']:
         return True
     else:
@@ -228,6 +228,21 @@ def _playback_mode_check():
 check_playback_mode = pytest.mark.skipif(
     _playback_mode_check(),
     reason="Test runs only in playback mode (not normal or record)."
+)
+
+
+def _normal_mode_check():
+    """Make sure the placebo mode is 'playback'."""
+    if os.getenv('PLACEBO_MODE', '').lower() == 'normal':
+        return False
+    else:
+        return True
+
+
+# skipif helper aswclient_placebo mode
+check_normal_mode = pytest.mark.skipif(
+    _normal_mode_check(),
+    reason="Test runs only in normal mode (not record or playback)."
 )
 
 

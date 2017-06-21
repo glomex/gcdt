@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.402] - 2017-06-21
+### Added
+- FIX ramuda redeploy version without changes issue (#145)
+
 ## [0.1.401] - 2017-06-20
 ### Added
 - FIX kumo artifactBucket handling (#292)

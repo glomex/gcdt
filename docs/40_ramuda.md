@@ -37,14 +37,28 @@ Options:
 --invocation-type=type  Event, RequestResponse or DryRun
 --outfile=file          write the response to file
 ```
+
+
 #### clean
 removes local bundle files.
+
 
 #### bundle
 zips all the files belonging to your lambda according to your config and requirements.txt and puts it in your current working directory as `bundle.zip`. Useful for debugging as you can still provide different environments.
 
+
 #### deploy
-deploys a lambda function to AWS. If the lambda function is non-existent it will create a new one. For an existing lambda function it checks whether code has changed and updates accordingly. In any case configuration will be updated and an alias called "ACTIVE" will be set to this version.
+
+Deploy a AWS Lambda function to AWS. If the lambda function is non-existent it will create a new one. 
+
+For an existing lambda function ramuda checks whether the hashcode of the bundle has changed and updates the lambda function accordingly. This feature was added to ramuda so we are able to compare the hashcodes locally and save time for bundle uploads to AWS. 
+
+This only works if subsequent deployments are executed from the same virtualenv (and same machine). The current implementation of the gcdt-bundler starts every deployment with a fresh virtualenv. If you want the hashcode comparison you need to provide the `--keep` option. With the '--keep' option the virtualenv is preserved. Otherwise the hashcodes of the ramuda code bundles will be different and the code will be deployed.
+
+If you can not reuse ('--keep') the virtualenv for example in case you deploy from different machines you need to use `git` to check for code changes and skip deployments accordingly.
+
+In any case configuration will be updated and an alias called "ACTIVE" will be set to this version.
+
 
 #### list
 lists all existing lambda functions including additional information like config and active version:
@@ -58,6 +72,7 @@ dp-dev-store-redshift-create-cdn-tables
 	CodeSha256: KY0Xk+g/Gt69V0siRhgaG7zWbg234dmb2hoz0NHIa3A=
 ```
 
+
 #### metrics
 displays metric for a given lambda:
 ```bash
@@ -68,20 +83,26 @@ dp-dev-ingest-lambda-cdnnorm
 	Throttles 13
 ```
 
+
 #### wire
 "wires" the lambda function to its event configuration. This actually activates the lambda function.
+
 
 #### unwire
 delets the event configuration for the lambda function
 
+
 #### delete
 deletes a lambda function
+
 
 #### rollback
 sets the active version to ACTIVE -1 or to a given version
 
+
 #### version
 will print the version of gcdt you are using
+
 
 #### invoke
 

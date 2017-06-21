@@ -7,7 +7,7 @@ import time
 
 import os
 import pytest
-from gcdt_bundler.bundler import _get_zipped_file
+from gcdt_bundler.bundler import get_zipped_file
 from nose.tools import assert_equal, assert_greater_equal, \
     assert_in, assert_not_in, assert_regexp_matches
 
@@ -16,12 +16,13 @@ from gcdt.ramuda_core import delete_lambda, deploy_lambda, ping, \
     wire, unwire, _lambda_add_invoke_permission, list_functions, \
     _update_lambda_configuration, get_metrics, rollback, _get_alias_version, \
     info, invoke
-from gcdt.ramuda_utils import list_lambda_versions
+from gcdt.ramuda_utils import list_lambda_versions, create_sha256, \
+    get_remote_code_hash
 from gcdt_testtools import helpers
 from gcdt_testtools.helpers import create_tempfile
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
     create_lambda_helper, create_lambda_role_helper, check_preconditions, \
-    settings_requirements
+    settings_requirements, check_normal_mode
 from gcdt_testtools.helpers_aws import temp_bucket, awsclient, cleanup_roles  # fixtures!
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from gcdt_testtools.helpers import create_tempfile
@@ -175,7 +176,7 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
     region = config['deployment'].get('region')
     artifact_bucket = config['deployment'].get('artifactBucket', None)
 
-    zipfile = _get_zipped_file(
+    zipfile = get_zipped_file(
         handler_filename,
         folders_from_file,
         )
@@ -294,7 +295,7 @@ def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas,
     region = config['deployment'].get('region')
     artifact_bucket = config['deployment'].get('artifactBucket', None)
 
-    zipfile = _get_zipped_file(
+    zipfile = get_zipped_file(
         handler_filename,
         folders_from_file,
         runtime=runtime,
@@ -409,7 +410,7 @@ def test_create_lambda_with_s3(awsclient, vendored_folder, cleanup_lambdas,
     region = config['deployment'].get('region')
     artifact_bucket = config['deployment'].get('artifactBucket', None)
 
-    zipfile = _get_zipped_file(
+    zipfile = get_zipped_file(
         handler_filename,
         folders_from_file,
     )
@@ -738,13 +739,14 @@ def test_rollback(awsclient, vendored_folder, temp_lambda):
     assert_equal(response['Versions'][2]['Version'], '2')
 
 
-# excluded vendored folder from bundle since we get different hash codes
-# from different platforms so we can not record this
-# TODO: this is a defect in ramuda (see #145, #158)!
-'''
 @pytest.mark.aws
 @check_preconditions
+@check_normal_mode
 def test_get_remote_code_hash(awsclient, vendored_folder, temp_lambda):
+    # this works only with the '--keep' option so timestamps of installed
+    # dependencies are unchanged. Consequently in this situation the bundle
+    # hashcode is the same.
+    # NOTE: this only makes sense in 'normal' placebo mode (not with playback!)
     log.info('running test_get_remote_code_hash')
 
     handler_filename = './resources/sample_lambda/handler.py'
@@ -753,16 +755,16 @@ def test_get_remote_code_hash(awsclient, vendored_folder, temp_lambda):
         {'source': './resources/sample_lambda/impl', 'target': 'impl'}
     ]
 
+    # now run the update using '--keep' option to get a similar hash
     # get local hash
-    zipfile = make_zip_file_bytes(handler=handler_filename,
-                                  paths=folders_from_file)
+    zipfile = get_zipped_file(handler_filename, folders_from_file, keep=True)
+
     expected_hash = create_sha256(zipfile)
 
     lambda_name = temp_lambda[0]
     time.sleep(10)
     remote_hash = get_remote_code_hash(awsclient, lambda_name)
-    assert_equal(remote_hash, expected_hash)
-'''
+    assert remote_hash == expected_hash
 
 
 @pytest.mark.aws
