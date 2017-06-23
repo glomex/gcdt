@@ -251,7 +251,7 @@ Ramuda supports AWS Lambda envrionment variables. You can specify them in `lambd
 More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
 
 
-#### Defining dependencies for your NodeJs lambda function
+#### Defining dependencies for your NodeJs lambda fgit unction
 
 A sample `package.json` file to that defines a dependency to the `1337` npm module:
 
