@@ -13,6 +13,7 @@ from . import __version__
 from .package_utils import get_package_versions
 from .gcdt_plugins import get_plugin_versions
 from .gcdt_logging import getLogger
+#from .gcdt_lifecycle import GracefulExit
 
 PY3 = sys.version_info[0] >= 3
 
@@ -218,6 +219,8 @@ def are_credentials_still_valid(awsclient):
     client = awsclient.get_client('lambda')
     try:
         client.list_functions()
+    except GracefulExit:
+        raise
     except Exception as e:
         log.debug(e)
         print(e)
@@ -235,3 +238,26 @@ def flatten(lis):
         else:
             new_lis.append(item)
     return new_lis
+
+
+class GracefulExit(Exception):
+    """
+    transport the signal information 
+    note: if you capture Exception you have to deal with this case, too
+    """
+    pass
+
+
+def signal_handler(signum, frame):
+    """
+    handle signals.
+    example: 'signal.signal(signal.SIGTERM, signal_handler)'
+    """
+    # signals are CONSTANTS so there is no mapping from signum to description
+    # so please add to the mapping in case you use more signals!
+    description = '%d' % signum
+    if signum == 2:
+        description = 'SIGINT'
+    elif signum == 15:
+        description = 'SIGTERM'
+    raise GracefulExit(description)
