@@ -12,7 +12,7 @@ from s3transfer import S3Transfer
 from tabulate import tabulate
 
 from . import utils
-
+from gcdt.utils import GracefulExit
 
 PY3 = sys.version_info[0] >= 3
 
@@ -27,6 +27,8 @@ def lambda_exists(awsclient, lambda_name):
     client_lambda = awsclient.get_client('lambda')
     try:
         client_lambda.get_function(FunctionName=lambda_name)
+    except GracefulExit:
+        raise
     except Exception as e:
         return False
     else:
@@ -73,6 +75,8 @@ def json2table(json):
             table.append([k.encode('ascii', 'ignore'),
                          str(json[k]).encode('ascii', 'ignore')])
         return tabulate(table, tablefmt='fancy_grid')
+    except GracefulExit:
+        raise
     except Exception as e:
         print(e)
         return json

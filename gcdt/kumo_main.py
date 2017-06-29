@@ -46,7 +46,7 @@ def load_template():
     """
     cloudformation, found = load_cloudformation_template()
     if not found:
-        print(colored.red('no cloudformation.py found, bailing out...'))
+        print(colored.red('could not load cloudformation.py, bailing out...'))
         sys.exit(1)
     return cloudformation
 

@@ -47,10 +47,10 @@ codedeploy {
 ```
 
 
-## tenkai configuration
+### tenkai configuration
 
 
-### add stack_output.yml to your tenkai bundle
+#### add stack_output.yml to your tenkai bundle
 
 If you need a convenient way of using the stack output during codedeploy on your instance then you can use this feature. 
 
@@ -72,3 +72,7 @@ For example if you want to set the environment variable ENV to 'DEV' you can do 
 export ENV=DEV
 ```
 
+
+### Signal handling
+
+I tenkai receives a SIGINT or SIGTERM signal during a deployment `stop_deployment` is called for the running deplyoment with `autoRollbackEnabled`.
