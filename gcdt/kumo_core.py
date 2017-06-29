@@ -11,13 +11,14 @@ import logging
 
 import os
 import six
-from clint.textui import colored, prompt
+from clint.textui import colored
 from tabulate import tabulate
 
 from .utils import get_env
 from .s3 import upload_file_to_s3
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
+from gcdt.utils import GracefulExit
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +51,8 @@ def load_cloudformation_template(path=None):
                     # register the template hooks so they listen to gcdt_signals
                     cloudformation.register()
             return cloudformation, True
+        except GracefulExit:
+            raise
         except ImportError as e:
             print('could not find package for import: %s' % e)
         except Exception as e:
@@ -101,6 +104,8 @@ def get_parameter_diff(awsclient, config):
                         new = old
                     table.append([param['ParameterKey'], old, new])
                     changed += 1
+            except GracefulExit:
+                raise
             except Exception:
                 print('Did not find %s in local config file' % param[
                     'ParameterKey'])
@@ -188,6 +193,8 @@ def _json2table(data):
                            data.iteritems()):
             table.append([k, str(v)])
         return tabulate(table, tablefmt='fancy_grid')
+    except GracefulExit:
+        raise
     except Exception:
         return data
 
@@ -321,6 +328,8 @@ def stack_exists(awsclient, stackName):
         response = client.describe_stacks(
             StackName=stackName
         )
+    except GracefulExit:
+        raise
     except Exception:
         return False
     else:
@@ -498,6 +507,11 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
         _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                    hook='post_update_hook',
                    message='CloudFormation is done, now executing post update hook...')
+    except GracefulExit as e:
+        log.info('Received %s signal - cancel cloudformation update for \'%s\'',
+                 str(e), stackname)
+        client_cf.cancel_update_stack(StackName=stackname)
+        exit_code = 1
     except Exception as e:
         if 'No updates' in repr(e):
             print(colored.yellow('No updates are to be performed.'))

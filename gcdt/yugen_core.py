@@ -9,6 +9,7 @@ from botocore.exceptions import ClientError
 from pybars import Compiler
 from tabulate import tabulate
 
+from gcdt.utils import GracefulExit
 
 SWAGGER_FILE = 'swagger.yaml'
 INVOKE_FUNCTION_ACTION = 'lambda:InvokeFunction'
@@ -594,6 +595,8 @@ def _json2table(data):
                            data.iteritems()):
             table.append([k, str(v)])
         return tabulate(table, tablefmt='fancy_grid')
+    except GracefulExit:
+        raise
     except Exception as e:
         return data
 

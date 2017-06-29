@@ -6,6 +6,10 @@ import time
 from clint.textui import colored
 
 from .s3 import upload_file_to_s3
+from .gcdt_logging import getLogger
+
+
+log = getLogger(__name__)
 
 
 def deploy(awsclient, applicationName, deploymentGroupName,
@@ -75,11 +79,11 @@ def deployment_status(awsclient, deploymentId, iterations=100):
         status = response['deploymentInfo']['status']
 
         if status not in steady_states:
-            print('Deployment: %s - State: %s' % (deploymentId, status))
+            log.info('Deployment: %s - State: %s' % (deploymentId, status))
             # sys.stdout.flush()
             time.sleep(10)
         elif status == 'Failed':
-            print(
+            log.info(
                 colored.red('Deployment: {} failed: {}'.format(
                     deploymentId,
                     json.dumps(response['deploymentInfo']['errorInformation'],
@@ -88,7 +92,22 @@ def deployment_status(awsclient, deploymentId, iterations=100):
             )
             return 1
         else:
-            print('Deployment: %s - State: %s' % (deploymentId, status))
+            log.info('Deployment: %s - State: %s' % (deploymentId, status))
             break
 
     return 0
+
+
+def stop_deployment(awsclient, deployment_id):
+    """stop tenkai deployment.
+
+    :param awsclient:
+    :param deployment_id:
+    """
+    log.info('Deployment: %s - stopping active deployment.', deployment_id)
+    client_codedeploy = awsclient.get_client('codedeploy')
+
+    response = client_codedeploy.stop_deployment(
+        deploymentId=deployment_id,
+        autoRollbackEnabled=True
+    )

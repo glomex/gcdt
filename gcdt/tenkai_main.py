@@ -8,9 +8,10 @@ import os
 import sys
 
 from . import utils
-from .tenkai_core import deploy, deployment_status  # bundle_revision
+from .tenkai_core import deploy, deployment_status, stop_deployment
 from gcdt.s3 import prepare_artifacts_bucket
 from .gcdt_cmd_dispatcher import cmd
+from .utils import GracefulExit
 from . import gcdt_lifecycle
 
 DOC = '''Usage:
@@ -48,21 +49,30 @@ def deploy_cmd(**tooldata):
 
     bucket = config['codedeploy'].get('artifactsBucket')
 
-    deployment = deploy(
-        awsclient=awsclient,
-        applicationName=config['codedeploy'].get('applicationName'),
-        deploymentGroupName=config['codedeploy'].get('deploymentGroupName'),
-        deploymentConfigName=config['codedeploy'].get('deploymentConfigName'),
-        bucket=bucket,
-        bundlefile=context['_bundle_file']
-    )
+    try:
+        deployment = deploy(
+            awsclient=awsclient,
+            applicationName=config['codedeploy'].get('applicationName'),
+            deploymentGroupName=config['codedeploy'].get('deploymentGroupName'),
+            deploymentConfigName=config['codedeploy'].get('deploymentConfigName'),
+            bucket=bucket,
+            bundlefile=context['_bundle_file']
+        )
 
-    exit_code = deployment_status(awsclient, deployment)
-    if exit_code:
-        return 1
+        exit_code = deployment_status(awsclient, deployment)
+        if exit_code:
+            return 1
+
+    except GracefulExit as e:
+        print('Received %s signal - stopping tenkai deployment' % str(e))
+        stop_deployment(awsclient, deployment)
+        exit_code = 1
+
     # remove bundle file
     if context['_bundle_file'] and os.path.exists(context['_bundle_file']):
         os.unlink(context['_bundle_file'])
+
+    return exit_code
 
 
 @cmd(spec=['bundle'])

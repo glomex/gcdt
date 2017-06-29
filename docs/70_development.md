@@ -247,6 +247,13 @@ Many, many documentation tools populate this space since it is so easy to come u
 The Sphinx is the Python std. docu tool. In combination with markdown tools set is a very convenient way to create Readthedocs conform documentation.
 
 
+#### Keep a changelog
+
+We where already keeping a changelog which "almost" followed the guide. In June 2017 we decided to make the format more explicit.
+
+The gcdt changelog format is defined here: http://keepachangelog.com/en/1.0.0/
+
+
 #### Use docopt to build the command line interface
 
 There is a never-ending discussion going about pros and cons of CLI tools for Python. Some of these tools are contained in the Python std. library, some are independent open source library additions. At the moment the most popular tools are Optparse, Argparse, Click, and Docopt

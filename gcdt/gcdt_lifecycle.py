@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
-import sys
+
 import imp
 import logging
-from copy import deepcopy
-
-from docopt import docopt
-import botocore.session
+import signal
+import sys
 from logging.config import dictConfig
 
+import botocore.session
+import os
+from docopt import docopt
+
+from gcdt.utils import GracefulExit, signal_handler
 from . import gcdt_signals
-from .gcdt_defaults import DEFAULT_CONFIG
-from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
-    get_env
-from .gcdt_cmd_dispatcher import cmd, get_command
-from .gcdt_plugins import load_plugins
 from .gcdt_awsclient import AWSClient
+from .gcdt_cmd_dispatcher import cmd, get_command
 from .gcdt_logging import logging_config
+from .gcdt_plugins import load_plugins
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
-
+from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
+    get_env
 
 log = logging.getLogger(__name__)
 
@@ -65,7 +65,6 @@ def lifecycle(awsclient, env, tool, command, arguments):
     check_gcdt_update()
 
     # config is "assembled" by config_reader NOT here!
-    #config = deepcopy(DEFAULT_CONFIG)
     config = {}
 
     gcdt_signals.config_read_init.send((context, config))
@@ -115,6 +114,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.bundle_finalized.send((context, config))
     log.debug('### bundle_finalized')
     if 'error' in context:
+        log.error(context['error'])
         gcdt_signals.error.send((context, config))
         return 1
 
@@ -125,6 +125,8 @@ def lifecycle(awsclient, env, tool, command, arguments):
         exit_code = cmd.dispatch(arguments,
                                  context=context,
                                  config=config[tool])
+    except GracefulExit:
+        raise
     except Exception as e:
         log.exception(e)
         log.debug(str(e), exc_info=True)  # this adds the traceback
@@ -152,27 +154,38 @@ def main(doc, tool, dispatch_only=None):
     :param tool: gcdt tool (gcdt, kumo, tenkai, ramuda, yugen)
     :return: exit_code
     """
-    arguments = docopt(doc, sys.argv[1:])
-    # DEBUG mode (if requested)
-    verbose = arguments.pop('--verbose', False)
-    if verbose:
-        logging_config['loggers']['gcdt']['level'] = 'DEBUG'
-    dictConfig(logging_config)
+    # Use signal handler to throw exception which can be caught to allow
+    # graceful exit.
+    # here: https://stackoverflow.com/questions/26414704/how-does-a-python-process-exit-gracefully-after-receiving-sigterm-while-waiting
+    signal.signal(signal.SIGTERM, signal_handler)  # Jenkins
+    signal.signal(signal.SIGINT, signal_handler)   # Ctrl-C
 
-    env = get_env()
-    if not env:
-        log.error('\'ENV\' environment variable not set!')
+    try:
+        arguments = docopt(doc, sys.argv[1:])
+        command = get_command(arguments)
+        # DEBUG mode (if requested)
+        verbose = arguments.pop('--verbose', False)
+        if verbose:
+            logging_config['loggers']['gcdt']['level'] = 'DEBUG'
+        dictConfig(logging_config)
+
+        env = get_env()
+        if not env:
+            log.error('\'ENV\' environment variable not set!')
+            return 1
+
+        if dispatch_only is None:
+            dispatch_only = ['version']
+        assert tool in ['gcdt', 'kumo', 'tenkai', 'ramuda', 'yugen']
+
+        if command in dispatch_only:
+            # handle commands that do not need a lifecycle
+            check_gcdt_update()
+            return cmd.dispatch(arguments)
+        else:
+            awsclient = AWSClient(botocore.session.get_session())
+            return lifecycle(awsclient, env, tool, command, arguments)
+    except GracefulExit as e:
+        log.info('Received %s signal - exiting command \'%s %s\'',
+                 str(e), tool, command)
         return 1
-
-    if dispatch_only is None:
-        dispatch_only = ['version']
-    assert tool in ['gcdt', 'kumo', 'tenkai', 'ramuda', 'yugen']
-
-    command = get_command(arguments)
-    if command in dispatch_only:
-        # handle commands that do not need a lifecycle
-        check_gcdt_update()
-        return cmd.dispatch(arguments)
-    else:
-        awsclient = AWSClient(botocore.session.get_session())
-        return lifecycle(awsclient, env, tool, command, arguments)

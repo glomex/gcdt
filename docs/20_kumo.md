@@ -254,3 +254,8 @@ If you want to lock down your stack even more you can implement two functions in
 * * the policy that gets applied during updates
 
 These should return a valid stack policy document which is then preferred over the default value. 
+
+
+### Signal handling
+
+I kumo receives a SIGINT or SIGTERM signal during a stack update `cancel_update_stack` is called for the stack.
