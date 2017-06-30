@@ -244,6 +244,12 @@ At this point the following features are implemented:
 
 Note: for this to work you need to **have npm installed** on the machine you want to run the ramuda bundling!
 
+#### AWS Lambda environment variables
+
+Ramuda supports AWS Lambda envrionment variables. You can specify them in `lambda.environment` section.
+
+More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
+
 
 #### Defining dependencies for your NodeJs lambda function
 

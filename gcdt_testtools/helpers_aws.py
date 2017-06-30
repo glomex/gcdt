@@ -74,40 +74,38 @@ def settings_requirements():
 
 
 def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
-                         lambda_handler='handler.handle'):
-    # caller needs to clean up both lambda!
-    '''
-    role = _create_role(
-        role_name,
-        policies=[
-            'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole',
-            'arn:aws:iam::aws:policy/AWSLambdaExecute']
-    )
+                         lambda_handler='handler.handle', folders_from_file=None,
+                         **kwargs):
+    """
+    NOTE: caller needs to clean up both lambda!
 
-    role_arn = role['Arn']
-    '''
-    # prepare ./vendored folder and settings file
+    :param awsclient:
+    :param lambda_name:
+    :param role_arn:
+    :param handler_filename:
+    :param lambda_handler:
+    :param folders_from_file:
+    :param kwargs: additional kwargs are used in deploy_lambda
+    :return:
+    """
     settings_requirements()
 
     lambda_description = 'lambda created for unittesting ramuda deployment'
-    # lambda_handler = 'handler.handle'
     timeout = 300
     memory_size = 128
-    folders_from_file = [
-        {'source': './vendored', 'target': '.'},
-        {'source': './resources/sample_lambda/impl', 'target': 'impl'}
-    ]
+    if not folders_from_file:
+        folders_from_file = [
+            {'source': './vendored', 'target': '.'},
+            {'source': './resources/sample_lambda/impl', 'target': 'impl'}
+        ]
     artifact_bucket = None
 
-    zipfile = get_zipped_file(#awsclient,
+    zipfile = get_zipped_file(
         handler_filename,
         folders_from_file,
-        #runtime=runtime,
-        #settings=settings
     )
 
-
-    # create the function
+    # create the AWS Lambda function
     deploy_lambda(
         awsclient=awsclient,
         function_name=lambda_name,
@@ -119,8 +117,11 @@ def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
         timeout=timeout,
         memory=memory_size,
         artifact_bucket=artifact_bucket,
-        zipfile=zipfile
+        zipfile=zipfile,
+        **kwargs
     )
+
+    # TODO better use waiter for that!
     time.sleep(10)
 
 

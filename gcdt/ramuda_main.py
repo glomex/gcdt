@@ -90,6 +90,7 @@ def deploy_cmd(keep, **tooldata):
     artifact_bucket = config.get('deployment', {}).get('artifactBucket', None)
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
+    environment = config['lambda'].get('environment', {})
     if runtime:
         assert runtime in DEFAULT_CONFIG['ramuda']['runtime']
     settings = config['lambda'].get('settings', None)
@@ -104,7 +105,8 @@ def deploy_cmd(keep, **tooldata):
         fail_deployment_on_unsuccessful_ping=
         fail_deployment_on_unsuccessful_ping,
         runtime=runtime,
-        settings=settings
+        settings=settings,
+        environment=environment
     )
     return exit_code
 
@@ -192,7 +194,6 @@ def rollback_cmd(lambda_name, version, **tooldata):
 
 @cmd(spec=['ping', '<lambda>', '<version>'])
 def ping_cmd(lambda_name, version=None, **tooldata):
-    #version = None
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
     if version:
@@ -214,7 +215,10 @@ def invoke_cmd(lambda_name, version, itype, payload, outfile, **tooldata):
     # $ ramuda invoke infra-dev-sample-lambda-unittest --payload='{"ramuda_action": "ping"}'
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
-    invoke(awsclient, lambda_name, payload, invocation_type=itype, version=version, outfile=outfile)
+    results = invoke(awsclient, lambda_name, payload, invocation_type=itype,
+                     version=version, outfile=outfile)
+    print('invoke result:')
+    print(results)
 
 
 def main():

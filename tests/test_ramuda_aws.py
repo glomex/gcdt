@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-
+import json
 import logging
 import shutil
 import time
@@ -833,9 +833,41 @@ def test_info(awsclient, vendored_folder, temp_lambda, capsys):
     assert '### PERMISSIONS ###' in out
     assert '### EVENT SOURCES ###' in out
 
+
+@pytest.mark.aws
+@check_preconditions
+def test_sample_lambda_nodejs_with_env(awsclient, vendored_folder,
+                                       cleanup_lambdas, cleanup_roles):
+    log.info('running test_sample_lambda_nodejs_with_env')
+    lambda_folder = './resources/sample_lambda_nodejs_with_env/'
+
+    temp_string = helpers.random_string()
+    lambda_name = 'jenkins_test_sample-lambda-nodejs6_10_' + temp_string
+    role_name = 'unittest_%s_lambda' % temp_string
+    role_arn = create_lambda_role_helper(awsclient, role_name)
+
+    # create the function
+    create_lambda_helper(awsclient, lambda_name, role_arn,
+                         here(lambda_folder + 'index.js'),
+                         lambda_handler='index.handler',
+                         folders_from_file=[],
+                         runtime='nodejs6.10',
+                         environment={"MYVALUE": "FOO"}
+    )
+
+    cleanup_roles.append(role_name)
+    cleanup_lambdas.append(lambda_name)
+
+    payload = '{"ramuda_action": "getenv"}'  # provided by our test sample
+    result = invoke(awsclient, lambda_name, payload)
+    env = json.loads(result)
+    assert 'MYVALUE' in env
+    assert env['MYVALUE'] == 'FOO'
+
+
 # TODO test_info with s3 and timed event sources
 # TODO
 # _ensure_cloudwatch_event
 # wire
 # _get_lambda_policies
-#
+# use create_lambda_helper to simplify above testcases

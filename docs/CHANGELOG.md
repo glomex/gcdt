@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+
+## [0.1.406] - 2017-06-30
+### Fixed
+- support for AWS Lambda ENV variables (#262)
+
 ## [0.1.405] - 2017-06-30
 ### Fixed
-- minor documentation changes for kumo. Better description of usage of a role for CloudFormation
+- minor documentation changes for kumo. Better description of usage of a role for CloudFormation (#162)
 
 ## [0.1.404] - 2017-06-29
 ### Fixed
