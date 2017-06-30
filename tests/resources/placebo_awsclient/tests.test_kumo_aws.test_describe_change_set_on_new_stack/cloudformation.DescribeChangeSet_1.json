@@ -1,0 +1,43 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/c801fd10-5da5-11e7-af33-50faeb52a4d2", 
+        "Status": "CREATE_PENDING", 
+        "ChangeSetName": "AGEKUSIU", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c8439aaf-5da5-11e7-81a0-89b3b33ef2d7", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c8439aaf-5da5-11e7-81a0-89b3b33ef2d7", 
+                "date": "Fri, 30 Jun 2017 15:07:06 GMT", 
+                "content-length": "1080", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "Parameters": [
+            {
+                "ParameterValue": "t2.micro", 
+                "ParameterKey": "InstanceType"
+            }
+        ], 
+        "Changes": [], 
+        "CreationTime": {
+            "hour": 15, 
+            "__class__": "datetime", 
+            "month": 6, 
+            "second": 6, 
+            "microsecond": 596000, 
+            "year": 2017, 
+            "day": 30, 
+            "minute": 7
+        }, 
+        "Capabilities": [
+            "CAPABILITY_IAM"
+        ], 
+        "StackName": "infra-dev-kumo-sample-stack", 
+        "NotificationARNs": [], 
+        "ExecutionStatus": "UNAVAILABLE", 
+        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/AGEKUSIU/ede25e0e-0d28-4c79-ae17-e07a12b32bae"
+    }
+}

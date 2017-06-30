@@ -1,0 +1,54 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/54ee1560-5d9c-11e7-9dc6-500c4267f861", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-f01mfoioe5ea"
+                    }
+                ], 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 13, 
+                    "__class__": "datetime", 
+                    "month": 6, 
+                    "second": 27, 
+                    "microsecond": 934000, 
+                    "year": 2017, 
+                    "day": 30, 
+                    "minute": 59
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "DELETE_IN_PROGRESS", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "6b7747e0-5d9c-11e7-b2bf-ab4862964991", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "6b7747e0-5d9c-11e7-b2bf-ab4862964991", 
+                "date": "Fri, 30 Jun 2017 14:00:05 GMT", 
+                "content-length": "1494", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

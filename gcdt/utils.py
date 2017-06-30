@@ -8,6 +8,7 @@ import collections
 
 import os
 from clint.textui import prompt, colored
+from tabulate import tabulate
 
 from . import __version__
 from .package_utils import get_package_versions
@@ -266,3 +267,24 @@ def signal_handler(signum, frame):
     elif signum == 15:
         description = 'SIGTERM'
     raise GracefulExit(description)
+
+
+def json2table(json):
+    """This does format a dictionary into a table.
+    Note this expects a dictionary (not a json string!)
+
+    :param json:
+    :return:
+    """
+    filter_terms = ['ResponseMetadata']
+    table = []
+    try:
+        for k in filter(lambda k: k not in filter_terms, json.keys()):
+            table.append([k.encode('ascii', 'ignore'),
+                         str(json[k]).encode('ascii', 'ignore')])
+        return tabulate(table, tablefmt='fancy_grid')
+    except GracefulExit:
+        raise
+    except Exception as e:
+        print(e)
+        return json

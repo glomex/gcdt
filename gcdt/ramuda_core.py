@@ -17,12 +17,12 @@ from botocore.exceptions import ClientError as ClientError
 from clint.textui import colored
 import maya
 
-from .ramuda_utils import json2table, s3_upload, \
+from .ramuda_utils import s3_upload, \
     lambda_exists, create_sha256, get_remote_code_hash, unit, \
     aggregate_datapoints, list_of_dict_equals, \
     create_aws_s3_arn, get_bucket_from_s3_arn, get_rule_name_from_event_arn, \
     build_filter_rules
-from gcdt.utils import GracefulExit
+from gcdt.utils import GracefulExit, json2table
 
 log = logging.getLogger(__name__)
 ALIAS_NAME = 'ACTIVE'
