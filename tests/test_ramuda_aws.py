@@ -855,8 +855,8 @@ def test_sample_lambda_nodejs_with_env(awsclient, vendored_folder,
                          environment={"MYVALUE": "FOO"}
     )
 
-    #cleanup_roles.append(role_name)
-    #cleanup_lambdas.append(lambda_name)
+    cleanup_roles.append(role_name)
+    cleanup_lambdas.append(lambda_name)
 
     payload = '{"ramuda_action": "getenv"}'  # provided by our test sample
     result = invoke(awsclient, lambda_name, payload)
