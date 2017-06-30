@@ -1,5 +1,5 @@
 ## kumo command
-  
+
 `kumo` (雲 from Japanese: cloud) is gcdts cloudformation deploy tool.
 
 
@@ -65,16 +65,16 @@ $ brew install graphviz
 The folder layout looks like this:
 
 
-cloudformation.py -> creates troposphere template, needs a method like this:
+`cloudformation.py` -> creates troposphere template, needs a method like this:
 
 ``` python
 def generate_template():
     return t.to_json()
 ```
 
-settings_dev.conf -> settings for dev in [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md) format, needs to include all parameters for the cloudformation template + stack name
+`gcdt_dev.json` -> settings for dev in json format, needs to include all parameters for the cloudformation template + stack name
 
-settings_prod.conf -> settings for prod in [hocon](https://github.com/typesafehub/config/blob/master/HOCON.md) format, needs to include all parameters for the cloudformation template + stack name
+Further settings files, depending on your environments in the format of `gcdt_<ENV>.json`
 
 
 #### Config file example
@@ -85,19 +85,21 @@ settings_prod.conf -> settings for prod in [hocon](https://github.com/typesafehu
     ...
 }
 ```
-
+You like examples better than documentation? Check out our sample-stack at https://github.com/glomex/gcdt-sample-stack/tree/master/infrastructure
 
 #### Configuring RoleARN for a cloudformation stack
 
 There is a new Feature in CloudFormation which lets a User specify a Role which shall be used to execute the Stack. Docs can be found at http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html
+This can be used to limit access of users drastically and only give CloudFormation the permission to do all the heavy lifting.
 
 ``` js
 "cloudformation": {
     ...
-    "RoleARN": "arn:aws:iam::<your_account>:policy/<your_cloudformation_policy>"
+    "RoleARN": "arn:aws:iam::<AccountID>:role/<CloudFormationRoleName>"
     ...
 }
 ```
+Make sure the role may be assumed by CloudFormation. See also: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html
 
 
 #### Setting the ENV variable
@@ -108,6 +110,13 @@ For example if you want to set the environment variable ENV to 'DEV' you can do 
 export ENV=DEV
 ```
 
+This can also be exploited to have different configuration for different regions which is not yet directly supported.
+
+``` bash
+export ENV=DEV_eu-west-1
+```
+
+Will load the cong file named `gcdt_dev_eu-west-1.json`
 
 ### Howto
 1. create a new local folder from the template: `kumo scaffold`
@@ -181,7 +190,7 @@ kumo offers numerous hook functions that get called during the lifecycle of a ku
 * post_hook()
   * gets called after a stack is either updated or created
 
-You can basically call any custom code you want. Just implement 
+You can basically call any custom code you want. Just implement
 the function in cloudformation.py
 
 multiple ways of using parameters in your hook functions:
@@ -201,11 +210,11 @@ Made functionality available in gcdt (sounds awful but it was there already anyw
 * gcdt.utils: get_env now available
 
 Continued no changes:
-* gcdt.iam: IAMRoleAndPolicies 
+* gcdt.iam: IAMRoleAndPolicies
 
 The following functionality requires `awsclient` to lookup information from AWS. The `awsclient` is available in the cloudformation template only within the scope of a hook (see above). Consequently you need to execute your calls within the scope of a hook:
-* gcdt.servicediscovery: get_outputs_for_stack 
-* gcdt.route53: create_record 
+* gcdt.servicediscovery: get_outputs_for_stack
+* gcdt.route53: create_record
 * gcdt.kumo_util: ensure_ebs_volume_tags_autoscaling_group
 
 
@@ -228,7 +237,7 @@ kumo does offer support for stack policies. It has a default stack policy that w
       "Resource" : "*"
     }
   ]
-}        
+}
 ```
 This allows an update operation to modify each resource but disables replacement or deletion. If you supply "--override-stack-policy" to kumo then it will use another default policy that gets applied during updates and allows every operation on every resource:
 
@@ -253,7 +262,7 @@ If you want to lock down your stack even more you can implement two functions in
 * get_stack_policy_during_update()
 * * the policy that gets applied during updates
 
-These should return a valid stack policy document which is then preferred over the default value. 
+These should return a valid stack policy document which is then preferred over the default value.
 
 
 ### Signal handling
