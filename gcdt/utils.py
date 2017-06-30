@@ -183,10 +183,15 @@ def check_gcdt_update():
     """Check whether a newer gcdt is available and output a warning.
 
     """
-    inst_version, latest_version = get_package_versions('gcdt')
-    if inst_version < latest_version:
-        print(colored.yellow('Please consider an update to gcdt version: %s' %
-                             latest_version))
+    try:
+        inst_version, latest_version = get_package_versions('gcdt')
+        if inst_version < latest_version:
+            print(colored.yellow('Please consider an update to gcdt version: %s' %
+                                 latest_version))
+    except GracefulExit:
+        raise
+    except Exception:
+        print(colored.yellow('PyPi appears to be down - we currently can\'t check for newer gcdt versions'))
 
 
 # adapted from:
