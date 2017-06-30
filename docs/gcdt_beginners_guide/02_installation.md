@@ -74,11 +74,21 @@ Here is the plugins name and short description.
 | gcdt-datadog-integration  | send deployment metrics and events to datadog  |
 |  gcdt-config-reader |  read configuration files in json, python, or yaml format |
 | glomex-config-reader  |  read hocon configuration files |
-| gcdt-lookup | lookup information related to your AWS account |
+| gcdt-lookups | lookup information related to your AWS account |
 | gcdt-slack-integration | send deployment status information to slack |
 | glomex-checks | useful checks of your configs, vpn connection, virtualenv version, etc  |
 
-Let's install all base plugins what we need to start using gcdt:
+gcdtd needs some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a requirements_gcdt.txt file:
 ```bash
-$ pip install gcdt-config-reader gcdt-lookup
+gcdt-say-hello
+gcdt-config-reader
+gcdt-lookups
+gcdt-bundler
+gcdt-slack-integration
+gcdt-datadog-integration
+gcdt-gen-serverless
+```
+After that just install it using `pip`:
+```bash
+$ pip install -r requirements_gcdt.txt
 ```
