@@ -3,7 +3,7 @@ Welcome to the beginners guide of `gcdt`. In this guide we will cover what `gcdt
 create beautiful infrastructure as code (IaC) with `kumo`, use it to deploying and configuring you AWS Lambda with `ramuda`,
 deploy your application with Codedeploy scripts and `tenkai`, and do all of this things for different Environment (dev, stage, prod)
 ## Infrastructure as code
-Infrastructure as Code (IAC) is a type of IT infrastructure that operations teams can automatically manage and provision through code, rather than using a manual process. Defining your infrastructure as code you will solve a lot of problems because code is:
+Infrastructure as Code (IaC) is a type of IT infrastructure that operations teams can automatically manage and provision through code, rather than using a manual process. Defining your infrastructure as code you will solve a lot of problems because code is:
 - portable
 - reusable
 - shareable
@@ -69,17 +69,17 @@ Let's create simple `gcdts_dev.conf`*(please change all values according your AW
 ```bash
 {
   "kumo": {
-    "StackName": "gcdt-sample-stack"
-    "VPCId": "lookup:stack:pnb-dev:DefaultVPCId"
-    "ScaleMinCapacity": "1"
-    "ScaleMaxCapacity": "1"
-    "InstanceType": "t2.micro"
-    "DefaultInstancePolicyARN": "lookup:stack:pnb-dev:DefaultInstancePolicyARN"
+    "StackName": "gcdt-sample-stack",
+    "VPCId": "lookup:stack:<stack-name>:DefaultVPCId",
+    "ScaleMinCapacity": "1",
+    "ScaleMaxCapacity": "1",
+    "InstanceType": "t2.micro",
+    "DefaultInstancePolicyARN": "lookup:stack:<stack-name>:DefaultInstancePolicyARN",
     "AMI": "lookup:baseami"
   }
 }
 ```
-In `VPCId` and `DefaultInstancePolicyARN` used `gcdt-lookups` plugin which will search outputs in CloudFormation stack named `pnb-dev` values for `DefaultVPCId` and `DefaultInstancePolicyARN` and use it in our template. *Instead of `pnb-dev` you should provide your stack name or use hardcoded value(not recommended).*
+In `VPCId` and `DefaultInstancePolicyARN` used `gcdt-lookups` plugin which will search outputs in CloudFormation stack named `pnb-dev` values for `DefaultVPCId` and `DefaultInstancePolicyARN` and use it in our template. *Instead of `<stack-name>` you should provide your stack name or use hardcoded value(not recommended).*
 It's time to create our first Infrastructure as Code. Let's to this.
 Here is simple [cloudformation.py](https://github.com/glomex/gcdt-sample-stack/blob/master/infrastructure/cloudformation.py) script. Use it to as a template for creating infrastructure.
 
@@ -94,6 +94,7 @@ Run your first infrastructure deployment. It's really easy.
 ```bash
 $ kumo deploy
 ```
+![Kumo deploy output](_static/gifs/kumo_deploy_output.gif "Kumo_Deploy_Output" =250px)
 **More information about `kumo` you can find in [docs](http://gcdt.readthedocs.io/en/latest/20_kumo.html)**
 
 ## Ramuda
@@ -112,13 +113,13 @@ Create `gcdt_(dev|stage|prod)` file or update if you create it with `kumo` *(ple
     "zip": "bundle.zip"
   },
   "lambda": {
-    "name" = "jenkins-gcdt-lifecycle-for-ramuda"
-    "description" = "lambda test for ramuda"
-    "role" = "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX"
-    "handlerFunction" = "handler.handle"
-    "handlerFile" = "handler.py"
-    "timeout" = 300
-    "memorySize" = 256
+    "name" = "jenkins-gcdt-lifecycle-for-ramuda",
+    "description" = "lambda test for ramuda",
+    "role" = "lookup:stack:<stack-name>:LambdaArnForDeploy",
+    "handlerFunction" = "handler.handle",
+    "handlerFile" = "handler.py",
+    "timeout" = "300",
+    "memorySize" = "256",
     "vpc": {
             "subnetIds": [
                 "lookup:stack:pnb-dev:LambdaSubnetIda",
@@ -134,3 +135,16 @@ then do:
 $ ramuda deploy
 ```
 **More information about `ramuda` you can find in [docs](http://gcdt.readthedocs.io/en/latest/40_ramuda.html)**
+
+## Tenkai
+tenkai will help you to deploy your application using AWS [Codedeploy](https://aws.amazon.com/codedeploy/).
+tenkai will create bundle and upload it to s3 with all files that you have in `codedeploy` folder. Create `codedeploy_(dev|stage|prod)` file *(please change all values according your AWS account)*:
+```bash
+codedeploy {
+  applicationName = "lookup:stack:<stack-name>:applicationName",
+  deploymentGroupName = "lookup:stack:<stack-name>:DeploymentGroup",
+  deploymentConfigName = "lookup:stack:<stack-name>:DeploymentConfig"
+  artifactsBucket = "7finity-infra-dev-deployment"
+}
+```
+**More information about `tenkai` you can find in [docs](http://gcdt.readthedocs.io/en/latest/30_tenkai.html)**
