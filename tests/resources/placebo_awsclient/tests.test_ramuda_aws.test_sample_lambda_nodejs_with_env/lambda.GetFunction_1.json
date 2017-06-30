@@ -1,0 +1,22 @@
+{
+    "status_code": 404, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 404, 
+            "RequestId": "292fdef2-5d71-11e7-8871-cb526821db5f", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "292fdef2-5d71-11e7-8871-cb526821db5f", 
+                "content-length": "139", 
+                "connection": "keep-alive", 
+                "date": "Fri, 30 Jun 2017 08:50:25 GMT", 
+                "content-type": "application/json", 
+                "x-amzn-errortype": "ResourceNotFoundException"
+            }
+        }, 
+        "Error": {
+            "Message": "Function not found: arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-nodejs6_10_xixctk", 
+            "Code": "ResourceNotFoundException"
+        }
+    }
+}
