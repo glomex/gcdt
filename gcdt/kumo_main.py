@@ -126,9 +126,19 @@ def preview_cmd(**tooldata):
     awsclient = context.get('_awsclient')
     cloudformation = load_template()
     get_parameter_diff(awsclient, conf)
-    change_set, stack_name = create_change_set(awsclient, conf,
+    change_set, stack_name, change_set_type = create_change_set(awsclient, conf,
                                                cloudformation)
+    if change_set_type == 'CREATE':
+        print('Stack \'%s\' does not exist.' % stack_name)
+        print('`kumo deploy` would create the following resources:')
+    else:
+        print('`kumo deploy` would update the following resources:')
     describe_change_set(awsclient, change_set, stack_name)
+    if change_set_type == 'CREATE':
+        # we currently do not review stack creations!
+        # so we delete the stack in "REVIEW" state
+        # more details here: https://github.com/glomex/gcdt/issues/73
+        delete_stack(awsclient, conf, feedback=False)
 
 
 def main():

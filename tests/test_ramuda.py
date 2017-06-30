@@ -7,9 +7,7 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-from collections import OrderedDict
 from tempfile import NamedTemporaryFile
-import json
 import time
 
 from s3transfer.subscribers import BaseSubscriber
@@ -18,15 +16,16 @@ import pytest
 
 from gcdt.ramuda_core import cleanup_bundle, bundle_lambda
 from gcdt.ramuda_utils import unit, \
-    aggregate_datapoints, json2table, create_sha256, ProgressPercentage, \
+    aggregate_datapoints, create_sha256, ProgressPercentage, \
     list_of_dict_equals, create_aws_s3_arn, get_rule_name_from_event_arn, \
     get_bucket_from_s3_arn, build_filter_rules, create_sha256_urlsafe
+from gcdt.utils import json2table
 from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
     cleanup_tempfiles
 from . import here
 
 
-PY3 = sys.version_info[0] >= 3
+#PY3 = sys.version_info[0] >= 3
 log = logging.getLogger(__name__)
 
 
@@ -54,52 +53,6 @@ def test_aggregate_datapoints():
          {'Sum': 0.1}]) == 0
     assert aggregate_datapoints(
         [{'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}, {'Sum': 1.1}]) == 4
-
-
-def test_json2table():
-    data = {
-        'sth': 'here',
-        'number': 1.1,
-        'ResponseMetadata': 'bla'
-    }
-    expected = u'\u2552\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2564\u2550\u2550\u2550\u2550\u2550\u2550\u2555\n\u2502 sth    \u2502 here \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 number \u2502 1.1  \u2502\n\u2558\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2567\u2550\u2550\u2550\u2550\u2550\u2550\u255b'
-    actual = json2table(data)
-    assert actual == expected
-
-
-def test_json2table_create_lambda_response():
-    response = OrderedDict([
-        ('CodeSha256', 'CwEvufZaAmNgUnlA6yTJGi8p8MNR+mNcCNYPOIwsTNM='),
-        ('FunctionName', 'jenkins-gcdt-lifecycle-for-ramuda'),
-        ('CodeSize', 430078),
-        ('MemorySize', 256),
-        ('FunctionArn', 'arn:aws:lambda:eu-west-1:644239850139:function:jenkins-gcdt-lifecycle-for-ramuda'),
-        ('Version', '13'),
-        ('Role', 'arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4'),
-        ('Timeout', 300),
-        ('LastModified', '2016-08-23T15:27:07.658+0000'),
-        ('Handler', 'handler.handle'),
-        ('Runtime', 'python2.7'),
-        ('Description', 'lambda test for ramuda')
-    ])
-
-    expected_file = here('resources/expected/expected_json2table.txt')
-    with open(expected_file) as efile:
-        expected = efile.read()
-        if not PY3:
-            expected = expected.decode('utf-8')
-    actual = json2table(response)  #.encode('utf-8')
-    assert actual == expected
-
-
-def test_json2table_exception():
-    data = json.dumps({
-        'sth': 'here',
-        'number': 1.1,
-        'ResponseMetadata': 'bla'
-    })
-    actual = json2table(data)
-    assert actual == data
 
 
 def test_create_sha256():

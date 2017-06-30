@@ -10,7 +10,7 @@ import pytest
 from gcdt.kumo_core import load_cloudformation_template, \
     get_parameter_diff, deploy_stack, \
     delete_stack, create_change_set, _get_stack_name, describe_change_set, \
-    _get_artifact_bucket, _s3_upload, _get_stack_state
+    _get_artifact_bucket, _s3_upload, _get_stack_state, delete_change_set
 from gcdt.kumo_util import ensure_ebs_volume_tags_ec2_instance, \
     ensure_ebs_volume_tags_autoscaling_group
 from gcdt.utils import are_credentials_still_valid
@@ -193,11 +193,12 @@ def test_kumo_stack_lifecycle(awsclient, simple_cloudformation_stack):
 
     # preview (with identical stack)
     # TODO: add more asserts!
-    change_set_name, stackname = \
+    change_set_name, stackname, change_set_type = \
         create_change_set(awsclient, config_simple_stack,
                           cloudformation_simple_stack)
     assert stackname == _get_stack_name(config_simple_stack)
     assert change_set_name != ''
+    assert change_set_type == 'UPDATE'
     describe_change_set(awsclient, change_set_name, stackname)
 
     # update the stack
@@ -376,11 +377,12 @@ def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
     config_rolearn = deepcopy(config_simple_stack)
     config_rolearn['cloudformation']['RoleARN'] = role['Arn']
 
-    change_set_name, stackname = \
+    change_set_name, stackname, change_set_type = \
         create_change_set(awsclient, config_rolearn,
                           cloudformation_simple_stack)
     assert stackname == _get_stack_name(config_rolearn)
     assert change_set_name != ''
+    assert change_set_type == 'UPDATE'
     describe_change_set(awsclient, change_set_name, stackname)
 
     # update the stack
@@ -390,3 +392,26 @@ def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
                              cloudformation_simple_stack,
                              override_stack_policy=False)
     assert exit_code == 0
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_describe_change_set_on_new_stack(awsclient):
+    # create a stack we use for the test lifecycle
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation.py')
+    )
+    change_set_name, stackname, change_set_type = \
+        create_change_set(awsclient, config_simple_stack,
+                          cloudformation_simple_stack)
+    assert stackname == _get_stack_name(config_simple_stack)
+    assert change_set_name != ''
+    assert change_set_type == 'CREATE'
+    describe_change_set(awsclient, change_set_name, stackname)
+
+    # clean up
+    # even if we delete the change_Set we need to delete our stack which
+    # is in state "REVIEW_IN_PROGRESS"
+    awsclient.get_client('cloudformation').delete_stack(
+        StackName=stackname,
+    )

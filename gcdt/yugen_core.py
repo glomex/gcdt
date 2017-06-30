@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 from pybars import Compiler
 from tabulate import tabulate
 
-from gcdt.utils import GracefulExit
+from gcdt.utils import GracefulExit, json2table
 
 SWAGGER_FILE = 'swagger.yaml'
 INVOKE_FUNCTION_ACTION = 'lambda:InvokeFunction'
@@ -33,7 +33,7 @@ def export_to_swagger(awsclient, api_name, stage_name, api_description,
     api = _api_by_name(awsclient, api_name)
     if api is not None:
 
-        print(_json2table(api))
+        print(json2table(api))
         api_id = api['id']
         client_api = awsclient.get_client('apigateway')
         template_variables = _template_variables_to_dict(
@@ -60,7 +60,7 @@ def list_apis(awsclient):
     apis = client_api.get_rest_apis()['items']
 
     for api in apis:
-        print(_json2table(api))
+        print(json2table(api))
 
 
 def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
@@ -118,13 +118,13 @@ def delete_api(awsclient, api_name):
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
-        print(_json2table(api))
+        print(json2table(api))
 
         response = client_api.delete_rest_api(
             restApiId=api['id']
         )
 
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -145,7 +145,7 @@ def create_api_key(awsclient, api_name, api_key_name):
         enabled=True
     )
 
-    #print(_json2table(response))
+    #print(json2table(response))
 
     print('Add this api key \'%s\' to your api.conf' % response['id'])
     return response['id']
@@ -163,7 +163,7 @@ def delete_api_key(awsclient, api_key):
         apiKey=api_key
     )
 
-    print(_json2table(response))
+    print(json2table(response))
 
 
 def list_api_keys(awsclient):
@@ -175,7 +175,7 @@ def list_api_keys(awsclient):
     response = client_api.get_api_keys()['items']
 
     for item in response:
-        print(_json2table(item))
+        print(json2table(item))
 
 
 def create_custom_domain(awsclient, api_name, api_target_stage,
@@ -268,7 +268,7 @@ def _import_from_swagger(awsclient, api_name, api_description, stage_name,
 
     api = _api_by_name(awsclient, api_name)
     if api is None:
-        #print(_json2table(api))
+        #print(json2table(api))
         api_id = False
         template_variables = _template_variables_to_dict(
             client_api,
@@ -283,7 +283,7 @@ def _import_from_swagger(awsclient, api_name, api_description, stage_name,
             failOnWarnings=True,
             body=swagger_body
         )
-        print(_json2table(response_swagger))
+        print(json2table(response_swagger))
     else:
         print('API already taken')
 
@@ -317,7 +317,7 @@ def _update_from_swagger(awsclient, api_name, api_description, stage_name,
     else:
         print('API name unknown')
 
-    print(_json2table(response_swagger))
+    print(json2table(response_swagger))
 
 
 def _create_api(awsclient, api_name, api_description):
@@ -330,7 +330,7 @@ def _create_api(awsclient, api_name, api_description):
         description=api_description
     )
 
-    print(_json2table(response))
+    print(json2table(response))
 
 
 def _wire_api_key(awsclient, api_name, api_key, stage_name):
@@ -352,7 +352,7 @@ def _wire_api_key(awsclient, api_name, api_key, stage_name):
             ]
         )
 
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -375,7 +375,7 @@ def _create_deployment(awsclient, api_name, stage_name):
             description='TO BE FILLED'
         )
 
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -565,7 +565,7 @@ def _ensure_lambda_permissions(client_lambda, lmbda, api):
         Qualifier=lambda_alias
     )
 
-    print(_json2table(json.loads(response['Statement'])))
+    print(json2table(json.loads(response['Statement'])))
 
 
 def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
@@ -586,8 +586,9 @@ def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
         ]
 
 
+'''
 # TODO: possible to consolidate this with the one for ramuda?
-def _json2table(data):
+def json2table(data):
     filter_terms = ['ResponseMetadata']
     table = []
     try:
@@ -599,6 +600,7 @@ def _json2table(data):
         raise
     except Exception as e:
         return data
+'''
 
 
 def _custom_domain_name_exists(awsclient, domain_name):
