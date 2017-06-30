@@ -1,4 +1,4 @@
-__version__ = '0.1.406'
+__version__ = '0.1.407'
 
 class GcdtError(Exception):
     """
