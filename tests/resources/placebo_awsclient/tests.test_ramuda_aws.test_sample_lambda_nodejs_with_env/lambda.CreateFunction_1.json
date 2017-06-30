@@ -4,32 +4,32 @@
         "TracingConfig": {
             "Mode": "PassThrough"
         }, 
-        "CodeSha256": "8UWTe/GxavII0j9fp5Vq2jkbTwIK0ezn0SthPc8Js5A=", 
-        "FunctionName": "jenkins_test_sample-lambda-nodejs6_10_xixctk", 
+        "CodeSha256": "I1YcHlzvoltPs0GbDKznKVR8rBLpRuFpFbnVHWKVsvY=", 
+        "FunctionName": "jenkins_test_sample-lambda-nodejs6_10_dwyiod", 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 201, 
-            "RequestId": "29841934-5d71-11e7-9e5b-bb328771e681", 
+            "RequestId": "c6a7cfca-5d76-11e7-90c4-b551208a7be2", 
             "HTTPHeaders": {
-                "date": "Fri, 30 Jun 2017 08:50:45 GMT", 
-                "x-amzn-requestid": "29841934-5d71-11e7-9e5b-bb328771e681", 
+                "date": "Fri, 30 Jun 2017 09:30:48 GMT", 
+                "x-amzn-requestid": "c6a7cfca-5d76-11e7-90c4-b551208a7be2", 
                 "content-length": "691", 
                 "content-type": "application/json", 
                 "connection": "keep-alive"
             }
         }, 
-        "CodeSize": 3665676, 
+        "CodeSize": 3665493, 
         "MemorySize": 128, 
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-nodejs6_10_xixctk", 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-nodejs6_10_dwyiod", 
         "Environment": {
             "Variables": {
                 "MYVALUE": "FOO"
             }
         }, 
         "Version": "1", 
-        "Role": "arn:aws:iam::420189626185:role/unittest_xixctk_lambda", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_dwyiod_lambda", 
         "Timeout": 300, 
-        "LastModified": "2017-06-30T08:50:45.027+0000", 
+        "LastModified": "2017-06-30T09:30:48.465+0000", 
         "Handler": "index.handler", 
         "Runtime": "nodejs6.10", 
         "Description": "lambda created for unittesting ramuda deployment"
