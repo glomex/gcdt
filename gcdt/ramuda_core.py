@@ -1122,13 +1122,6 @@ def invoke(awsclient, function_name, payload, invocation_type=None,
         )
 
     results = response['Payload'].read()  # payload is a 'StreamingBody'
-    if 'alive' in str(results):
-        pass
-        # print(str(results))
-        # print('#####Cool, your lambda function did respond to ping with %s.' %
-        #      str(results))
-    else:
-        print(colored.red('Your lambda function did not respond to ping.'))
     log.debug('invoke completed')
     # write to file
     if outfile:

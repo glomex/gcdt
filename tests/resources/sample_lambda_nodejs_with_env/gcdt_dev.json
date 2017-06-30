@@ -1,0 +1,37 @@
+{
+  "ramuda": {
+    "bundling": {
+      "folders": [],
+      "zip": "bundle.zip"
+    },
+
+    "lambda": {
+      "name": "infra-dev-sample-lambda-nodejs6_10",
+      "description": "testcase using nodejs with env",
+      "events": {},
+      "handlerFile": "index.js",
+      "runtime": "nodejs6.10",
+      "handlerFunction": "index.handler",
+      "memorySize": "128",
+      "role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX",
+      "timeout": "15",
+      "vpc": {
+        "subnetIds": [
+          "lookup:stack:infra-dev:LambdaSubnetIda",
+          "lookup:stack:infra-dev:LambdaSubnetIdb",
+          "lookup:stack:infra-dev:LambdaSubnetIdc"
+        ],
+        "securityGroups": [
+          "lookup:stack:infra-dev:EC2SecurityLambdaDefault"
+        ]
+      },
+      "environment": {
+        "MYVALUE": "FOO"
+      }
+    },
+    "deployment": {
+      "region": "eu-west-1",
+      "artifactBucket": "lookup:stack:infra-dev:s3DeploymentBucket"
+    }
+  }
+}

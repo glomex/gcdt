@@ -192,7 +192,6 @@ def rollback_cmd(lambda_name, version, **tooldata):
 
 @cmd(spec=['ping', '<lambda>', '<version>'])
 def ping_cmd(lambda_name, version=None, **tooldata):
-    #version = None
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
     if version:
@@ -214,7 +213,10 @@ def invoke_cmd(lambda_name, version, itype, payload, outfile, **tooldata):
     # $ ramuda invoke infra-dev-sample-lambda-unittest --payload='{"ramuda_action": "ping"}'
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
-    invoke(awsclient, lambda_name, payload, invocation_type=itype, version=version, outfile=outfile)
+    results = invoke(awsclient, lambda_name, payload, invocation_type=itype,
+                     version=version, outfile=outfile)
+    print('invoke result:')
+    print(results)
 
 
 def main():

@@ -62,6 +62,9 @@ def lifecycle(awsclient, env, tool, command, arguments):
     ## initialized
     gcdt_signals.initialized.send(context)
     log.debug('### initialized')
+    if 'error' in context:
+        log.error(context['error'])
+        return 1
     check_gcdt_update()
 
     # config is "assembled" by config_reader NOT here!
