@@ -4,12 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.1.405] - 2017-06-30
-### Added
-- support for AWS Lambda ENV variables (#304)
 
-## [0.1.404] - 2017-06-26
-### Added
+## [0.1.406] - 2017-06-30
+### Fixed
+- support for AWS Lambda ENV variables (#262)
+
+## [0.1.405] - 2017-06-30
+### Fixed
+- minor documentation changes for kumo. Better description of usage of a role for CloudFormation (#162)
+
+## [0.1.404] - 2017-06-29
+### Fixed
 - handle SIGTERM and SIGINT signals and stop running deployments accordingly (#40)
 
 ## [0.1.403] - 2017-06-22
@@ -94,7 +99,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - open source on Github (#255)
 - moved build jobs to new infra jenkins (#255)
 ### Changed
-- it is now mandatory for gcdt users to maintain plugin dependencies 
+- it is now mandatory for gcdt users to maintain plugin dependencies
 
 ## [0.0.84] - 2017-03-30
 ### Added
@@ -198,11 +203,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - kumo Parameter diffing does not work for aws coma-seperated inputs (#77).
 - ramuda fail deployment on failing ping (#113).
 - moved tests to pytest to improve cleanup after tests (#119).
-- speedup tests by use of mocked service calls to AWS services (#151). 
+- speedup tests by use of mocked service calls to AWS services (#151).
 
 ## [0.0.57] - 2016-09-23
 ### Added
-- tenkai now supports execution of bash scripts before bundling, can be used to bundle packages at runtime. 
+- tenkai now supports execution of bash scripts before bundling, can be used to bundle packages at runtime.
 ### Fixed
 - tenkai now returns proper exit codes when deployment fails.
 
@@ -218,7 +223,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.0.45] - 2016-09-01
 ### Added
 - ramuda autowire functionality
-- gcdt sends metrics and events to datadog 
+- gcdt sends metrics and events to datadog
 ### Fixed
 - yugen will add invoke lambda permission for new paths in existing APIs
 
