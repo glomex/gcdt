@@ -148,3 +148,17 @@ codedeploy {
 }
 ```
 **More information about `tenkai` you can find in [docs](http://gcdt.readthedocs.io/en/latest/30_tenkai.html)**
+
+## Yugen
+yugen is a tool that will help you to deploy and manage your API with AWS API Gateway. All you need is top put your `swagger.yml` into the same folder as a `gcdt_(dev|stage|prod)` file. Also, add some new configs into it:
+```bash
+"yugen": {
+    "api": {
+        "apiKey": "xxxxxxxxxxxxxx",
+        "description": "Gcdt sample API based on dp api-mock",
+        "name": "jenkins-gcdt-sample-api-dev",
+        "targetStage": "mock"
+    }
+}
+```
+**More information about `yugen` you can find in [docs](http://gcdt.readthedocs.io/en/latest/50_yugen.html)**
