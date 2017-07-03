@@ -41,7 +41,7 @@ A little opinionated but pretty common:
 
 * `requirements.txt` tools and packages your service directly depends on
 * `requirements_def.txt` tools and packages you need to develop and test your service
-* `requirements_gcdt.txt` gcdt and gcdt plugins you use to deploy your service to AWS
+* `requirements_gcdt.txt` gcdt and gcdt plugins you use to deploy your service to AWS (see https://github.com/glomex/gcdt#installing-gcdt)
 * `requirements_docs.txt` tools you need to write and build your documentation
 
 TODO: document version schema
@@ -66,25 +66,25 @@ TODO add private repo deps
 All gcdt packages live in a private PyPi repository. See [reposerver](http://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/) for instructions.
 
 
-#### Install your dependencies
-
-``` bash
-$ pip install -r requirements.txt -r requirements_dev.txt
-```
-
-If you have additional docs - dependencies for your project you need to install them, too:
-
-``` bash
-$ pip install -r requirements_docs.txt
-```
-
-
 #### Activate a virtualenv before use
 
 Again make sure you activate a virtualenv before you can use it:
 
 ``` bash
 $ source ./venv/bin/activate
+```
+
+
+#### Install your dependencies
+
+``` bash
+$ pip install -r requirements.txt -r requirements_dev.txt -r requirements_gcdt.txt
+```
+
+If you have additional docs - dependencies for your project you need to install them, too:
+
+``` bash
+$ pip install -r requirements_docs.txt
 ```
 
 
@@ -95,8 +95,3 @@ I do not throw away my lawn mower once I am done but with my terminals I do that
 ``` bash
 $ deactivate
 ```
-
-
-### Use the gcdt installer
-
-The gcdt installer is deprecated and not recommended for use any more. Please consider to use virtualenv and pip tools to get the most out of gcdt.

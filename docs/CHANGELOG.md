@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [0.1.408] - 2017-06-30
-### Fixed
+### Added
 - kumo preview for new stack (#73)
 
 ## [0.1.407] - 2017-06-30
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - do not fail check_gcdt_update when PyPi is down (#313)
 
 ## [0.1.406] - 2017-06-30
-### Fixed
+### Added
 - support for AWS Lambda ENV variables (#262)
 
 ## [0.1.405] - 2017-06-30
@@ -22,11 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - minor documentation changes for kumo. Better description of usage of a role for CloudFormation (#162)
 
 ## [0.1.404] - 2017-06-29
-### Fixed
+### Added
 - handle SIGTERM and SIGINT signals and stop running deployments accordingly (#40)
 
 ## [0.1.403] - 2017-06-22
-### Fixed
+### Added
 - define GracefulExit exception (#40)
 
 ## [0.1.402] - 2017-06-21
@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - tenkai clean up /tmp files (#60)
 
 ## [0.1.398] - 2017-06-16
-### Fixed
+### Added
 - kumo use special role for cloudformation deployments (#162)
 
 ## [0.1.397] - 2017-06-16
