@@ -517,10 +517,18 @@ def delete_stack(awsclient, conf, feedback=True):
     """
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
+    rolearn = conf['cloudformation'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
-    response = client_cf.delete_stack(
-        StackName=_get_stack_name(conf),
-    )
+
+    request = {
+        'StackName': stackname,
+    }
+
+    if rolearn:
+        request['RoleARN'] = rolearn
+
+    response = client_cf.delete_stack(**request)
+
     if feedback:
         return _poll_stack_events(awsclient, stackname, last_event)
 
