@@ -4,27 +4,30 @@
         "TracingConfig": {
             "Mode": "PassThrough"
         }, 
-        "CodeSha256": "BpffV5bAL57vFonMtd45niJ/VH9yMjumNX+xCbmGIvc=", 
-        "FunctionName": "jenkins_test_dpecss", 
+        "CodeSha256": "Z6EGsnTo0OnOTGHMLDVxj83XwAoSudYFbAkg/fEhwvQ=", 
+        "FunctionName": "jenkins_test_yvvxvv", 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 201, 
-            "RequestId": "af099756-4f3d-11e7-997d-31507625c181", 
+            "RequestId": "643ee8f1-60b9-11e7-9ea1-1f40b3b75e67", 
             "HTTPHeaders": {
-                "date": "Mon, 12 Jun 2017 07:06:41 GMT", 
-                "x-amzn-requestid": "af099756-4f3d-11e7-997d-31507625c181", 
-                "content-length": "601", 
+                "date": "Tue, 04 Jul 2017 13:05:10 GMT", 
+                "x-amzn-requestid": "643ee8f1-60b9-11e7-9ea1-1f40b3b75e67", 
+                "content-length": "626", 
                 "content-type": "application/json", 
                 "connection": "keep-alive"
             }
         }, 
-        "CodeSize": 3665287, 
+        "CodeSize": 3665997, 
         "MemorySize": 128, 
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_dpecss", 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_yvvxvv", 
+        "Environment": {
+            "Variables": {}
+        }, 
         "Version": "1", 
-        "Role": "arn:aws:iam::420189626185:role/unittest_dpecss_lambda", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_yvvxvv_lambda", 
         "Timeout": 300, 
-        "LastModified": "2017-06-12T07:06:41.478+0000", 
+        "LastModified": "2017-07-04T13:05:11.027+0000", 
         "Handler": "handler.handle", 
         "Runtime": "python2.7", 
         "Description": "lambda created for unittesting ramuda deployment"

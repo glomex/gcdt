@@ -1,25 +1,25 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "AttachedPolicies": [
             {
-                "PolicyName": "AWSLambdaExecute",
+                "PolicyName": "AWSLambdaExecute", 
                 "PolicyArn": "arn:aws:iam::aws:policy/AWSLambdaExecute"
-            },
+            }, 
             {
-                "PolicyName": "AWSLambdaVPCAccessExecutionRole",
+                "PolicyName": "AWSLambdaVPCAccessExecutionRole", 
                 "PolicyArn": "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
             }
-        ],
-        "IsTruncated": false,
+        ], 
+        "IsTruncated": false, 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "e3194e21-f2ce-11e6-a58e-770d8fbd383f",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "52a8a6e7-60b9-11e7-8535-99c993965bdc", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "e3194e21-f2ce-11e6-a58e-770d8fbd383f",
-                "date": "Tue, 14 Feb 2017 16:01:46 GMT",
-                "content-length": "732",
+                "x-amzn-requestid": "52a8a6e7-60b9-11e7-8535-99c993965bdc", 
+                "date": "Tue, 04 Jul 2017 13:04:32 GMT", 
+                "content-length": "732", 
                 "content-type": "text/xml"
             }
         }

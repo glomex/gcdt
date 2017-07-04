@@ -4,13 +4,13 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "b516bdce-5d76-11e7-a81b-49120429bb48", 
+            "RequestId": "ce0c5442-60b9-11e7-bf84-87f380511b9f", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "b516bdce-5d76-11e7-a81b-49120429bb48", 
+                "x-amzn-requestid": "ce0c5442-60b9-11e7-bf84-87f380511b9f", 
                 "vary": "Accept-Encoding", 
                 "content-length": "34171", 
                 "content-type": "text/xml", 
-                "date": "Fri, 30 Jun 2017 09:30:08 GMT"
+                "date": "Tue, 04 Jul 2017 13:07:59 GMT"
             }
         }, 
         "IsTruncated": false, 
@@ -730,7 +730,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/lambda/sre-dev-ecs-LambdaSreDevEcsHostServiceScale-FP9OJIIA7LZU"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJC6SLOHUEK2S7VCKY", 
                 "CreateDate": {
                     "hour": 13, 

@@ -1,15 +1,15 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "RuleArn": "arn:aws:events:eu-west-1:420189626185:rule/unittest-dev-lambda-schedule",
+        "RuleArn": "arn:aws:events:eu-west-1:420189626185:rule/unittest-dev-lambda-schedule", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "85e6ed5d-f2cd-11e6-a303-4767fcf95a65",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "810fd7a5-60b7-11e7-978a-3f6d4a33c4dc", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "85e6ed5d-f2cd-11e6-a303-4767fcf95a65",
-                "date": "Tue, 14 Feb 2017 15:52:00 GMT",
-                "content-length": "85",
+                "x-amzn-requestid": "810fd7a5-60b7-11e7-978a-3f6d4a33c4dc", 
+                "date": "Tue, 04 Jul 2017 12:51:31 GMT", 
+                "content-length": "85", 
                 "content-type": "application/x-amz-json-1.1"
             }
         }

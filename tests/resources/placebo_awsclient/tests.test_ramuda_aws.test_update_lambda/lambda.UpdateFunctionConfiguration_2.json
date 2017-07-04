@@ -1,29 +1,32 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "CodeSha256": "2CaJaDceZ2ubHiNoEDB3wEZ1P87s1E0E1RHn5B/2tNA=",
-        "FunctionName": "jenkins_test_miilbf",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "ktOomWALa4M0YVP74I7H5Dicx8FEzRyygmhPPj3jyX8=", 
+        "FunctionName": "jenkins_test_rseouo", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "63b62e95-f2cd-11e6-8330-8944f436dccb",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "4fcbfe7e-60b7-11e7-93ce-27e2bfb6e8ab", 
             "HTTPHeaders": {
-                "date": "Tue, 14 Feb 2017 15:51:03 GMT",
-                "x-amzn-requestid": "63b62e95-f2cd-11e6-8330-8944f436dccb",
-                "content-length": "550",
-                "content-type": "application/json",
+                "date": "Tue, 04 Jul 2017 12:50:08 GMT", 
+                "x-amzn-requestid": "4fcbfe7e-60b7-11e7-93ce-27e2bfb6e8ab", 
+                "content-length": "607", 
+                "content-type": "application/json", 
                 "connection": "keep-alive"
             }
-        },
-        "CodeSize": 124720,
-        "MemorySize": 128,
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_miilbf",
-        "Version": "$LATEST",
-        "Role": "arn:aws:iam::420189626185:role/unittest_miilbf_lambda",
-        "Timeout": 300,
-        "LastModified": "2017-02-14T15:51:03.650+0000",
-        "Handler": "handler.handle",
-        "Runtime": "python2.7",
+        }, 
+        "CodeSize": 3666443, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_rseouo", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_rseouo_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T12:50:09.219+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
         "Description": "lambda created for unittesting ramuda deployment"
     }
 }

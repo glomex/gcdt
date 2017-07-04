@@ -4,13 +4,13 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "de0bf903-5d76-11e7-8ea3-7135b642a815", 
+            "RequestId": "f4d22b9e-60b9-11e7-81c0-4711b98c34e4", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "de0bf903-5d76-11e7-8ea3-7135b642a815", 
+                "x-amzn-requestid": "f4d22b9e-60b9-11e7-81c0-4711b98c34e4", 
                 "vary": "Accept-Encoding", 
                 "content-length": "34719", 
                 "content-type": "text/xml", 
-                "date": "Fri, 30 Jun 2017 09:31:16 GMT"
+                "date": "Tue, 04 Jul 2017 13:09:04 GMT"
             }
         }, 
         "IsTruncated": false, 
@@ -730,7 +730,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/lambda/sre-dev-ecs-LambdaSreDevEcsHostServiceScale-FP9OJIIA7LZU"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.ap-southeast-2.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-west-1.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJC6SLOHUEK2S7VCKY", 
                 "CreateDate": {
                     "hour": 13, 
@@ -799,20 +799,20 @@
             }, 
             {
                 "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
-                "RoleId": "AROAIFQTKHE3BONGIFVWG", 
+                "RoleId": "AROAJUXZBYAIZ5BRSD7X4", 
                 "CreateDate": {
-                    "hour": 9, 
+                    "hour": 13, 
                     "__class__": "datetime", 
-                    "month": 6, 
-                    "second": 8, 
+                    "month": 7, 
+                    "second": 0, 
                     "microsecond": 0, 
                     "year": 2017, 
-                    "day": 30, 
-                    "minute": 30
+                    "day": 4, 
+                    "minute": 8
                 }, 
-                "RoleName": "unittest_dwyiod_lambda", 
+                "RoleName": "unittest_bblfvw_lambda", 
                 "Path": "/", 
-                "Arn": "arn:aws:iam::420189626185:role/unittest_dwyiod_lambda"
+                "Arn": "arn:aws:iam::420189626185:role/unittest_bblfvw_lambda"
             }, 
             {
                 "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 

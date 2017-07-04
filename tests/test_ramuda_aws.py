@@ -73,7 +73,7 @@ def temp_lambda(awsclient):
                          lambda_handler='handler.handle')
     yield lambda_name, role_name, role_arn
     # cleanup
-    delete_lambda(awsclient, lambda_name)
+    delete_lambda(awsclient, lambda_name, delete_logs=True)
     delete_role_helper(awsclient, role_name)
 
 
@@ -83,7 +83,7 @@ def cleanup_lambdas(awsclient):
     yield items
     # cleanup
     for i in items:
-        delete_lambda(awsclient, i)
+        delete_lambda(awsclient, i, delete_logs=True)
 
 
 @pytest.mark.aws
@@ -194,7 +194,6 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
         artifact_bucket=artifact_bucket,
         zipfile=zipfile
     )
-    # TODO improve this (by using a waiter??)
     cleanup_lambdas.append(lambda_name)
 
 
