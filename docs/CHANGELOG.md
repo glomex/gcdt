@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.1.409] - 2017-07-03
+## [0.1.411] - 2017-07-04
+### Added
+- configure cloudwatch logs for ramuda (#191)
+
+## [0.1.410] - 2017-07-03
 ### Fixed
 - fix 'file://' prefix for ramuda invoke payload (#246)
 

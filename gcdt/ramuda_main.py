@@ -16,6 +16,7 @@ from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
     cleanup_bundle, invoke
 from .gcdt_cmd_dispatcher import cmd
 from .gcdt_defaults import DEFAULT_CONFIG
+from.cloudwatch_logs import delete_log_group
 from . import gcdt_lifecycle
 
 
@@ -36,7 +37,7 @@ DOC = '''Usage:
         ramuda info
         ramuda wire [-v]
         ramuda unwire [-v]
-        ramuda delete [-v] -f <lambda>
+        ramuda delete [-v] -f <lambda> [--delete-logs]
         ramuda rollback [-v] <lambda> [<version>]
         ramuda ping [-v] <lambda> [<version>]
         ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
@@ -49,6 +50,7 @@ Options:
 --payload=payload       '{"foo": "bar"}' or file://input.txt
 --invocation-type=type  Event, RequestResponse or DryRun
 --outfile=file          write the response to file
+--delete-logs           delete the log group and contained logs
 '''
 
 
@@ -91,6 +93,7 @@ def deploy_cmd(keep, **tooldata):
     zipfile = context['_zipfile']
     runtime = config['lambda'].get('runtime', 'python2.7')
     environment = config['lambda'].get('environment', {})
+    retention_in_days = config['lambda'].get('logs', {}).get('retentionInDays', None)
     if runtime:
         assert runtime in DEFAULT_CONFIG['ramuda']['runtime']
     settings = config['lambda'].get('settings', None)
@@ -106,7 +109,8 @@ def deploy_cmd(keep, **tooldata):
         fail_deployment_on_unsuccessful_ping,
         runtime=runtime,
         settings=settings,
-        environment=environment
+        environment=environment,
+        retention_in_days=retention_in_days
     )
     return exit_code
 
@@ -118,8 +122,8 @@ def metrics_cmd(lambda_name, **tooldata):
     return get_metrics(awsclient, lambda_name)
 
 
-@cmd(spec=['delete', '-f', '<lambda>'])
-def delete_cmd(force, lambda_name, **tooldata):
+@cmd(spec=['delete', '-f', '<lambda>', '--delete-logs'])
+def delete_cmd(force, lambda_name, delete_logs, **tooldata):
     context = tooldata.get('context')
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
@@ -129,7 +133,8 @@ def delete_cmd(force, lambda_name, **tooldata):
         time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
         exit_code = delete_lambda(awsclient, lambda_name,
                                   s3_event_sources,
-                                  time_event_sources)
+                                  time_event_sources,
+                                  delete_logs)
     else:
         exit_code = delete_lambda(
             awsclient, lambda_name, [], [])

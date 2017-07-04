@@ -22,7 +22,8 @@ from .ramuda_utils import s3_upload, \
     aggregate_datapoints, list_of_dict_equals, \
     create_aws_s3_arn, get_bucket_from_s3_arn, get_rule_name_from_event_arn, \
     build_filter_rules
-from gcdt.utils import GracefulExit, json2table
+from .utils import GracefulExit, json2table
+from .cloudwatch_logs import put_retention_policy, delete_log_group
 
 log = logging.getLogger(__name__)
 ALIAS_NAME = 'ACTIVE'
@@ -241,7 +242,9 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
                   security_groups=None, artifact_bucket=None,
                   zipfile=None,
                   fail_deployment_on_unsuccessful_ping=False,
-                  runtime='python2.7', settings=None, environment=None):
+                  runtime='python2.7', settings=None, environment=None,
+                  retention_in_days=None
+                  ):
     """Create or update a lambda function.
 
     :param awsclient:
@@ -258,8 +261,11 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
     :param artifact_bucket:
     :param zipfile:
     :param environment: environment variables
+    :param retention_in_days: retention time of the cloudwatch logs
     :return: exit_code
     """
+    # TODO: the signature of this function is too big, clean this up
+    # also consolidate create, update, config and add waiters!
     if lambda_exists(awsclient, function_name):
         function_version = _update_lambda(awsclient, function_name,
                                           handler_filename,
@@ -281,6 +287,11 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
                                           artifact_bucket, zipfile,
                                           runtime=runtime,
                                           environment=environment)
+    # configure cloudwatch logs
+    if retention_in_days:
+        log_group_name = '/aws/lambda/%s' % function_name
+        put_retention_policy(awsclient, log_group_name, retention_in_days)
+
     pong = ping(awsclient, function_name, version=function_version)
     if 'alive' in str(pong):
         print(colored.green('Great you\'re already accepting a ping ' +
@@ -557,7 +568,7 @@ def rollback(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
 
 
 def delete_lambda(awsclient, function_name, s3_event_sources=[],
-                  time_event_sources=[]):
+                  time_event_sources=[], delete_logs=False):
     # FIXME: mutable default arguments!
     """Delete a lambda function.
 
@@ -565,6 +576,7 @@ def delete_lambda(awsclient, function_name, s3_event_sources=[],
     :param function_name:
     :param s3_event_sources:
     :param time_event_sources:
+    :param delete_logs:
     :return: exit_code
     """
     unwire(awsclient, function_name, s3_event_sources=s3_event_sources,
@@ -572,6 +584,9 @@ def delete_lambda(awsclient, function_name, s3_event_sources=[],
            alias_name=ALIAS_NAME)
     client_lambda = awsclient.get_client('lambda')
     response = client_lambda.delete_function(FunctionName=function_name)
+    if delete_logs:
+        log_group_name = '/aws/lambda/%s' % function_name
+        delete_log_group(awsclient, log_group_name)
 
     # TODO remove event source first and maybe also needed for permissions
     print(json2table(response))
