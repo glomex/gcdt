@@ -817,7 +817,7 @@ def test_invoke_payload_from_file(awsclient, vendored_folder, temp_lambda):
     role_arn = temp_lambda[2]
     payload_file = create_tempfile('{"ramuda_action": "ping"}')
 
-    response = invoke(awsclient, lambda_name, payload='file:/%s' % payload_file)
+    response = invoke(awsclient, lambda_name, payload='file://%s' % payload_file)
     assert response == '"alive"'
 
     # cleanup

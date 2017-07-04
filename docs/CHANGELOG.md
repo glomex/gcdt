@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [0.1.409] - 2017-07-03
+### Fixed
+- fix 'file://' prefix for ramuda invoke payload (#246)
+
+## [0.1.409] - 2017-07-03
 ### Added
 - use roleARN for kumo delete, too (#162)
 

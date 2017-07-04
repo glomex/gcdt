@@ -1124,9 +1124,9 @@ def invoke(awsclient, function_name, payload, invocation_type=None,
     client_lambda = awsclient.get_client('lambda')
     if invocation_type is None:
         invocation_type = 'RequestResponse'
-    if payload.startswith('file:/'):
+    if payload.startswith('file://'):
         log.debug('reading payload from file: %s' % payload)
-        with open(payload[6:], 'r') as pfile:
+        with open(payload[7:], 'r') as pfile:
             payload = pfile.read()
 
     if version:
