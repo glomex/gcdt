@@ -1,26 +1,27 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "FunctionError": "Unhandled",
+        "FunctionError": "Unhandled", 
         "Payload": {
-            "body": "{\"errorMessage\": \"Unable to import module 'handler'\"}",
-            "__module__": "botocore.response",
+            "body": "{\"errorMessage\": \"Unable to import module 'handler'\"}", 
+            "__module__": "botocore.response", 
             "__class__": "StreamingBody"
-        },
+        }, 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "b76c947c-f2ce-11e6-86b7-4df294462add",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "0c179df8-60b9-11e7-9ff0-6bed282d3f7c", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "b76c947c-f2ce-11e6-86b7-4df294462add",
-                "content-length": "53",
-                "x-amzn-remapped-content-length": "0",
-                "x-amz-function-error": "Unhandled",
-                "connection": "keep-alive",
-                "date": "Tue, 14 Feb 2017 16:00:33 GMT",
+                "x-amzn-requestid": "0c179df8-60b9-11e7-9ff0-6bed282d3f7c", 
+                "content-length": "53", 
+                "x-amzn-remapped-content-length": "0", 
+                "x-amzn-trace-id": "root=1-595b91ea-82e84509a85686c6e61a6d31;sampled=0", 
+                "x-amz-function-error": "Unhandled", 
+                "connection": "keep-alive", 
+                "date": "Tue, 04 Jul 2017 13:02:34 GMT", 
                 "content-type": "application/json"
             }
-        },
+        }, 
         "StatusCode": 200
     }
 }

@@ -1,59 +1,71 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "bda1a158-f2ce-11e6-8039-b5a84a182099",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "12671146-60b9-11e7-9369-1d4430aace33", 
             "HTTPHeaders": {
-                "date": "Tue, 14 Feb 2017 16:00:43 GMT",
-                "x-amzn-requestid": "bda1a158-f2ce-11e6-8039-b5a84a182099",
-                "content-length": "1685",
-                "content-type": "application/json",
+                "date": "Tue, 04 Jul 2017 13:02:44 GMT", 
+                "x-amzn-requestid": "12671146-60b9-11e7-9369-1d4430aace33", 
+                "content-length": "1881", 
+                "content-type": "application/json", 
                 "connection": "keep-alive"
             }
-        },
+        }, 
         "Versions": [
             {
-                "Version": "$LATEST",
-                "CodeSha256": "2CaJaDceZ2ubHiNoEDB3wEZ1P87s1E0E1RHn5B/2tNA=",
-                "FunctionName": "jenkins_test_gvznvv",
-                "MemorySize": 128,
-                "CodeSize": 124720,
-                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_gvznvv:$LATEST",
-                "Handler": "handler.handle",
-                "Role": "arn:aws:iam::420189626185:role/unittest_gvznvv_lambda",
-                "Timeout": 300,
-                "LastModified": "2017-02-14T16:00:33.502+0000",
-                "Runtime": "python2.7",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "+m9sPPRiyAEAC8Da+D2WPVoi7QgwEBaqbz/W053D7AE=", 
+                "FunctionName": "jenkins_test_qftuxk", 
+                "MemorySize": 128, 
+                "CodeSize": 3666284, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qftuxk:$LATEST", 
+                "Handler": "handler.handle", 
+                "Role": "arn:aws:iam::420189626185:role/unittest_qftuxk_lambda", 
+                "Timeout": 300, 
+                "LastModified": "2017-07-04T13:02:34.384+0000", 
+                "Runtime": "python2.7", 
                 "Description": "lambda created for unittesting ramuda deployment"
-            },
+            }, 
             {
-                "Version": "1",
-                "CodeSha256": "5HEnIu5BH1EGQjUGZCXP0c7LdIq9ut0nW+0A19yk6GY=",
-                "FunctionName": "jenkins_test_gvznvv",
-                "MemorySize": 128,
-                "CodeSize": 124696,
-                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_gvznvv:1",
-                "Handler": "handler.handle",
-                "Role": "arn:aws:iam::420189626185:role/unittest_gvznvv_lambda",
-                "Timeout": 300,
-                "LastModified": "2017-02-14T16:00:05.203+0000",
-                "Runtime": "python2.7",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "1", 
+                "CodeSha256": "psYSRgcCcFETVDZoX2fTFfk8UQ0mujKoPqIb/B7jtLA=", 
+                "FunctionName": "jenkins_test_qftuxk", 
+                "MemorySize": 128, 
+                "CodeSize": 3666088, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qftuxk:1", 
+                "Environment": {
+                    "Variables": {}
+                }, 
+                "Handler": "handler.handle", 
+                "Role": "arn:aws:iam::420189626185:role/unittest_qftuxk_lambda", 
+                "Timeout": 300, 
+                "LastModified": "2017-07-04T13:01:46.280+0000", 
+                "Runtime": "python2.7", 
                 "Description": "lambda created for unittesting ramuda deployment"
-            },
+            }, 
             {
-                "Version": "2",
-                "CodeSha256": "2CaJaDceZ2ubHiNoEDB3wEZ1P87s1E0E1RHn5B/2tNA=",
-                "FunctionName": "jenkins_test_gvznvv",
-                "MemorySize": 128,
-                "CodeSize": 124720,
-                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_gvznvv:2",
-                "Handler": "handler.handle",
-                "Role": "arn:aws:iam::420189626185:role/unittest_gvznvv_lambda",
-                "Timeout": 300,
-                "LastModified": "2017-02-14T16:00:33.329+0000",
-                "Runtime": "python2.7",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "2", 
+                "CodeSha256": "+m9sPPRiyAEAC8Da+D2WPVoi7QgwEBaqbz/W053D7AE=", 
+                "FunctionName": "jenkins_test_qftuxk", 
+                "MemorySize": 128, 
+                "CodeSize": 3666284, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qftuxk:2", 
+                "Handler": "handler.handle", 
+                "Role": "arn:aws:iam::420189626185:role/unittest_qftuxk_lambda", 
+                "Timeout": 300, 
+                "LastModified": "2017-07-04T13:02:33.998+0000", 
+                "Runtime": "python2.7", 
                 "Description": "lambda created for unittesting ramuda deployment"
             }
         ]

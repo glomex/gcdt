@@ -1,0 +1,35 @@
+{
+    "status_code": 201, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "X5VNuwEk5rlHd+9xCWPk33SgUNYHJdIidVLHahXHCls=", 
+        "FunctionName": "jenkins_test_atnwzz", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "ef9dcce8-60b6-11e7-b1a2-b9666a07d848", 
+            "HTTPHeaders": {
+                "date": "Tue, 04 Jul 2017 12:47:28 GMT", 
+                "x-amzn-requestid": "ef9dcce8-60b6-11e7-b1a2-b9666a07d848", 
+                "content-length": "597", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3265, 
+        "MemorySize": 256, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_atnwzz", 
+        "Environment": {
+            "Variables": {}
+        }, 
+        "Version": "1", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_atnwzz_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T12:47:27.874+0000", 
+        "Handler": "index.handler", 
+        "Runtime": "nodejs6.10", 
+        "Description": "lambda test for ramuda"
+    }
+}
