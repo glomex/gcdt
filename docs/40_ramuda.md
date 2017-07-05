@@ -130,58 +130,80 @@ The preceding invoke command specifies RequestResponse as the invocation type, w
 
 ### Folder Layout
 
-lambda_ENV.conf -> settings for Lambda function
+
+### Sample config file
+
+sample gcdt_dev.json file:
 
 ```text
-lambda {
-  name = "dp-dev-store-redshift-load"
-  description = "Lambda function which loads normalized files into redshift"
-  role = "arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4"
-
-  handlerFunction = "handler.lambda_handler"
-  handlerFile = "handler.py"
-  timeout = "180"
-  memorySize = "128"
-  events {
-    s3Sources = [
-        { bucket = "dp-dev-store-cdn-redshift-manifests", type = "s3:ObjectCreated:*", suffix = ".json" },
-        { 
-            bucket = "dp-dev-store-cdn-redshift-manifests",
-            type = "s3:ObjectCreated:*",
-            prefix = "folder",
-            suffix = ".gz",
-            ensure="exists"
-         }
-    ]
-        timeSchedules = [
-           {
-               ensure = "exists",
-               ruleName = "time-event-test-T1",
-               ruleDescription = "run every 5 min from 0-5 UTC",
-               scheduleExpression = "cron(0/5 0-5 ? * * *)"
-           },
+{
+  "ramuda": {
+    "lambda": {
+      "name": "dp-dev-store-redshift-load",
+      "description": "Lambda function which loads normalized files into redshift",
+      "role": "arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4",
+      "handlerFunction": "handler.lambda_handler",
+      "handlerFile": "handler.py",
+      "timeout": "180",
+      "memorySize": "128",
+      "events": {
+        "s3Sources": [
+          {
+            "bucket": "dp-dev-store-cdn-redshift-manifests",
+            "type": "s3:ObjectCreated:*",
+            "suffix": ".json"
+          },
+          {
+            "bucket": "dp-dev-store-cdn-redshift-manifests",
+            "type": "s3:ObjectCreated:*",
+            "prefix": "folder",
+            "suffix": ".gz",
+            "ensure": "exists"
+          }
+        ],
+        "timeSchedules": [
+          {
+            "ensure": "exists",
+            "ruleName": "time-event-test-T1",
+            "ruleDescription": "run every 5 min from 0-5 UTC",
+            "scheduleExpression": "cron(0/5 0-5 ? * * *)"
+          }
         ]
+      },
+      "vpc": {
+        "subnetIds": [
+          "subnet-87685dde",
+          "subnet-9f39ccfb",
+          "subnet-166d7061"
+        ],
+        "securityGroups": [
+          "sg-ae6850ca"
+        ]
+      }
+    },
+    "bundling": {
+      "zip": "bundle.zip",
+      "preBundle": [
+        "../bin/first_script.sh",
+        "../bin/second_script.sh"
+      ],
+      "folders": [
+        {
+          "source": "../redshiftcdnloader",
+          "target": "./redshiftcdnloader"
+        },
+        {
+          "source": "psycopg2-linux",
+          "target": "psycopg2"
+        }
+      ]
+    },
+    "deployment": {
+      "region": "eu-west-1",
+      "artifactBucket": "7finity-$PROJECT-deployment"
+    }
   }
-  vpc  {
-    subnetIds = ["subnet-87685dde", "subnet-9f39ccfb", "subnet-166d7061"]
-    securityGroups = ["sg-ae6850ca"]
-  }
 }
-
-bundling {
-  zip = "bundle.zip"
-  preBundle = ["../bin/first_script.sh", "../bin/second_script.sh"]
-  folders = [
-    { source = "../redshiftcdnloader", target = "./redshiftcdnloader"}
-    { source = "psycopg2-linux", target = "psycopg2" }
-  ]
-}
-
-deployment {
-  region = "eu-west-1",
-  artifactBucket = "7finity-$PROJECT-deployment"
-}
-
 ```
 
 
@@ -196,7 +218,7 @@ Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 1
 "lambda": {
     ...
     "logs": {
-        "retentionInDays" = 90
+        "retentionInDays": 90
     }
 }
 ```
@@ -246,9 +268,17 @@ At this point the following features are implemented:
 
 Note: for this to work you need to **have npm installed** on the machine you want to run the ramuda bundling!
 
+
 #### AWS Lambda environment variables
 
-Ramuda supports AWS Lambda envrionment variables. You can specify them in `lambda.environment` section.
+Ramuda supports AWS Lambda environment variables. You can specify them within the `lambda` section.
+
+``` json
+    ...
+    "environment": {
+        "MYVALUE": "FOO"
+    }
+```
 
 More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
 
@@ -294,6 +324,6 @@ exports.handler = function(event, context, callback) {
 ```
 
 
-#### Environment specific configuration for your lambda function
+### Environment specific configuration for your lambda functions
 
-Please put the environment specific configuration for your lambda function into a `settings_<env>.conf` file.
+Please put the environment specific configuration for your lambda function into a `gcdt_<env>.json` file. For most teams a good convention would be to maintain at least 'dev', 'qa', and 'prod' envs.

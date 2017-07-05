@@ -4,31 +4,3 @@
 * describe how to do PR (incl versions, details, etc.), describe releases process
 *
 
-
-some nodejs snippets:
-I suppose you could install express with npm
-
-if that is the case you could have a package.json with your app dependencies e.g. express
-
-with that in place you can configure runtime = 'nodejs4.3' for your lambda_dev.conf
-
-and deploy via "ramuda deploy" (edited)
-
-your api gateway u usually have a swagger.yaml
-
-and you deploy that using "yugen deploy" probably need  an api-key to make that work
-
-for nodejs we do not have config scaffolding but if you are fit in nodejs you can help us with that
-
-http://glomex-infra-docuserver-prod.s3-website-eu-west-1.amazonaws.com/latest/40_ramuda.html
-
-maybe the screencast is helpful to get the gist of gcdt but it does not cover your specific usecase
-
-https://confluence.glomex.com/display/OPSSHARED/gcdt+screencasts
-
-in fact express can be installed via npm: `$ npm install express --save` (edited)
-
-why the VPN requirement? (edited)
-
-
-
