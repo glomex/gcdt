@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.412] - 2017-07-05
+### Added
+- fix some docu issues for ramuda
+
 ## [0.1.411] - 2017-07-04
 ### Added
 - configure cloudwatch logs for ramuda (#191)
