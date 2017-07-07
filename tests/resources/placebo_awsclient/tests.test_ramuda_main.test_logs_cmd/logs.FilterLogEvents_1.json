@@ -1,0 +1,52 @@
+{
+    "status_code": 200, 
+    "data": {
+        "searchedLogStreams": [
+            {
+                "searchedCompletely": true, 
+                "logStreamName": "2017/07/07/[1]b9fe77e1eacf473ca868c219bb84f449"
+            }
+        ], 
+        "events": [
+            {
+                "ingestionTime": 1499425901429, 
+                "timestamp": 1499425901394, 
+                "message": "START RequestId: 0c9ef6c7-6305-11e7-a95d-c91be3e45d18 Version: 1\n", 
+                "eventId": "33438314971064697090122405099249495585794831415899062272", 
+                "logStreamName": "2017/07/07/[1]b9fe77e1eacf473ca868c219bb84f449"
+            }, 
+            {
+                "ingestionTime": 1499425916574, 
+                "timestamp": 1499425901398, 
+                "message": "[INFO]\t2017-07-07T11:11:41.394Z\t0c9ef6c7-6305-11e7-a95d-c91be3e45d18\t{u'ramuda_action': u'ping'} - <__main__.LambdaContext object at 0x7ffad87a8650>\n", 
+                "eventId": "33438314971153900070916527610124832677831415886647132160", 
+                "logStreamName": "2017/07/07/[1]b9fe77e1eacf473ca868c219bb84f449"
+            }, 
+            {
+                "ingestionTime": 1499425916574, 
+                "timestamp": 1499425901398, 
+                "message": "END RequestId: 0c9ef6c7-6305-11e7-a95d-c91be3e45d18\n", 
+                "eventId": "33438314971153900070916527610124832677831415886647132161", 
+                "logStreamName": "2017/07/07/[1]b9fe77e1eacf473ca868c219bb84f449"
+            }, 
+            {
+                "ingestionTime": 1499425916574, 
+                "timestamp": 1499425901398, 
+                "message": "REPORT RequestId: 0c9ef6c7-6305-11e7-a95d-c91be3e45d18\tDuration: 0.33 ms\tBilled Duration: 100 ms \tMemory Size: 128 MB\tMax Memory Used: 17 MB\t\n", 
+                "eventId": "33438314971153900070916527610124832677831415886647132162", 
+                "logStreamName": "2017/07/07/[1]b9fe77e1eacf473ca868c219bb84f449"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1a8109e7-6305-11e7-9ed3-3536e0aaeaeb", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "1a8109e7-6305-11e7-9ed3-3536e0aaeaeb", 
+                "date": "Fri, 07 Jul 2017 11:12:03 GMT", 
+                "content-length": "1497", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}
