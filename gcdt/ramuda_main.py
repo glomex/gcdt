@@ -6,19 +6,19 @@ Script to deploy Lambda functions to AWS
 """
 
 from __future__ import unicode_literals, print_function
+
 import sys
 
 from clint.textui import colored
 
+from . import gcdt_lifecycle
 from . import utils
-from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
-    wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
-    cleanup_bundle, invoke
 from .gcdt_cmd_dispatcher import cmd
 from .gcdt_defaults import DEFAULT_CONFIG
-from.cloudwatch_logs import delete_log_group
-from . import gcdt_lifecycle
-
+from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
+    wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
+    cleanup_bundle, invoke, logs
+from .ramuda_utils import check_and_format_logs_params
 
 # TODO introduce own config for account detection
 # TODO re-upload on requirements.txt changes
@@ -41,6 +41,7 @@ DOC = '''Usage:
         ramuda rollback [-v] <lambda> [<version>]
         ramuda ping [-v] <lambda> [<version>]
         ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
+        ramuda logs <lambda> [--start=<start>] [--end=<end>] [--tail]
         ramuda version
 
 Options:
@@ -51,6 +52,9 @@ Options:
 --invocation-type=type  Event, RequestResponse or DryRun
 --outfile=file          write the response to file
 --delete-logs           delete the log group and contained logs
+--start=start           log start UTC '2017-06-28 14:23' or '1h', '3d', '5w', ...
+--end=end               log end UTC '2017-06-28 14:25' or '2h', '4d', '6w', ...
+--tail                  continuously output logs (can't use '--end'), stop 'Ctrl-C'
 '''
 
 
@@ -224,6 +228,26 @@ def invoke_cmd(lambda_name, version, itype, payload, outfile, **tooldata):
                      version=version, outfile=outfile)
     print('invoke result:')
     print(results)
+
+
+@cmd(spec=['logs', '<lambda>', '--start', '--end', '--tail'])
+def logs_cmd(lambda_name, start, end, tail, **tooldata):
+
+    context = tooldata.get('context')
+    awsclient = context.get('_awsclient')
+    if tail and end:
+        print(colored.red('You can not use \'--end\' and \'--tail\' options together.'))
+        return
+
+    start_dt, end_dt = check_and_format_logs_params(start, end, tail)
+
+    if end and end_dt <= start_dt:
+        print(colored.red('\'--end\' value before \'--start\' value.'))
+        return
+
+    if tail:
+        print(colored.yellow('Use \'Ctrl-C\' to exit tail mode'))
+    logs(awsclient, lambda_name, start_dt=start_dt, end_dt=end_dt, tail=tail)
 
 
 def main():

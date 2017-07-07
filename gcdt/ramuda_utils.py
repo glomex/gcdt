@@ -2,12 +2,14 @@
 from __future__ import unicode_literals, print_function
 
 import base64
+import datetime
 import hashlib
 import logging
 import sys
 import threading
 import time
 
+import maya
 import os
 from s3transfer import S3Transfer
 
@@ -193,3 +195,53 @@ def s3_upload(awsclient, deploy_bucket, zipfile, lambda_name):
     # print(dest_key)
     print()
     return dest_key, response['ETag'], response['VersionId']
+
+
+# helpers for ramuda logs command
+def check_and_format_logs_params(start, end, tail):
+    """Helper to read the params for the logs command"""
+    def _decode_duration_type(duration_type):
+        durations = {'m': 'minutes', 'h': 'hours', 'd': 'days', 'w': 'weeks'}
+        return durations[duration_type]
+
+    if not start:
+        if tail:
+            start_dt = maya.now().subtract(seconds=300).datetime(naive=True)
+        else:
+            start_dt = maya.now().subtract(days=1).datetime(naive=True)
+    elif start and start[-1] in ['m', 'h', 'd', 'w']:
+        value = int(start[:-1])
+        start_dt = maya.now().subtract(
+            **{_decode_duration_type(start[-1]): value}).datetime(naive=True)
+    elif start:
+        start_dt = maya.parse(start).datetime(naive=True)
+
+    if end and end[-1] in ['m', 'h', 'd', 'w']:
+        value = int(end[:-1])
+        end_dt = maya.now().subtract(
+            **{_decode_duration_type(end[-1]): value}).datetime(naive=True)
+    elif end:
+        end_dt = maya.parse(end).datetime(naive=True)
+    else:
+        end_dt = None
+    return start_dt, end_dt
+
+
+def decode_format_timestamp(timestamp):
+    """Convert unix timestamp (millis) into date & time we use in logs output.
+
+    :param timestamp: unix timestamp in millis
+    :return: date, time in UTC
+    """
+    dt = maya.MayaDT(timestamp/1000).datetime(naive=True)
+    return dt.strftime('%Y-%m-%d'), dt.strftime('%H:%M:%S')
+
+
+def datetime_to_timestamp(dt):
+    """Convert datetime to millis since epoc.
+
+    :param dt:
+    :return: milliseconds since 1970-01-01
+    """
+    #return int((dt - datetime.datetime(1970, 1, 1)).total_seconds() * 1000)
+    return int(maya.MayaDT.from_datetime(dt)._epoch * 1000)

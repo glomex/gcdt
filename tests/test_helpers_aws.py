@@ -36,6 +36,18 @@ def test_file_reader(temp_folder):
         assert reader() == '222'
 
 
+def test_file_reader_with_datatype_int(temp_folder):
+    filename = os.path.join(temp_folder[0], 'fake_data_file')
+    with open(filename, 'w') as dfile:
+        print('111', file=dfile)
+        print('222', file=dfile)
+
+    with open(filename, 'r') as dfile:
+        reader = file_reader(temp_folder[0], 'fake_data_file', 'int')
+        assert reader() == 111
+        assert reader() == 222
+
+
 @check_playback_mode
 def test_random_string_recording(awsclient):
     # record and playback cases are identical for this test

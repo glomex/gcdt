@@ -27,6 +27,7 @@ Usage:
         ramuda rollback [-v] <lambda> [<version>]
         ramuda ping [-v] <lambda> [<version>]
         ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
+        ramuda logs <lambda> [--start=<start>] [--end=<end>] [--tail]
         ramuda version
 
 Options:
@@ -37,6 +38,9 @@ Options:
 --invocation-type=type  Event, RequestResponse or DryRun
 --outfile=file          write the response to file
 --delete-logs           delete the log group and contained logs
+--start=start           log start UTC '2017-06-28 14:23' or '1h', '3d', '5w', ...
+--end=end               log end UTC '2017-06-28 14:25' or '2h', '4d', '6w', ...
+--tail                  continuously output logs (can't use '--end'), stop 'Ctrl-C'
 ```
 
 
@@ -103,9 +107,6 @@ If you use the `--delete-logs` the cloudwatch log group associated to the AWS La
 sets the active version to ACTIVE -1 or to a given version
 
 
-#### version
-will print the version of gcdt you are using
-
 
 #### invoke
 
@@ -126,6 +127,52 @@ $ ramuda invoke my_hello_world \
 ```
 
 The preceding invoke command specifies RequestResponse as the invocation type, which returns a response immediately in response to the function execution. Alternatively, you can specify Event as the invocation type to invoke the function asynchronously.
+
+
+#### logs
+
+The `ramuda logs` command provides you with convenient access to log events emitted by your AWS Lambda function.
+
+The command offers '--start' and '--end' options where you can filter the log events to your specification. You can use human readable dates like '2017-07-24 14:00:00' or you can specify dates in the past relative to `now` using '1m', '2h', '3d', '5w', etc. 
+
+``` bash
+$ ramuda logs ops-dev-captain-crunch-slack-notifier --start=1d
+MoinMoin fin0007m!
+2017-07-07
+07:00:32  START RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8 Version: $LATEST
+07:00:36  END RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8
+07:00:36  REPORT RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8        Duration: 4221.50 ms    Billed Duration: 4300 ms        Memory Size: 128 MB     Max Memory Used: 43 MB
+Bye fin0007m. Talk to you soon!
+```
+
+The '--start' option has a default of '1d'. This means if you run `ramuda logs <your-function-name>` you get the log output of your function for the last 24 hours.
+
+``` bash
+$ ramuda logs ops-dev-captain-crunch-slack-notifier
+MoinMoin fin0007m!
+2017-07-07
+07:00:32  START RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8 Version: $LATEST
+07:00:36  END RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8
+07:00:36  REPORT RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8        Duration: 4221.50 ms    Billed Duration: 4300 ms        Memory Size: 128 MB     Max Memory Used: 43 MB
+Bye fin0007m. Talk to you soon!
+```
+
+You can use `ramuda logs` to **tail** the log output of your lambda function. The default start date in tail mode is 5 minutes before. You can specify any past start date in tail mode but you can not specify an '--end' option in tail mode. To exit the `ramuda logs` tail mode use `Ctrl-C`.
+
+``` bash
+$ ramuda logs ops-dev-captain-crunch-slack-notifier --start=1d --tail
+MoinMoin fin0007m!
+Use 'Ctrl-C' to exit tail mode
+2017-07-07
+07:00:32  START RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8 Version: $LATEST
+07:00:36  END RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8
+07:00:36  REPORT RequestId: f75cd7de-62e1-11e7-937d-ef5726c6f5c8        Duration: 4221.50 ms    Billed Duration: 4300 ms        Memory Size: 128 MB     Max Memory Used: 43 MB
+^CReceived SIGINT signal - exiting command 'ramuda logs'
+```
+
+
+#### version
+will print the version of gcdt you are using
 
 
 ### Folder Layout

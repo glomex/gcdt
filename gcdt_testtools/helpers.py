@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import os
 import subprocess
+import time
 import random
 import shutil
 import string
@@ -58,6 +59,16 @@ def random_string():
     that will work with your recorded placebo json files (see helpers_aws.py).
     """
     return ''.join([random.choice(string.ascii_lowercase) for i in range(6)])
+
+
+def time_now():
+    """Like int(time.time() * 1000) but supports record and playback for testing.
+
+    note: in case you use this function in a test during test together with
+    an awsclient then this function is altered so you get reproducible results
+    that will work with your recorded placebo json files (see helpers_aws.py).
+    """
+    return int(time.time()) * 1000
 
 
 # TODO find out how to automatically load the gcdt_testtools fixtures

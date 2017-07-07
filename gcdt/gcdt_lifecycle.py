@@ -21,6 +21,7 @@ from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
 from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
     get_env
+from .gcdt_defaults import DEFAULT_CONFIG
 
 log = logging.getLogger(__name__)
 
@@ -94,7 +95,10 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.config_validation_init.send((context, config))
     log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
-    if tool not in config:
+    if context['command'] in \
+            DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
+        pass  # we do not require a config for this command
+    elif tool not in config:
         context['error'] = 'Configuration missing for \'%s\'.' % tool
         log.error(context['error'])
         gcdt_signals.error.send((context, config))
@@ -127,7 +131,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     try:
         exit_code = cmd.dispatch(arguments,
                                  context=context,
-                                 config=config[tool])
+                                 config=config.get(tool, {}))
     except GracefulExit:
         raise
     except Exception as e:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+import time
 import logging
 from tempfile import NamedTemporaryFile
 
@@ -8,7 +9,7 @@ import pytest
 from nose.tools import assert_regexp_matches
 
 from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
-    delete_cmd, metrics_cmd, ping_cmd, bundle_cmd, invoke_cmd
+    delete_cmd, metrics_cmd, ping_cmd, bundle_cmd, invoke_cmd, logs_cmd
 from gcdt_bundler.bundler import bundle
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata, \
@@ -200,3 +201,20 @@ def test_bundle_cmd(capsys, temp_folder):
     bundle_cmd(False, **tooldata)
     out, err = capsys.readouterr()
     assert out == 'Finished - a bundle.zip is waiting for you...\n'
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_logs_cmd(awsclient, vendored_folder, temp_lambda, capsys):
+    log.info('running test_logs_cmd')
+    tooldata = get_tooldata(awsclient, 'ramuda', 'logs', config={})
+    lambda_name = temp_lambda[0]
+
+    # this testcase is potentially flaky since we depend on the log events
+    # to eventually arrive in AWS cloudwatch
+    time.sleep(10)  # automatically removed in playback mode!
+
+    logs_cmd(lambda_name, '2m', None, False, **tooldata)
+    out, err = capsys.readouterr()
+    # our lambda can handle ping so we should see the related entry in the log
+    assert '{u\'ramuda_action\': u\'ping\'}' in out
