@@ -20,7 +20,6 @@ from gcdt import __version__
 from gcdt.gcdt_config_reader import read_json_config
 from gcdt.utils import get_env
 
-
 log = logging.getLogger(__name__)
 
 
@@ -74,7 +73,8 @@ def settings_requirements():
 
 
 def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
-                         lambda_handler='handler.handle', folders_from_file=None,
+                         lambda_handler='handler.handle',
+                         folders_from_file=None,
                          **kwargs):
     """
     NOTE: caller needs to clean up both lambda!
@@ -217,32 +217,34 @@ check_preconditions = pytest.mark.skipif(
 )
 
 
-def _playback_mode_check():
+def is_playback_mode():
     """Make sure the placebo mode is 'playback'."""
     if os.getenv('PLACEBO_MODE', '').lower() in ['record', 'normal']:
-        return True
-    else:
         return False
+    else:
+        return True
 
 
 # skipif helper aswclient_placebo mode
+# not this needs to invert the check
 check_playback_mode = pytest.mark.skipif(
-    _playback_mode_check(),
+    not is_playback_mode(),
     reason="Test runs only in playback mode (not normal or record)."
 )
 
 
-def _normal_mode_check():
+def is_normal_mode():
     """Make sure the placebo mode is 'playback'."""
     if os.getenv('PLACEBO_MODE', '').lower() == 'normal':
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 # skipif helper aswclient_placebo mode
+# not this needs to invert the check
 check_normal_mode = pytest.mark.skipif(
-    _normal_mode_check(),
+    not is_normal_mode(),
     reason="Test runs only in normal mode (not record or playback)."
 )
 
@@ -255,10 +257,11 @@ def awsclient(request):
             os.path.dirname(request.module.__file__), p))
 
     random_string_orig = helpers.random_string
+    time_now_orig = helpers.time_now
     sleep_orig = time.sleep
     random_string_filename = 'random_string.txt'
+    time_now_filename = 'time_now.txt'
     prefix = request.module.__name__ + '.' + request.function.__name__
-    #record_dir = os.path.join(here('./resources/placebo_awsclient'), prefix)
     record_dir = os.path.join(there('./resources/placebo_awsclient'), prefix)
 
     client = PlaceboAWSClient(botocore.session.Session(), data_path=record_dir)
@@ -268,14 +271,19 @@ def awsclient(request):
         client.record()
         helpers.random_string = recorder(record_dir, random_string_orig,
                                          filename=random_string_filename)
+        helpers.time_now = recorder(record_dir, time_now_orig,
+                                    filename=time_now_filename)
     elif os.getenv('PLACEBO_MODE', '').lower() == 'normal':
         # neither record nor playback, just run the tests against AWS services
         pass
     else:
         def fake_sleep(seconds):
             pass
+
         helpers.random_string = file_reader(record_dir,
                                             random_string_filename)
+        helpers.time_now = file_reader(record_dir,
+                                       time_now_filename, 'int')
         time.sleep = fake_sleep
         client.playback()
 
@@ -285,6 +293,7 @@ def awsclient(request):
     client.stop()
     # restore original functionality
     helpers.random_string = random_string_orig
+    helpers.recordable_now = time_now_orig
     time.sleep = sleep_orig
 
 
@@ -312,7 +321,7 @@ def recorder(record_dir, function, filename=None):
     return wrapper
 
 
-def file_reader(record_dir, filename):
+def file_reader(record_dir, filename, datatype=None):
     """helper to read a file line by line
     basically same as dfile.next but strips whitespace
 
@@ -328,6 +337,8 @@ def file_reader(record_dir, filename):
 
             def f():
                 line = next(idata).strip()
+                if datatype and datatype == 'int':
+                    return int(line)
                 return line
     else:
         # if file does not exist
@@ -361,7 +372,8 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
         context = {'_awsclient': awsclient, 'tool': tool, 'command': command}
         config = read_json_config(gcdt_config_file)[tool]
         _resolve_lookups(context, config, config.get('lookups',
-            ['secret', 'ssl', 'stack', 'baseami']))
+                                                     ['secret', 'ssl', 'stack',
+                                                      'baseami']))
 
     tooldata = {
         'context': {

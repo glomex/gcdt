@@ -47,6 +47,38 @@ def put_retention_policy(awsclient, log_group_name, retention_in_days):
     )
 
 
+def filter_log_events(awsclient, log_group_name, start_ts, end_ts=None):
+    """
+    Note: this is used to retrieve logs in ramuda.
+
+    :param log_group_name: log group name
+    :param start_ts: timestamp
+    :param end_ts: timestamp
+    :return: list of log entries
+    """
+    client_logs = awsclient.get_client('logs')
+    logs = []
+    next_token = None
+    while True:
+        request = {
+            'logGroupName': log_group_name,
+            'startTime': start_ts
+        }
+        if end_ts:
+            request['endTime'] = end_ts
+        if next_token:
+            request['nextToken'] = next_token
+        response = client_logs.filter_log_events(**request)
+        logs.extend(
+            [{'timestamp': e['timestamp'], 'message': e['message']}
+             for e in response['events']]
+        )
+        if 'nextToken' not in response:
+            break
+        next_token = response['nextToken']
+    return logs
+
+
 # these functions we need so we can test a log group lifecycle
 def describe_log_group(awsclient, log_group_name):
     """Get info on the specified log group

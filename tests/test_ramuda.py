@@ -9,16 +9,20 @@ except ImportError:
     from io import StringIO
 from tempfile import NamedTemporaryFile
 import time
+import datetime
 
 from s3transfer.subscribers import BaseSubscriber
 from nose.tools import assert_regexp_matches
 import pytest
+import mock
+import maya
 
 from gcdt.ramuda_core import cleanup_bundle, bundle_lambda
 from gcdt.ramuda_utils import unit, \
     aggregate_datapoints, create_sha256, ProgressPercentage, \
     list_of_dict_equals, create_aws_s3_arn, get_rule_name_from_event_arn, \
-    get_bucket_from_s3_arn, build_filter_rules, create_sha256_urlsafe
+    get_bucket_from_s3_arn, build_filter_rules, create_sha256_urlsafe, \
+    check_and_format_logs_params, decode_format_timestamp, datetime_to_timestamp
 from gcdt.utils import json2table
 from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
     cleanup_tempfiles
@@ -164,3 +168,40 @@ def test_bundle_lambda(temp_folder, capsys):
     assert os.path.isfile('bundle.zip')
     out, err = capsys.readouterr()
     assert out == 'Finished - a bundle.zip is waiting for you...\n'
+
+
+LOGS_PARAM_CASES = [
+    ('2w', '1w', False, '2014-12-18 03:00:00', '2014-12-25 03:00:00'),
+    ('2w', '2d', False, '2014-12-18 03:00:00', '2014-12-30 03:00:00'),
+    ('2d', '2h', False, '2014-12-30 03:00:00', '2015-01-01 01:00:00'),
+    ('2h', '2m', False, '2015-01-01 01:00:00', '2015-01-01 02:58:00'),
+    ('20m', '1m', False, '2015-01-01 02:40:00', '2015-01-01 02:59:00'),
+    ('2014-12-18 03:00:00', '2014-12-25 03:00:00', False,
+        '2014-12-18 03:00:00', '2014-12-25 03:00:00'),
+    (None, None, False, '2014-12-31 03:00:00', None),
+    (None, None, True, '2015-01-01 02:55:00', None)
+]
+
+
+@pytest.mark.parametrize('start, end, tail, exp_start_ts, exp_end_ts', LOGS_PARAM_CASES)
+@mock.patch('maya.now', return_value=maya.when('2015-01-01 03:00:00'))
+def test_check_and_format_logs_params(mocked_maya_now, start, end, tail, exp_start_ts, exp_end_ts):
+    start_ts, end_ts = check_and_format_logs_params(start, end, tail)
+    assert start_ts == maya.parse(exp_start_ts).datetime(naive=True)
+    if exp_end_ts is None:
+        assert end_ts is None
+    else:
+        assert end_ts == maya.parse(exp_end_ts).datetime(naive=True)
+
+
+def test_decode_format_timestamp():
+    timestamp = 1499353246961  # in millis
+    exp_date = '2017-07-06'
+    exp_time = '15:00:46'
+    assert decode_format_timestamp(timestamp) == (exp_date, exp_time)
+
+
+def test_datetime_to_timestamp():
+    exp_timestamp = 1499353246961  # in millis
+    dt = maya.when('2017-07-06 15:00:46.961').datetime(naive=True)
+    assert datetime_to_timestamp(dt) == exp_timestamp

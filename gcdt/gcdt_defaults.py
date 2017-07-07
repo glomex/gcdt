@@ -24,7 +24,8 @@ DEFAULT_CONFIG = {
         'settings_file': 'settings.json',
         'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],
         'python_bundle_venv_dir': '.gcdt/venv',
-        'keep': False
+        'keep': False,
+        'non_config_commands': ['logs']  # this command does not require config
     },
     'tenkai': {
         'stack_output_file': 'stack_output.yml'

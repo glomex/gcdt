@@ -5,25 +5,28 @@ Script to deploy Lambda functions to AWS
 """
 
 from __future__ import unicode_literals, print_function
-import sys
-import os
-import shutil
-import uuid
-import time
+
+import datetime
 import json
 import logging
+import shutil
+import sys
+import time
+import uuid
 
+import maya
+import os
 from botocore.exceptions import ClientError as ClientError
 from clint.textui import colored
-import maya
 
+from .cloudwatch_logs import put_retention_policy, delete_log_group, \
+    filter_log_events
 from .ramuda_utils import s3_upload, \
     lambda_exists, create_sha256, get_remote_code_hash, unit, \
     aggregate_datapoints, list_of_dict_equals, \
     create_aws_s3_arn, get_bucket_from_s3_arn, get_rule_name_from_event_arn, \
-    build_filter_rules
+    build_filter_rules, decode_format_timestamp, datetime_to_timestamp
 from .utils import GracefulExit, json2table
-from .cloudwatch_logs import put_retention_policy, delete_log_group
 
 log = logging.getLogger(__name__)
 ALIAS_NAME = 'ACTIVE'
@@ -275,7 +278,7 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
                                           artifact_bucket=artifact_bucket,
                                           zipfile=zipfile,
                                           environment=environment
-                                        )
+                                          )
     else:
         if not zipfile:
             return 1
@@ -311,7 +314,8 @@ def _create_lambda(awsclient, function_name, role, handler_filename,
                    handler_function,
                    folders, description, timeout, memory,
                    subnet_ids=None, security_groups=None,
-                   artifact_bucket=None, zipfile=None, runtime='python2.7', environment=None):
+                   artifact_bucket=None, zipfile=None, runtime='python2.7',
+                   environment=None):
     log.debug('create lambda function: %s' % function_name)
     # move to caller!
     # _install_dependencies_with_pip('requirements.txt', './vendored')
@@ -399,7 +403,7 @@ def _update_lambda(awsclient, function_name, handler_filename,
     _update_lambda_function_code(awsclient, function_name,
                                  artifact_bucket=artifact_bucket,
                                  zipfile=zipfile
-    )
+                                 )
     function_version = \
         _update_lambda_configuration(
             awsclient, function_name, role, handler_function,
@@ -428,7 +432,7 @@ def _update_lambda_function_code(
         awsclient, function_name,
         artifact_bucket=None,
         zipfile=None
-        ):
+):
     log.debug('Updating existing AWS Lambda function...')
     client_lambda = awsclient.get_client('lambda')
     if not zipfile:
@@ -528,8 +532,8 @@ def get_metrics(awsclient, name):
                     'Value': name
                 },
             ],
-            #StartTime=datetime.now() + timedelta(days=-1),
-            #EndTime=datetime.now(),
+            # StartTime=datetime.now() + timedelta(days=-1),
+            # EndTime=datetime.now(),
             StartTime=maya.now().subtract(days=1).datetime(),
             EndTime=maya.now().datetime(),
             Period=3600,
@@ -772,8 +776,10 @@ def _ensure_s3_event(awsclient, s3_event_source, function_name, alias_name,
             for rule in filter_rules:
                 print(colored.magenta(
                     '\t\t{}: {}'.format(rule['Name'], rule['Value'])))
-            _remove_permission(awsclient, function_name, permission_exists, alias_name)
-            _remove_events_from_s3_bucket(awsclient, bucket_name, target_lambda_arn,
+            _remove_permission(awsclient, function_name, permission_exists,
+                               alias_name)
+            _remove_events_from_s3_bucket(awsclient, bucket_name,
+                                          target_lambda_arn,
                                           filter_rules)
 
 
@@ -1119,7 +1125,7 @@ def ping(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
     payload = '{"ramuda_action": "ping"}'  # default to ping event
     # reuse invoke
     return invoke(awsclient, function_name, payload, invocation_type=None,
-           alias_name=alias_name, version=version)
+                  alias_name=alias_name, version=version)
 
 
 def invoke(awsclient, function_name, payload, invocation_type=None,
@@ -1169,3 +1175,46 @@ def invoke(awsclient, function_name, payload, invocation_type=None,
         return
     else:
         return results
+
+
+def logs(awsclient, function_name, start_dt, end_dt=None, tail=False):
+    """Send a ping request to a lambda function.
+
+    :param awsclient:
+    :param function_name:
+    :param start_dt:
+    :param end_dt:
+    :param tail:
+    :return:
+    """
+    log.debug('Getting cloudwatch logs for: %s', function_name)
+    log_group_name = '/aws/lambda/%s' % function_name
+
+    current_date = None
+    start_ts = datetime_to_timestamp(start_dt)
+    if end_dt:
+        end_ts = datetime_to_timestamp(end_dt)
+    else:
+        end_ts = None
+
+    # tail mode
+    # we assume that logs can arrive late but not out of order
+    # so we hold the timestamp of the last logentry and start the next iteration
+    # from there
+    while True:
+        logentries = filter_log_events(awsclient, log_group_name,
+                                       start_ts=start_ts, end_ts=end_ts)
+        if logentries:
+            for e in logentries:
+                actual_date, actual_time = decode_format_timestamp(e['timestamp'])
+                if current_date != actual_date:
+                    # print the date only when it changed
+                    current_date = actual_date
+                    print(current_date)
+                print('%s  %s' % (actual_time, e['message'].strip()))
+        if tail:
+            if logentries:
+                start_ts = logentries[-1]['timestamp'] + 1
+            time.sleep(5)
+            continue
+        break
