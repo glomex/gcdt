@@ -41,12 +41,13 @@ The following table lists the plugins and gives a brief overview what each plugi
 
 Plugin | Description
 ------ | -----------
-gcdt_datadog_integration | send deployment metrics and events to datadog
 gcdt_config_reader | read configuration files in json, python, or yaml format
 glomex_config_reader | read hocon configuration files
 gcdt_lookup | lookup information related to your AWS account
+gcdt_bundler | create code bundles for tenkai and ramuda.
 gcdt_say_hello | simple plugin to demonstrate how plugins work / are developed
 gcdt_slack_integration | send deployment status information to slack
+gcdt_datadog_integration | send deployment metrics and events to datadog
 
 Please refer to detailed plugin's documentation later in this document folder for detailed information about that plugin.
 

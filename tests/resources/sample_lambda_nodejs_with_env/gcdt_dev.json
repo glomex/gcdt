@@ -29,6 +29,7 @@
         "MYVALUE": "FOO"
       }
     },
+
     "deployment": {
       "region": "eu-west-1",
       "artifactBucket": "lookup:stack:infra-dev:s3DeploymentBucket"

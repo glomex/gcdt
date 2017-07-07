@@ -1,4 +1,4 @@
-## gcdt-config- reader plugin 
+## gcdt-config-reader plugin 
 
 Read config from files in json, python or yaml format.
 There is a section called `overview on configuration` above. Please make sure you have that one covered.

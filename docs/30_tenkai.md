@@ -64,6 +64,26 @@ If you need a convenient way of using the stack output during codedeploy on your
 ```
 
 
+#### Adding a settings.json file
+
+tenkai supports a `settings` section. If it is used a `settings.json` file is added to the zip bundle containing the values. You can specify the settings within the `tenkai` section.
+``` json
+    ...
+    "settings": {
+        "MYVALUE": "FOO"
+    }
+```
+
+You can use lookups like for the rest of the configuration. Note that the values are looked up BEFORE the the instance is deployed via codedeploy. If values change during the instance lifecycle it does not recognise the changes. For values that must be updated you should lookup the values in your code using for example credstash.
+
+``` json
+    ...
+    "settings": {
+        "accountId": "lookup:stack:infra-dev:AWSAccountId"
+    }
+```
+
+
 #### Setting the ENV variable
 
 For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:

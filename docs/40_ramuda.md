@@ -330,6 +330,27 @@ Ramuda supports AWS Lambda environment variables. You can specify them within th
 More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
 
 
+#### Adding a settings.json file
+
+Ramuda supports a settings section. If used a `settings.json` file is added to the zip bundle. You can specify the settings within the `ramuda` section.
+
+``` json
+    ...
+    "settings": {
+        "MYVALUE": "FOO"
+    }
+```
+
+You can use lookups like for the rest of the configuration. Note that the values are looked up BEFORE the AWS Lambda function is deployed. If values change during the AWS Lambda function lifecycle it does not recognise the changes. For values that must be updated you should lookup the values in your code using for example credstash.
+
+``` json
+    ...
+    "settings": {
+        "accountId": "lookup:stack:infra-dev:AWSAccountId"
+    }
+```
+
+
 #### Defining dependencies for your NodeJs lambda function
 
 A sample `package.json` file to that defines a dependency to the `1337` npm module:
