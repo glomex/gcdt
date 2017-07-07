@@ -1,29 +1,32 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "CodeSha256": "H1+SHVarBM4pLQY9z8FEr60nPvPdXfvjP9iv3djAWAk=",
-        "FunctionName": "jenkins_test_imeuvf",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "jSulMsupaj6EgXrHlL+HbYSLfG62lKWQ4ApLzJFuWfo=", 
+        "FunctionName": "jenkins_test_apqecf", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "2e7ead99-f2cd-11e6-a216-0749cb3577d9",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "cafa6056-60b6-11e7-b928-71a820a3d083", 
             "HTTPHeaders": {
-                "date": "Tue, 14 Feb 2017 15:49:34 GMT",
-                "x-amzn-requestid": "2e7ead99-f2cd-11e6-a216-0749cb3577d9",
-                "content-length": "521",
-                "content-type": "application/json",
+                "date": "Tue, 04 Jul 2017 12:46:25 GMT", 
+                "x-amzn-requestid": "cafa6056-60b6-11e7-b928-71a820a3d083", 
+                "content-length": "577", 
+                "content-type": "application/json", 
                 "connection": "keep-alive"
             }
-        },
-        "CodeSize": 3091,
-        "MemorySize": 256,
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_imeuvf",
-        "Version": "$LATEST",
-        "Role": "arn:aws:iam::420189626185:role/unittest_imeuvf_lambda",
-        "Timeout": 300,
-        "LastModified": "2017-02-14T15:49:34.384+0000",
-        "Handler": "index.handler",
-        "Runtime": "nodejs4.3",
+        }, 
+        "CodeSize": 3023, 
+        "MemorySize": 256, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_apqecf", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_apqecf_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T12:46:26.385+0000", 
+        "Handler": "index.handler", 
+        "Runtime": "nodejs4.3", 
         "Description": "lambda test for ramuda"
     }
 }

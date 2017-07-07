@@ -23,7 +23,7 @@ Usage:
         ramuda info
         ramuda wire [-v]
         ramuda unwire [-v]
-        ramuda delete [-v] -f <lambda>
+        ramuda delete [-v] -f <lambda> [--delete-logs]
         ramuda rollback [-v] <lambda> [<version>]
         ramuda ping [-v] <lambda> [<version>]
         ramuda invoke [-v] <lambda> [<version>] [--invocation-type=<type>] --payload=<payload> [--outfile=<file>]
@@ -36,6 +36,7 @@ Options:
 --payload=payload       '{"foo": "bar"}' or file://input.txt
 --invocation-type=type  Event, RequestResponse or DryRun
 --outfile=file          write the response to file
+--delete-logs           delete the log group and contained logs
 ```
 
 
@@ -95,6 +96,8 @@ delets the event configuration for the lambda function
 #### delete
 deletes a lambda function
 
+If you use the `--delete-logs` the cloudwatch log group associated to the AWS Lambda function is deleted including log entries, too. This helps to save cost for items used in testing.
+
 
 #### rollback
 sets the active version to ACTIVE -1 or to a given version
@@ -127,94 +130,115 @@ The preceding invoke command specifies RequestResponse as the invocation type, w
 
 ### Folder Layout
 
-lambda_ENV.conf -> settings for Lambda function
+
+### Sample config file
+
+sample gcdt_dev.json file:
 
 ```text
-lambda {
-  name = "dp-dev-store-redshift-load"
-  description = "Lambda function which loads normalized files into redshift"
-  role = "arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4"
-
-  handlerFunction = "handler.lambda_handler"
-  handlerFile = "handler.py"
-  timeout = "180"
-  memorySize = "128"
-  events {
-    s3Sources = [
-        { bucket = "dp-dev-store-cdn-redshift-manifests", type = "s3:ObjectCreated:*", suffix = ".json" },
-        { 
-            bucket = "dp-dev-store-cdn-redshift-manifests",
-            type = "s3:ObjectCreated:*",
-            prefix = "folder",
-            suffix = ".gz",
-            ensure="exists"
-         }
-    ]
-        timeSchedules = [
-           {
-               ensure = "exists",
-               ruleName = "time-event-test-T1",
-               ruleDescription = "run every 5 min from 0-5 UTC",
-               scheduleExpression = "cron(0/5 0-5 ? * * *)"
-           },
+{
+  "ramuda": {
+    "lambda": {
+      "name": "dp-dev-store-redshift-load",
+      "description": "Lambda function which loads normalized files into redshift",
+      "role": "arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4",
+      "handlerFunction": "handler.lambda_handler",
+      "handlerFile": "handler.py",
+      "timeout": "180",
+      "memorySize": "128",
+      "events": {
+        "s3Sources": [
+          {
+            "bucket": "dp-dev-store-cdn-redshift-manifests",
+            "type": "s3:ObjectCreated:*",
+            "suffix": ".json"
+          },
+          {
+            "bucket": "dp-dev-store-cdn-redshift-manifests",
+            "type": "s3:ObjectCreated:*",
+            "prefix": "folder",
+            "suffix": ".gz",
+            "ensure": "exists"
+          }
+        ],
+        "timeSchedules": [
+          {
+            "ensure": "exists",
+            "ruleName": "time-event-test-T1",
+            "ruleDescription": "run every 5 min from 0-5 UTC",
+            "scheduleExpression": "cron(0/5 0-5 ? * * *)"
+          }
         ]
+      },
+      "vpc": {
+        "subnetIds": [
+          "subnet-87685dde",
+          "subnet-9f39ccfb",
+          "subnet-166d7061"
+        ],
+        "securityGroups": [
+          "sg-ae6850ca"
+        ]
+      }
+    },
+    "bundling": {
+      "zip": "bundle.zip",
+      "preBundle": [
+        "../bin/first_script.sh",
+        "../bin/second_script.sh"
+      ],
+      "folders": [
+        {
+          "source": "../redshiftcdnloader",
+          "target": "./redshiftcdnloader"
+        },
+        {
+          "source": "psycopg2-linux",
+          "target": "psycopg2"
+        }
+      ]
+    },
+    "deployment": {
+      "region": "eu-west-1",
+      "artifactBucket": "7finity-$PROJECT-deployment"
+    }
   }
-  vpc  {
-    subnetIds = ["subnet-87685dde", "subnet-9f39ccfb", "subnet-166d7061"]
-    securityGroups = ["sg-ae6850ca"]
-  }
 }
-
-bundling {
-  zip = "bundle.zip"
-  preBundle = ["../bin/first_script.sh", "../bin/second_script.sh"]
-  folders = [
-    { source = "../redshiftcdnloader", target = "./redshiftcdnloader"}
-    { source = "psycopg2-linux", target = "psycopg2" }
-  ]
-}
-
-deployment {
-  region = "eu-west-1",
-  artifactBucket = "7finity-$PROJECT-deployment"
-}
-
 ```
 
-### configuration
 
-#### user configuration in ~/.gcdt
+### ramuda configuration as part of the gcdt_<env>.json file
 
-The .gcdt config file resides in your home folder and is created with "$ gcdt configure" as described above.
-We use .gcdt config file also for user specific configuration:
 
-```text
-ramuda {
-  failDeploymentOnUnsuccessfulPing = true
+#### log retention
+
+Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
+
+``` json
+"lambda": {
+    ...
+    "logs": {
+        "retentionInDays": 90
+    }
 }
 ```
-
-*failDeploymentOnUnsuccessfulPing*: ramuda deploy command fails if the lambda function does not implement ping or ping fails.
-
-
-#### lambda configuration
-
-settings_<env>.conf -> settings for your code
 
 
 #### S3 upload
 ramuda can upload your lambda functions to S3 instead of inline through the API.
-To enable this feature add this to your lambda.conf:
+To enable this feature add this to the "ramuda" section of your `gcdt_<env>.json` config file:
 
-deployment {
-region = "eu-west-1",
-    artifactBucket = "7finity-$PROJECT-deployment"
+``` json
+"deployment": {
+    "region": "eu-west-1",
+    "artifactBucket": "7finity-$PROJECT-deployment"
 }
+```
 
 You can get the name of the bucket from Ops and it should be part of the stack outputs of the base stack in your account (s3DeploymentBucket).
 
 
-#### Setting the ENV variable
+### Setting the ENV variable
 
 For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
 
@@ -229,7 +253,7 @@ gcdt supports the `nodejs4.3`, `nodejs6.10`, `python2.7`, `python3.6` runtimes.
 
 Add the runtime config to the `lambda` section of your gcdt configuration. 
 
-``` js
+``` json
     "runtime": "nodejs4.3"
 ```
 
@@ -243,6 +267,20 @@ At this point the following features are implemented:
 * if no runtime is defined gcdt uses the default runtime `python2.7`
 
 Note: for this to work you need to **have npm installed** on the machine you want to run the ramuda bundling!
+
+
+#### AWS Lambda environment variables
+
+Ramuda supports AWS Lambda environment variables. You can specify them within the `lambda` section.
+
+``` json
+    ...
+    "environment": {
+        "MYVALUE": "FOO"
+    }
+```
+
+More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
 
 
 #### Defining dependencies for your NodeJs lambda function
@@ -286,6 +324,6 @@ exports.handler = function(event, context, callback) {
 ```
 
 
-#### Environment specific configuration for your lambda function
+### Environment specific configuration for your lambda functions
 
-Please put the environment specific configuration for your lambda function into a `settings_<env>.conf` file.
+Please put the environment specific configuration for your lambda function into a `gcdt_<env>.json` file. For most teams a good convention would be to maintain at least 'dev', 'qa', and 'prod' envs.

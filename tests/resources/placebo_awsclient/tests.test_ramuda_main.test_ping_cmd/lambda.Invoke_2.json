@@ -1,24 +1,25 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Payload": {
-            "body": "\"alive\"",
-            "__module__": "botocore.response",
+            "body": "\"alive\"", 
+            "__module__": "botocore.response", 
             "__class__": "StreamingBody"
-        },
+        }, 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "78c64935-f2d7-11e6-87c4-0589d5244da2",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "6293be9c-60bb-11e7-9e3a-c55be24c01d4", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "78c64935-f2d7-11e6-87c4-0589d5244da2",
-                "content-length": "7",
-                "x-amzn-remapped-content-length": "0",
-                "connection": "keep-alive",
-                "date": "Tue, 14 Feb 2017 17:03:13 GMT",
+                "x-amzn-requestid": "6293be9c-60bb-11e7-9e3a-c55be24c01d4", 
+                "content-length": "7", 
+                "x-amzn-trace-id": "root=1-595b95d6-a67f41d523d4e4454664b9c4;sampled=0", 
+                "x-amzn-remapped-content-length": "0", 
+                "connection": "keep-alive", 
+                "date": "Tue, 04 Jul 2017 13:19:18 GMT", 
                 "content-type": "application/json"
             }
-        },
+        }, 
         "StatusCode": 200
     }
 }

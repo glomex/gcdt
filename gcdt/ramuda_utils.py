@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
+
 import base64
 import hashlib
+import logging
 import sys
 import threading
 import time
-import logging
 
+import os
 from s3transfer import S3Transfer
-from tabulate import tabulate
 
+from gcdt.utils import GracefulExit
 from . import utils
-
 
 PY3 = sys.version_info[0] >= 3
 
@@ -27,6 +27,8 @@ def lambda_exists(awsclient, lambda_name):
     client_lambda = awsclient.get_client('lambda')
     try:
         client_lambda.get_function(FunctionName=lambda_name)
+    except GracefulExit:
+        raise
     except Exception as e:
         return False
     else:
@@ -57,25 +59,6 @@ def list_lambda_versions(awsclient, function_name):  # this is not used!!
     )
     log.debug(response)
     return response
-
-
-def json2table(json):
-    """This does format a dictionary into a table.
-    Note this expects a dictionary (not a json string!)
-
-    :param json:
-    :return:
-    """
-    filter_terms = ['ResponseMetadata']
-    table = []
-    try:
-        for k in filter(lambda k: k not in filter_terms, json.keys()):
-            table.append([k.encode('ascii', 'ignore'),
-                         str(json[k]).encode('ascii', 'ignore')])
-        return tabulate(table, tablefmt='fancy_grid')
-    except Exception as e:
-        print(e)
-        return json
 
 
 def create_sha256(code):

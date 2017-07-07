@@ -11,13 +11,14 @@ import logging
 
 import os
 import six
-from clint.textui import colored, prompt
+from clint.textui import colored
 from tabulate import tabulate
 
 from .utils import get_env
 from .s3 import upload_file_to_s3
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
+from gcdt.utils import GracefulExit, json2table
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +51,8 @@ def load_cloudformation_template(path=None):
                     # register the template hooks so they listen to gcdt_signals
                     cloudformation.register()
             return cloudformation, True
+        except GracefulExit:
+            raise
         except ImportError as e:
             print('could not find package for import: %s' % e)
         except Exception as e:
@@ -101,6 +104,8 @@ def get_parameter_diff(awsclient, config):
                         new = old
                     table.append([param['ParameterKey'], old, new])
                     changed += 1
+            except GracefulExit:
+                raise
             except Exception:
                 print('Did not find %s in local config file' % param[
                     'ParameterKey'])
@@ -178,18 +183,6 @@ def _get_stack_state(client_cf, stackname):
     except:
         print('Failed to get stack state.')
         return
-
-
-def _json2table(data):
-    filter_terms = ['ResponseMetadata']
-    table = []
-    try:
-        for k, v in filter(lambda k, v: k not in filter_terms,
-                           data.iteritems()):
-            table.append([k, str(v)])
-        return tabulate(table, tablefmt='fancy_grid')
-    except Exception:
-        return data
 
 
 def _get_stack_id(awsclient, stackname):
@@ -321,6 +314,8 @@ def stack_exists(awsclient, stackName):
         response = client.describe_stacks(
             StackName=stackName
         )
+    except GracefulExit:
+        raise
     except Exception:
         return False
     else:
@@ -498,6 +493,11 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
         _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                    hook='post_update_hook',
                    message='CloudFormation is done, now executing post update hook...')
+    except GracefulExit as e:
+        log.info('Received %s signal - cancel cloudformation update for \'%s\'',
+                 str(e), stackname)
+        client_cf.cancel_update_stack(StackName=stackname)
+        exit_code = 1
     except Exception as e:
         if 'No updates' in repr(e):
             print(colored.yellow('No updates are to be performed.'))
@@ -508,19 +508,29 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
     return exit_code
 
 
-def delete_stack(awsclient, conf):
+def delete_stack(awsclient, conf, feedback=True):
     """Delete the stack from AWS cloud.
 
     :param awsclient:
     :param conf:
+    :param feedback: print out stack events (defaults to True)
     """
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
+    rolearn = conf['cloudformation'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
-    response = client_cf.delete_stack(
-        StackName=_get_stack_name(conf),
-    )
-    return _poll_stack_events(awsclient, stackname, last_event)
+
+    request = {
+        'StackName': stackname,
+    }
+
+    if rolearn:
+        request['RoleARN'] = rolearn
+
+    response = client_cf.delete_stack(**request)
+
+    if feedback:
+        return _poll_stack_events(awsclient, stackname, last_event)
 
 
 def list_stacks(awsclient):
@@ -547,27 +557,35 @@ def list_stacks(awsclient):
         result['StackName'] = summary["StackName"]
         result['CreationTime'] = summary['CreationTime']
         result['StackStatus'] = summary['StackStatus']
-        print(_json2table(result))
+        print(json2table(result))
         stack_sum += 1
     print('listed %s stacks' % str(stack_sum))
 
 
 def create_change_set(awsclient, conf, cloudformation):
     client = awsclient.get_client('cloudformation')
+    stack_name = _get_stack_name(conf)
     change_set_name = ''.join(random.SystemRandom().choice(
         string.ascii_uppercase) for _ in range(8))
+
+    if stack_exists(awsclient, stack_name):
+        change_set_type = 'UPDATE'
+    else:
+        change_set_type = 'CREATE'
+
     response = client.create_change_set(
-        StackName=_get_stack_name(conf),
+        StackName=stack_name,
         TemplateBody=cloudformation.generate_template(),
         Parameters=_generate_parameters(conf),
         Capabilities=[
             'CAPABILITY_IAM',
         ],
-        ChangeSetName=change_set_name
+        ChangeSetName=change_set_name,
+        ChangeSetType=change_set_type
     )
     # print json2table(response)
     # TODO catch nonexistant stack (ValidationError)
-    return change_set_name, _get_stack_name(conf)
+    return change_set_name, stack_name, change_set_type
 
 
 def describe_change_set(awsclient, change_set_name, stack_name):
@@ -589,7 +607,23 @@ def describe_change_set(awsclient, change_set_name, stack_name):
         # print('##### %s' % status)
         if status == 'CREATE_COMPLETE':
             for change in response['Changes']:
-                print(_json2table(change['ResourceChange']))
+                print(json2table(change['ResourceChange']))
+
+
+def delete_change_set(awsclient, change_set_name, stack_name):
+    """Delete specified change set. Currently we only use this during
+    automated regression testing. But we have plans so lets locate this
+    functionality here
+
+    :param awsclient:
+    :param change_set_name:
+    :param stack_name:
+    """
+    client = awsclient.get_client('cloudformation')
+
+    response = client.delete_change_set(
+        ChangeSetName=change_set_name,
+        StackName=stack_name)
 
 
 def _get_stack_name(conf):

@@ -146,7 +146,7 @@ def test_deploy_delete_cmds(awsclient, vendored_folder, cleanup_roles,
 
     # now we use the delete cmd to remove the lambda function
     tooldata['context']['command'] = 'delete'
-    delete_cmd(True, lambda_name, **tooldata)
+    delete_cmd(True, lambda_name, True, **tooldata)
 
 
 @pytest.mark.aws

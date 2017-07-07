@@ -29,7 +29,7 @@ def test_load_template(capsys):
     with pytest.raises(SystemExit):
         load_template()
     out, err = capsys.readouterr()
-    assert 'no cloudformation.py found, bailing out...\n' in out
+    assert 'could not load cloudformation.py, bailing out...\n' in out
 
 
 def test_version_cmd(capsys):

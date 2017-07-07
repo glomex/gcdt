@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "Zlv+YR6/UncLetDHZW33lDWBOdySnjSy49YA3jGxMsM=", 
+        "FunctionName": "jenkins_test_sample-lambda-nodejs6_10_bblfvw", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "ed64ec95-60b9-11e7-b8fd-436c4b7d21ea", 
+            "HTTPHeaders": {
+                "date": "Tue, 04 Jul 2017 13:08:52 GMT", 
+                "x-amzn-requestid": "ed64ec95-60b9-11e7-b8fd-436c4b7d21ea", 
+                "content-length": "657", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3665704, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-nodejs6_10_bblfvw", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_bblfvw_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T13:08:52.616+0000", 
+        "Handler": "index.handler", 
+        "Runtime": "nodejs6.10", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

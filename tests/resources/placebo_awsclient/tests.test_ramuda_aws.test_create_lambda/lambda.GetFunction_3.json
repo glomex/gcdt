@@ -1,33 +1,36 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Code": {
-            "RepositoryType": "S3",
-            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_qjamze-d519accb-910d-4683-a8c5-59e0cbb5db16?X-Amz-Security-Token=FQoDYXdzEO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDPuvzqfrOMCjup2%2BviK3A3B3j1kqxv8kMkgTJ3XZCTT3cw84p%2FRtIn88xtb6oUtBK1cmFleEsa6F%2F5sEjHFAyaohLyoJjym4%2Fyi4%2BXFGZ%2BRXizV4YpWeUlGuCa5LJpZX7FlwL1fVsXJmGnWREtCdLHFx3FWrn9iVd3QOidBKW7LxnLf5yJISiSIasfGxL8dyY1ink4O544AWbio%2FD%2B551W%2FI8s%2BhPzRY%2Fq26O7U7sGe0TpzsNfin5bnDlzXVBApKFskGMhmuJdio8skR4Pj6wymYL%2Ft8gAmA2j4QG7gry7vAMAz0P0OW6R7bpz6mG9LxWqy71HdxK4Oey87Fgzi7u%2BIJC5vgNVQw0hcPdSEMdKzWKYVMKn9ybqHQVmr8SmCpZoRWCBXPVTrgSuCO%2B31eemZHJa95EwacKOlQAasS9TCv5lO%2BYTrO26MMSJqbALZMZ%2B9wQlIGyv3puby8S0%2BJ6OwND0all40KR5BtdXxvErGNQyT52LeFuZslY%2FbPVP3ct9u0NHD2cEv0x27K6rKN%2FIOAJAeshWq3dhcZeaB3hGRBF64BZjqAWdH8rkqZqJ7q3u7uh8UBZLYCmOEvc7x6qIb6x%2Bk7wtoogZyMxQU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170214T154900Z&X-Amz-SignedHeaders=host&X-Amz-Expires=599&X-Amz-Credential=ASIAISAKSS4FJLV4JE7A%2F20170214%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=e04db6d28d6ae02398526ed2eb9292bc518637ab5e5b1faea34da31a6497897f"
-        },
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_yrrcwk-d56e9085-7db0-4c0e-ba2a-3a11a18be029?X-Amz-Security-Token=FQoDYXdzEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDMoV9zENZDHSlZ8VPSK3A3AC0zxVXwNz7E4CCjbZHeSvxkrwqselW6VVILil%2B77l0m%2BGL%2B4%2FmQFS99BcCUkiCPlFVk50VVOt1c1T66sv8qjKEpW2arUV71MFmL2yhGHrVskWlU9sNH63E1izu0Pmz2s9BA%2Bx%2BdVfBrLAGD5Xduvr%2FqP2nv8QPNS6TAmkkStoHfugWIzcN4QFi7QytQwgIurtlo616%2FrDAcp%2F%2F4iNC59QLNeI1%2BjQdLQU3q9KTFHF2kU5B7CTswSp%2FTt5nmbLetfregZSjfutOqV1SLAXcY%2FLe4V3yTNutvltvAPsD%2F7lrxJXdnKsra5s1e6YlIx5%2FObd9VdsJY14tYGYMsNwiV%2FC0R%2BsxEaK6p1CuwFxnYUfrnmbTH6TTh6m1MqaNhgr29R%2BvnQoXl%2Foh0CEQzsfvXczycfWknohT%2BTHkj4tS5bPQ54b3wqoD5EnIwkPaDlE%2Bb29I5qBJ3iX4MJ5xbO4I8dckRs6ADijBLPCZ1Dxx2eI1rvqjPfEQ%2BPPR%2FSkpADHUXEj%2BHPkuuH9TvOG6GrT3rx%2FjpfcD4fQytjuD1wXUiu9R%2FwwZ8aGZmlCsqkn%2B76JPjpn5BbyndsowOvtygU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170704T124520Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAIJ4CZ44D37OIVX4A%2F20170704%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=c4356ca5027d578e221b305155c7d4d0344258357a8cf3435acd6527d3386232"
+        }, 
         "Configuration": {
-            "Version": "$LATEST",
-            "CodeSha256": "vnjtrE5/tV1iT54RMHCRlL6cwa+NVLS+zr9dtPGWHfU=",
-            "FunctionName": "jenkins_test_qjamze",
-            "MemorySize": 256,
-            "CodeSize": 124403,
-            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qjamze",
-            "Handler": "handler.handle",
-            "Role": "arn:aws:iam::420189626185:role/unittest_qjamze_lambda",
-            "Timeout": 300,
-            "LastModified": "2017-02-14T15:48:59.334+0000",
-            "Runtime": "python2.7",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "H6JiC7CX/z9XPD3NFXE1SXhxNNBndOyB3dlfn+CElPc=", 
+            "FunctionName": "jenkins_test_yrrcwk", 
+            "MemorySize": 256, 
+            "CodeSize": 3666414, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_yrrcwk", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_yrrcwk_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-07-04T12:45:18.771+0000", 
+            "Runtime": "python2.7", 
             "Description": "lambda test for ramuda"
-        },
+        }, 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "1a8a3008-f2cd-11e6-83a2-c97855f18aaf",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "a3d37c88-60b6-11e7-9083-893583f251fb", 
             "HTTPHeaders": {
-                "date": "Tue, 14 Feb 2017 15:49:00 GMT",
-                "x-amzn-requestid": "1a8a3008-f2cd-11e6-83a2-c97855f18aaf",
-                "content-length": "1719",
-                "content-type": "application/json",
+                "date": "Tue, 04 Jul 2017 12:45:19 GMT", 
+                "x-amzn-requestid": "a3d37c88-60b6-11e7-9083-893583f251fb", 
+                "content-length": "1800", 
+                "content-type": "application/json", 
                 "connection": "keep-alive"
             }
         }

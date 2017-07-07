@@ -1,29 +1,32 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "CodeSha256": "vnjtrE5/tV1iT54RMHCRlL6cwa+NVLS+zr9dtPGWHfU=",
-        "FunctionName": "jenkins_test_oxfzts",
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "9fQrGR+MPGqcDBp+EnMqU9ZtlXuDQwlbi8zpboUeT1Q=", 
+        "FunctionName": "jenkins_test_pmineg", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "44e7380c-f2cd-11e6-87fa-198b3ccfd983",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1c31d9d3-60b7-11e7-ab86-eb4eb46089cc", 
             "HTTPHeaders": {
-                "date": "Tue, 14 Feb 2017 15:50:11 GMT",
-                "x-amzn-requestid": "44e7380c-f2cd-11e6-87fa-198b3ccfd983",
-                "content-length": "531",
-                "content-type": "application/json",
+                "date": "Tue, 04 Jul 2017 12:48:42 GMT", 
+                "x-amzn-requestid": "1c31d9d3-60b7-11e7-ab86-eb4eb46089cc", 
+                "content-length": "588", 
+                "content-type": "application/json", 
                 "connection": "keep-alive"
             }
-        },
-        "CodeSize": 124403,
-        "MemorySize": 256,
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_oxfzts",
-        "Version": "$LATEST",
-        "Role": "arn:aws:iam::420189626185:role/unittest_oxfzts_lambda",
-        "Timeout": 300,
-        "LastModified": "2017-02-14T15:50:11.963+0000",
-        "Handler": "handler.handle",
-        "Runtime": "python2.7",
+        }, 
+        "CodeSize": 3666233, 
+        "MemorySize": 256, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_pmineg", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_pmineg_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T12:48:42.643+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
         "Description": "lambda nodejs test for ramuda"
     }
 }

@@ -10,14 +10,15 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "c6cb9f96-f859-11e6-b2dc-03f557e5ec6b", 
+            "RequestId": "beb28233-60bb-11e7-8458-8ff1991fed81", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "c6cb9f96-f859-11e6-b2dc-03f557e5ec6b", 
+                "x-amzn-requestid": "beb28233-60bb-11e7-8458-8ff1991fed81", 
                 "content-length": "53", 
                 "x-amzn-remapped-content-length": "0", 
+                "x-amzn-trace-id": "root=1-595b9671-25ab71550e28a619404cb27e;sampled=0", 
                 "x-amz-function-error": "Unhandled", 
                 "connection": "keep-alive", 
-                "date": "Tue, 21 Feb 2017 17:18:35 GMT", 
+                "date": "Tue, 04 Jul 2017 13:21:52 GMT", 
                 "content-type": "application/json"
             }
         }, 

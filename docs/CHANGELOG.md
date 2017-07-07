@@ -5,8 +5,44 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.1.403] - 2017-06-22
+## [0.1.412] - 2017-07-05
+### Added
+- fix some docu issues for ramuda
+
+## [0.1.411] - 2017-07-04
+### Added
+- configure cloudwatch logs for ramuda (#191)
+
+## [0.1.410] - 2017-07-03
 ### Fixed
+- fix 'file://' prefix for ramuda invoke payload (#246)
+
+## [0.1.409] - 2017-07-03
+### Added
+- use roleARN for kumo delete, too (#162)
+
+## [0.1.408] - 2017-06-30
+### Added
+- kumo preview for new stack (#73)
+
+## [0.1.407] - 2017-06-30
+### Fixed
+- do not fail check_gcdt_update when PyPi is down (#313)
+
+## [0.1.406] - 2017-06-30
+### Added
+- support for AWS Lambda ENV variables (#262)
+
+## [0.1.405] - 2017-06-30
+### Fixed
+- minor documentation changes for kumo. Better description of usage of a role for CloudFormation (#162)
+
+## [0.1.404] - 2017-06-29
+### Added
+- handle SIGTERM and SIGINT signals and stop running deployments accordingly (#40)
+
+## [0.1.403] - 2017-06-22
+### Added
 - define GracefulExit exception (#40)
 
 ## [0.1.402] - 2017-06-21
@@ -26,7 +62,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - tenkai clean up /tmp files (#60)
 
 ## [0.1.398] - 2017-06-16
-### Fixed
+### Added
 - kumo use special role for cloudformation deployments (#162)
 
 ## [0.1.397] - 2017-06-16
@@ -87,7 +123,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - open source on Github (#255)
 - moved build jobs to new infra jenkins (#255)
 ### Changed
-- it is now mandatory for gcdt users to maintain plugin dependencies 
+- it is now mandatory for gcdt users to maintain plugin dependencies
 
 ## [0.0.84] - 2017-03-30
 ### Added
@@ -191,11 +227,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - kumo Parameter diffing does not work for aws coma-seperated inputs (#77).
 - ramuda fail deployment on failing ping (#113).
 - moved tests to pytest to improve cleanup after tests (#119).
-- speedup tests by use of mocked service calls to AWS services (#151). 
+- speedup tests by use of mocked service calls to AWS services (#151).
 
 ## [0.0.57] - 2016-09-23
 ### Added
-- tenkai now supports execution of bash scripts before bundling, can be used to bundle packages at runtime. 
+- tenkai now supports execution of bash scripts before bundling, can be used to bundle packages at runtime.
 ### Fixed
 - tenkai now returns proper exit codes when deployment fails.
 
@@ -211,7 +247,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.0.45] - 2016-09-01
 ### Added
 - ramuda autowire functionality
-- gcdt sends metrics and events to datadog 
+- gcdt sends metrics and events to datadog
 ### Fixed
 - yugen will add invoke lambda permission for new paths in existing APIs
 
