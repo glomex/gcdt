@@ -12,11 +12,9 @@ TODO: add the screencast link.
 * [Python Package Index](https://pypi.python.org/pypi)
 
 
-
 ### What you need to know about python package management
 
 TODO
-
 
 ### gcdt package structure
 
@@ -30,7 +28,6 @@ The following diagram gives an overview on the gcdt packages. Please note how we
 
 At glomex we have very few (currently one) gcdt packages we do not want to open-source. The glomex-config-reader has very opinionated defaults on how we use gcdt on our AWS infrastructure that is very specific and optimized for our media usecase.
 
-
 ### Maintaining dependencies for your project
 
 It is a very common practice not to install Python packages by hand. Instead dependencies and version are managed in a documented and repeatable way. Basically you add the names and versions of your packages to a text file. Most projects also group their dependencies into `direct` dependencies of the service or application and packages they need to develop, build, test and document.
@@ -41,7 +38,7 @@ The easiest way to install gcdt is via pip and virtualenv.
 
 ### Defining which gcdt-plugins to use
 
-gcdt needs at least some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a `requirements_gcdt.txt` file:
+gcdt needs at least some gcdt-glugins so you should want to install these together. Add `gcdt` and the plugins you use to *requirements_gcdt.txt*
 
 ``` text
 gcdt
@@ -56,9 +53,12 @@ gcdt-gen-serverless
 
 This is also a best practice to use the `requirements_gcdt.txt` file on your build server.
 
-### Prepare virtualenv
+### Setup virtualenv
 
-I am sure every Python dev uses virtualenv on a day to day basis. But we also use gcdt to deploy PHP, Ruby, and NodeJs projects. So I like to cover the basics:
+We sure every Python dev uses virtualenv on a day to day basis. Using virtualenvs for Python is considered best practise. This is what you need to do:
+* create a virtualenv ('$ virtualenv venv')
+* install the packages you want to use (see above)
+* a virtualenv works basically like every other technical device, you need to switch it on before you can use it ('$ source ./venv/bin/activate')
 
 Prepare the venv:
 
@@ -94,3 +94,10 @@ I do not throw away my lawn mower once I am done but with my terminals I do that
 ``` bash
 $ deactivate
 ```
+
+## Updating gcdt
+If you need to update `gcdt` just do:
+```bash
+$ pip install -U -r requirements_gcdt.txt
+```
+This will update `gcdt` and all `gcdt plugins` specified in *requirements_gcdt.txt*

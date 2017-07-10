@@ -124,26 +124,6 @@ Will load the cong file named `gcdt_dev_eu-west-1.json`
 3. fill `settings_<env>.conf` with valid parameters for your CloudFormation template
 4. call `kumo deploy` to deploy your stack to AWS
 
-
-### Kumo uses a specialized version of troposphere
-
-Maintaining our own troposhpere fork has many benefits but also a few disadvantages.
-
-#### Pros
-
-* region specific cloudformation resource specifications specs
-* smaller codebase (allows better quality / test coverage)
-* quickly have new cloudformation features available (update spec)
-+ update-type Mutable / Immutable
-+ easy to integrate "opinionated defaults" - feature
-+ easy to integrate "scaffolding" - feature
-
-
-#### Cons
-
-* need to maintain own fork (migrate new features and bug fixes, update specs)
-* I think 100% backwards compatibility will be an issue regarding generated modules and imports from cloudformation.ps templates. I expect that people who need to update their templates to a) set the region b) remove some imports.
-
 #### Details
 
 https://github.com/cloudtools/troposphere/issues/618

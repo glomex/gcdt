@@ -42,7 +42,7 @@ We hope gcdt will be helpful to you, too. At glomex we believe that only open so
 
 ## Installation
 
-Follow the [instruction](http://gcdt.readthedocs.io/en/latest/07_installation.html) to install `gcdt`
+Follow the [instructions](http://gcdt.readthedocs.io/en/latest/07_installation.html) to install `gcdt`
 
 ## Contributing
 
