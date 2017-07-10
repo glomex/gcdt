@@ -7,7 +7,7 @@ create beautiful infrastructure as code (IaC):
 * deploy API and manage API keys with `yugen`
 All of these things you could do for different Environments (dev, stage, prod)
 ## Infrastructure as code
-Infrastructure as Code (IaC) is a type of IT infrastructure that teams can automatically manage and provision through code, rather than using a manual process. Defining your infrastructure as code you will solve a lot of problems because code is:
+Infrastructure as Code (IaC) is a type of IT infrastructure that teams can automatically manage and provision through code, rather than using a manual process. Through defining your infrastructure as code you will solve a lot of problems since code is:
 - portable
 - reusable
 - shareable
@@ -32,7 +32,7 @@ $ virtualenv venv
 $ source ./venv/bin/activate
 $ pip install pip --upgrade
 ```
-gcdt needs some gcdt-glugins so you should want to install these together. Plugins is a powerful tool to add features to `gcdt` without having to directly modify the `gcdt` core. The easiest way is to put the dependencies into a requirements_gcdt.txt file:
+gcdt needs some `gcdt-glugins` so you should install these together. `gcdt-glugins` are powerful tool to add features to `gcdt` without having to directly modify the `gcdt` core. The easiest way is to put the dependencies into a *requirements_gcdt.txt* file:
 ```bash
 gcdt
 gcdt-config-reader
@@ -48,6 +48,12 @@ $ pip install -r requirements_gcdt.txt
 ```
 To check that everything is good and `gcdt` installed just do:
 ```bash
+$ gcdt version
+ERROR: 'ENV' environment variable not set!
+```
+`ENV` is environment variables which is required for recognizing what config file to use. Usually you have three different config file for each environment (dev, stage, prod). Use ENV to point `gcdt` what config file to use. You should specify it before running any `gcdt` command.
+```bash
+$ export ENV=dev # gcdt will use gcdt_dev.json config file
 $ gcdt version
 gcdt version 0.1.403
 gcdt plugins:
@@ -66,7 +72,7 @@ First of all you need to create two files:
 * *cloudformation.py* - here you will describe your infrastructure using `troposphere`
 * *gcdt_(dev|stage|prod)* - settings for your ENV in `json` format, needs to include all parameters for the cloudformation template + stack name. You should have separate config for each ENV.
 
-Let's create simple `gcdts_dev.json`*(please change all values according your AWS account)*:
+Let's create a simple `gcdts_dev.json`*(please change all values according your AWS account)*:
 ```bash
 {
   "kumo": {
@@ -80,8 +86,10 @@ Let's create simple `gcdts_dev.json`*(please change all values according your AW
   }
 }
 ```
-In `VPCId` and `DefaultInstancePolicyARN` used `gcdt-lookups` plugin which will search outputs in CloudFormation stack, that you mention in config file above, values for `DefaultVPCId` and `DefaultInstancePolicyARN` and use it in your template. *Instead of `<stack-name>` you should provide your stack name or use hardcoded value(not recommended).*
-It's time to create our first Infrastructure as Code. Let's to this.
+The values for `VPCId` and `DefaultInstancePolicyARN` are filled by by the `gcdt-lookups` which then will be used in the template. The `gcdt-lookups` plugin will search the outputs in the CloudFormation stack (as mentioned in the config).
+
+*Instead of `<stack-name>` you should provide your stack name or use hardcoded value(not recommended).*
+It's time to create our first Infrastructure as Code. Let's do this.
 Here is simple [cloudformation.py](https://github.com/glomex/gcdt-sample-stack/blob/master/infrastructure/cloudformation.py) script. Use it as a template for creating your infrastructure.
 
 ### Deploy stack to AWS
@@ -99,7 +107,7 @@ $ kumo deploy
 **More information about `kumo` you can find in [docs](http://gcdt.readthedocs.io/en/latest/20_kumo.html)**
 
 ## Ramuda
-Ramuda will help you to deploy, manage and control AWS Lambda. Ramuda support such runtimes: **nodejs4.3, nodejs6.10, python2.7, python3.6**
+Ramuda will help you to deploy, manage and control AWS Lambda. Ramuda supported runtimes are: **nodejs4.3, nodejs6.10, python2.7, python3.6**
 ### Deploy simple AWS Lambda
 Create `gcdt_(dev|stage|prod)` file or update if you create it with `kumo` *(please change all values according your AWS account)*:
 ```bash
@@ -139,14 +147,20 @@ $ ramuda deploy
 
 ## Tenkai
 tenkai will help you to deploy your application using AWS [Codedeploy](https://aws.amazon.com/codedeploy/).
-tenkai will create bundle and upload it to s3 with all files that you have in `codedeploy` folder. Create `codedeploy_(dev|stage|prod)` file *(please change all values according your AWS account)*:
+tenkai will create bundle and upload it to s3 with all files that you have in `codedeploy` folder. Create or update `gcdt_(dev|stage|prod)` file *(please change all values according your AWS account)*:
 ```bash
-codedeploy {
-  applicationName = "lookup:stack:<stack-name>:applicationName",
-  deploymentGroupName = "lookup:stack:<stack-name>:DeploymentGroup",
-  deploymentConfigName = "lookup:stack:<stack-name>:DeploymentConfig"
-  artifactsBucket = "7finity-infra-dev-deployment"
+"tenkai": {
+  "codedeploy": {
+    "applicationName": "lookup:stack:gcdt-sample-stack:applicationName",
+    "deploymentGroupName": "lookup:stack:gcdt-sample-stack:DeploymentGroup",
+    "deploymentConfigName": "lookup:stack:gcdt-sample-stack:DeploymentConfig",
+    "artifactsBucket": "lookup:stack:<stack-name>:s3DeploymentBucket"
+  }
 }
+```
+then do:
+```bash
+$ tenkai deploy
 ```
 **More information about `tenkai` you can find in [docs](http://gcdt.readthedocs.io/en/latest/30_tenkai.html)**
 
