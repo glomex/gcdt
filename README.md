@@ -1,12 +1,12 @@
 [![Documentation](https://readthedocs.org/projects/beedo/badge/?version=latest)](http://gcdt.readthedocs.io/en/latest/)
-[![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](LICENSE) 
+[![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/glomex/glomex-cloud-deployment-tools.svg?maxAge=2592000)](https://github.com/glomex/glomex-cloud-deployment-tools/issues)
 
 # glomex-cloud-deployment-tools (gcdt)
 
 gcdt is a CLI tool to code and deploy your AWS infrastructure.
 
-The gcdt command line tools have emerged from our experiences at glomex while working extensively with AWS services like Cloudformation, CodeDeploy, AWS Lambda, and API Gateway. gcdt is based on the same technology AWS uses to build AWS-CLI and Boto3 tools. 
+The gcdt command line tools have emerged from our experiences at glomex while working extensively with AWS services like Cloudformation, CodeDeploy, AWS Lambda, and API Gateway. gcdt is based on the same technology AWS uses to build AWS-CLI and Boto3 tools.
 
 In 2017 glomex won the Gartner award "Best Data Management and Infrastructure". Key to our success are the gcdt automation tools we use to successfully complete >100 deployments per day to AWS. Over the course of the last 12 months we built gcdt ourselves using Python.
 
@@ -40,64 +40,13 @@ We hope gcdt will be helpful to you, too. At glomex we believe that only open so
 * [gcdt project board](https://github.com/glomex/gcdt/projects/1)
 
 
-## Installing gcdt
+## Installation
 
-The easiest way to install gcdt is via pip and virtualenv.
-
-
-### Defining which gcdt-plugins to use
-
-gcdt needs at least some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a `requirements_gcdt.txt` file:
-
-``` text
-gcdt
-gcdt-say-hello
-gcdt-config-reader
-gcdt-lookups
-gcdt-bundler
-gcdt-slack-integration
-gcdt-datadog-integration
-gcdt-gen-serverless
-```
-
-This is also a best practice to use the `requirements_gcdt.txt` file on your build server.
-
-
-### Prepare virtualenv
-
-I am sure every Python dev uses virtualenv on a day to day basis. But we also use gcdt to deploy PHP, Ruby, and NodeJs projects. So I like to cover the basics:
-
-Prepare the venv:
-
-``` bash
-$ virtualenv venv
-```
-
-Activate the venv for use:
-
-``` bash
-$ source ./venv/bin/activate
-```
-
-
-### Installing all dev dependencies in one go 
-
-Install the dependencies into venv:
-
-``` bash
-$ pip install -r requirements_gcdt.txt
-```
-
-Now you can start using gcdt:
-
-``` bash
-$ gcdt version
-```
-
-BTW, `gcdt version` shows you all the versions of gcdt and installed plugins. So you can use this to quickly check which plugins are installed. 
-
+Follow the [instruction](http://gcdt.readthedocs.io/en/latest/07_installation.html) to install `gcdt`
 
 ## Contributing
+
+Here you can find the full guide for [contributing](http://gcdt.readthedocs.io/en/latest/70_development.html)
 
 At glomex we welcome feedback, bug reports, and pull requests!
 

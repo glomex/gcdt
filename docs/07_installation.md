@@ -1,12 +1,12 @@
 ## Installing gcdt
 
 This chapter covers the gcdt installation. gcdt's behaviour can be customized using plugins. The gcdt plugin mechanism relies on standard Python package mechanisms. In order to get a good experience and get the most out of gcdt you need to know a few things about Python packaging.
- 
+
 This chapter aims to provide you with all the information you need to know on this topic. We also have a screencast in the making related to this topic.
 
 TODO: add the screencast link.
 
- 
+
 ### Related documents
 
 * [Python Package Index](https://pypi.python.org/pypi)
@@ -20,7 +20,7 @@ TODO
 
 ### gcdt package structure
 
-The following diagram gives an overview on the gcdt packages. Please note how we grouped the gcdt packages in the following categories: 
+The following diagram gives an overview on the gcdt packages. Please note how we grouped the gcdt packages in the following categories:
 
 * gcdt - the gcdt core (livecycle mechanism, gcdt tools)
 * gcdt plugins - packages to customize how you use gcdt
@@ -28,7 +28,7 @@ The following diagram gives an overview on the gcdt packages. Please note how we
 
 ![gcdt package structure overview](/_static/images/gcdt-package-structure.png "gcdt package structure overview")
 
-At glomex we have very few (currently one) gcdt packages we do not want to open-source. The glomex-config-reader has very opinionated defaults on how we use gcdt on our AWS infrastructure that is very specific and optimized for our media usecase. 
+At glomex we have very few (currently one) gcdt packages we do not want to open-source. The glomex-config-reader has very opinionated defaults on how we use gcdt on our AWS infrastructure that is very specific and optimized for our media usecase.
 
 
 ### Maintaining dependencies for your project
@@ -37,56 +37,55 @@ It is a very common practice not to install Python packages by hand. Instead dep
 
 The grouping is not enforced by packaging but to have a std. within an organization is beneficial especially if your want to reuse CI/CD tools.
 
-A little opinionated but pretty common:
+The easiest way to install gcdt is via pip and virtualenv.
 
-* `requirements.txt` tools and packages your service directly depends on
-* `requirements_def.txt` tools and packages you need to develop and test your service
-* `requirements_gcdt.txt` gcdt and gcdt plugins you use to deploy your service to AWS (see https://github.com/glomex/gcdt#installing-gcdt)
-* `requirements_docs.txt` tools you need to write and build your documentation
+### Defining which gcdt-plugins to use
 
-TODO: document version schema
+gcdt needs at least some gcdt-glugins so you should want to install these together. The easiest way is to put the dependencies into a `requirements_gcdt.txt` file:
 
-* add gcdt to your requirements_gcdt.txt
-* add the plugins you use to requirements_gcdt.txt
+``` text
+gcdt
+gcdt-say-hello
+gcdt-config-reader
+gcdt-lookups
+gcdt-bundler
+gcdt-slack-integration
+gcdt-datadog-integration
+gcdt-gen-serverless
+```
 
+This is also a best practice to use the `requirements_gcdt.txt` file on your build server.
 
-### Installation
+### Prepare virtualenv
 
-#### Setup virtualenv
+I am sure every Python dev uses virtualenv on a day to day basis. But we also use gcdt to deploy PHP, Ruby, and NodeJs projects. So I like to cover the basics:
 
-Using virtualenv is a little bit evolved so some people do not like to use it. There is three things you need to do.
+Prepare the venv:
 
-* create a virtualenv ('$ virtualenv venv')
-* install the packages you want to use (see below)
-* a virtualenv works basically like every other technical device, you need to switch it on before you can use it ('$ source ./venv/bin/activate')
+``` bash
+$ virtualenv venv
+```
 
-
-TODO add private repo deps
-
-All gcdt packages live in a private PyPi repository. See [reposerver](http://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/) for instructions.
-
-
-#### Activate a virtualenv before use
-
-Again make sure you activate a virtualenv before you can use it:
+Activate the venv for use:
 
 ``` bash
 $ source ./venv/bin/activate
 ```
+### Installing all dev dependencies in one go
 
-
-#### Install your dependencies
-
-``` bash
-$ pip install -r requirements.txt -r requirements_dev.txt -r requirements_gcdt.txt
-```
-
-If you have additional docs - dependencies for your project you need to install them, too:
+Install the dependencies into venv:
 
 ``` bash
-$ pip install -r requirements_docs.txt
+$ pip install -r requirements_gcdt.txt
 ```
 
+Now you can start using gcdt:
+
+``` bash
+$ gcdt version
+```
+
+BTW, `gcdt version` shows you all the versions of gcdt and installed plugins. So you can use this to quickly check which plugins are installed.
 
 #### Deactivate a virtualenv
 
