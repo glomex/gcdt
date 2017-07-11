@@ -2,7 +2,7 @@
 
 The previous chapter gave an overview on the gcdt plugin system so please make sure that you have read through that one. This section goes into more detail in how the gcdt plugin mechanism works. So you can customize plugins or even write new ones.
 
-gcdt plugins are standard python packages which are installed separately. How to do this is covered in the previous chapter `plugin overview`. To understand how the plugin mechanism works one must know about the `gcdt livecycle` which is covered in the next section.
+gcdt plugins are standard python packages which are installed separately. How to do this is covered in the previous chapter [plugin overview](http://gcdt.readthedocs.io/en/latest/gcdt_plugins/10_overview.html). To understand how the plugin mechanism works one must know about the `gcdt lifecycle` which is covered in the next section.
 
 If a gcdt command is entered on the command line things are processed in the following order:
 
@@ -61,17 +61,13 @@ The same lifecycle & signals mechanism applies to gcdt hooks. So if you ever won
 
 ### Overview of the gcdt lifecycle
 
-The gcdt lifecycle is the essential piece of the gcdt tool core. It is like the clockwork of a watch. The gcdt lifecycle makes sure that everything is executed in the right order and everything works together like commands, hooks, plugins, etc. 
+The gcdt lifecycle is the essential piece of the gcdt tool core. It is like the clockwork of a watch. The gcdt lifecycle makes sure that everything is executed in the right order and everything works together like commands, hooks, plugins, etc.
 
 The gcdt lifecycle is generic. This means the gcdt lifecycle is the same for each and every gcdt tool. But it is possible that a tool does not need a certain lifecycle step to it just skips it. For example there is no bundling for kumo(, yet?).
 
 The coarse grained gcdt lifecycle looks like that:
 
-* read config from file
-* process lookups (lookups are a gcdt syntax to retrieve config & secrets from other systems)
-* validate config
-* bundle (create zip artefacts)
-* execute the gcdt command
+![gcdt_lifecycle](/_static/images/gcdt_lifecycle.png)
 
 If during processing of a lifecycle an error occurs then the processing stops.
 

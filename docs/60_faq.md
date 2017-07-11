@@ -11,7 +11,9 @@ must supply either home or prefix/exec-prefix -- not both
 
 You can find a solution on [here](http://stackoverflow.com/questions/24257803/distutilsoptionerror-must-supply-either-home-or-prefix-exec-prefix-not-both)
 
-### Raumel package error
+### Python package errors
+
+**Please ensure that you have the latest version of `pip` and `virtualenv`**
 
 If you have such error:
 ```bash
@@ -21,10 +23,29 @@ you need to upgrade `pip` with latest version:
 ```bash
 $ pip install pip --upgrade
 ```
+The cause of such error could be the old version of `virtualenv`:
+```python
+Traceback (most recent call last):
+  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/bin/kumo", line 5, in <module>
+    from pkg_resources import load_entry_point
+  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 3018, in <module>
+    working_set = WorkingSet._build_master()
+  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 612, in _build_master
+    ws.require(__requires__)
+  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 918, in require
+    needed = self.resolve(parse_requirements(requirements))
+  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 805, in resolve
+    raise DistributionNotFound(req)
+pkg_resources.DistributionNotFound: regex==2017.6.07
+```
+Update `virtualenv`:
+```bash
+$ pip install virtualenv --upgrade
+```
 
 ### Bundling error
 
-Such error usually appear because you didn't install `gcdt-bundler` plugin:
+This error is usually caused by not having installed the `gcdt-bundler` plugin:
 ```python
 (.python) root@:/app# AWS_PROFILE=superuser-dev ENV=qa ramuda deploy
 ERROR: u'_zipfile'

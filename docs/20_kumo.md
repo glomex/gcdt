@@ -2,11 +2,9 @@
 
 `kumo` (雲 from Japanese: cloud) is gcdts cloudformation deploy tool.
 
-
 ### Related documents
 
 * [AWS CloudFormation service](https://aws.amazon.com/cloudformation/)
-
 
 ### Usage
 
@@ -76,7 +74,6 @@ def generate_template():
 
 Further settings files, depending on your environments in the format of `gcdt_<ENV>.json`
 
-
 #### Config file example
 
 ``` js
@@ -101,10 +98,9 @@ This can be used to limit access of users drastically and only give CloudFormati
 ```
 Make sure the role may be assumed by CloudFormation. See also: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html
 
-
 #### Setting the ENV variable
 
-For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
+If you want to set the environment variable ENV to 'DEV' you can do that as follows:
 
 ``` bash
 export ENV=DEV
@@ -116,25 +112,18 @@ This can also be exploited to have different configuration for different regions
 export ENV=DEV_eu-west-1
 ```
 
-Will load the cong file named `gcdt_dev_eu-west-1.json`
+Will load the config file named `gcdt_dev_eu-west-1.json`
 
 ### Howto
-1. create a new local folder from the template: `kumo scaffold`
-2. fill `cloudformation.py` with the contents of your stack
-3. fill `settings_<env>.conf` with valid parameters for your CloudFormation template
-4. call `kumo deploy` to deploy your stack to AWS
-
-#### Details
-
-https://github.com/cloudtools/troposphere/issues/618
-http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html
-
+1. create and fill `cloudformation.py` with the contents of your stack
+2. create and fill `settings_<env>.conf` with valid parameters for your CloudFormation template
+3. call `kumo deploy` to deploy your stack to AWS
 
 ### Kumo lifecycle hooks
 
 Kumo lifecycle hooks work exactly like gcdt lifecycle hooks but have a specialized integration for kumo templates.
 
-```
+```python
 def my_hook(params):
     context, config = params
     ...
@@ -150,10 +139,9 @@ def deregister():
     gcdt_signals.initialized.disconnect(my_hook)
 ```
 
-
 ### Kumo legacy hooks
 
-The hooks in this section are deprecated please use gcdt livecycle hooks (see above)
+The hooks in this section are deprecated please use gcdt lifecycle hooks (see above)
 
 kumo offers numerous hook functions that get called during the lifecycle of a kumo deploy run:
 
@@ -171,16 +159,15 @@ kumo offers numerous hook functions that get called during the lifecycle of a ku
   * gets called after a stack is either updated or created
 
 You can basically call any custom code you want. Just implement
-the function in cloudformation.py
+the function in `cloudformation.py`
 
-multiple ways of using parameters in your hook functions:
+Multiple ways of using parameters in your hook functions:
 
 * no arguments (as previous to version 0.0.73.dev0.dev0)
 * use kwargs dict and just access the arguments you need e.g. "def pre_hook(**kwargs):"
 * use all positional arguments e.g. "def pre_hook(awsclient, config, parameters, stack_outputs, stack_state):"
 * use all arguments as keyword arguments or mix.
 * with version 0.0.77 we decided to move away from using boto_sessions towards awsclient (more flexible and low-level).
-
 
 ### Using gcdt functionality in your cloudformation templates
 
@@ -196,7 +183,6 @@ The following functionality requires `awsclient` to lookup information from AWS.
 * gcdt.servicediscovery: get_outputs_for_stack
 * gcdt.route53: create_record
 * gcdt.kumo_util: ensure_ebs_volume_tags_autoscaling_group
-
 
 ### Stack Policies
 kumo does offer support for stack policies. It has a default stack policy that will get applied to each stack:
@@ -221,7 +207,6 @@ kumo does offer support for stack policies. It has a default stack policy that w
 ```
 This allows an update operation to modify each resource but disables replacement or deletion. If you supply "--override-stack-policy" to kumo then it will use another default policy that gets applied during updates and allows every operation on every resource:
 
-
 ```json
 {
   "Statement" : [
@@ -244,7 +229,6 @@ If you want to lock down your stack even more you can implement two functions in
 
 These should return a valid stack policy document which is then preferred over the default value.
 
-
 ### Signal handling
 
-I kumo receives a SIGINT or SIGTERM signal during a stack update `cancel_update_stack` is called for the stack.
+kumo receives a SIGINT or SIGTERM signal during a stack update `cancel_update_stack` is called for the stack.
