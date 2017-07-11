@@ -29,7 +29,10 @@ def bucket_exists(awsclient, bucket):
 def create_versioned_bucket(awsclient, bucket):
     client_s3 = awsclient.get_client('s3')
     client_s3.create_bucket(
-        Bucket=bucket
+        Bucket=bucket,
+        CreateBucketConfiguration={
+            'LocationConstraint': 'eu-west-1'
+        }
     )
     client_s3.put_bucket_versioning(
         Bucket=bucket,
