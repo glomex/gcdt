@@ -479,7 +479,7 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
         }
 
         if _get_artifact_bucket(conf):
-            request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation),
+            request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
         else:
             # if we have no artifacts bucket configured then upload the template directly
             request['TemplateBody'] = cloudformation.generate_template()
