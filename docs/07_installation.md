@@ -4,17 +4,22 @@ This chapter covers the gcdt installation. gcdt's behaviour can be customized us
 
 This chapter aims to provide you with all the information you need to know on this topic. We also have a screencast in the making related to this topic.
 
-TODO: add the screencast link.
-
-
 ### Related documents
 
 * [Python Package Index](https://pypi.python.org/pypi)
 
-
 ### What you need to know about python package management
 
-TODO
+There is now a lot of packaging infrastructure in the Python community, a lot of technology, and a lot of experience. We will try cover some basic things and give you best practice what to use for Python package management.
+1. **Always use `virtualenv`.** A virtualenv is effectively an overlay on top of your system Python install. Creating a virtualenv can be thought of as copying your system Python environment into a local location. When you modify virtualenvs, you are modifying an isolated container. Modifying virtualenvs has no impact on your system Python.
+2. **Use `pip` for installing packages.** Python packaging has historically been a mess. There are a handful of tools and APIs for installing Python packages. As a casual Python user, you only need to know of one of them: pip.
+If someone says install a package, you should be thinking create a `virtualenv`, activate a `virtualenv`, `pip install <package>`. You should never run `pip install` outside of a `virtualenv`. (The exception is to install `virtualenv` and pip itself, which you almost certainly want in your system/global Python.)
+3. **Use `requirements` file for installing all project dependencies**. Always strictly specify the package version. Bad one: `somepackage=>2.0.3`. Good one: `somepackage==2.0.3`
+
+Here is some useful links if you want dive deeper into Python package management.
+* [A history of Python packaging](https://blog.startifact.com/posts/older/a-history-of-python-packaging.html)
+* [Python Packaging Do's and Don'ts](https://gregoryszorc.com/blog/2014/07/15/python-packaging-do%27s-and-don%27ts/)
+* [The Nine Circles of Python Dependency Hell](https://tech.knewton.com/blog/2015/09/the-nine-circles-of-python-dependency-hell/)
 
 ### gcdt package structure
 
@@ -33,6 +38,12 @@ At glomex we have very few (currently one) gcdt packages we do not want to open-
 It is a very common practice not to install Python packages by hand. Instead dependencies and version are managed in a documented and repeatable way. Basically you add the names and versions of your packages to a text file. Most projects also group their dependencies into `direct` dependencies of the service or application and packages they need to develop, build, test and document.
 
 The grouping is not enforced by packaging but to have a std. within an organization is beneficial especially if your want to reuse CI/CD tools.
+
+A little opinionated but pretty common:
+
+* `requirements.txt` tools and packages your service directly depends on
+* `requirements_def.txt` tools and packages you need to develop and test your service
+* `requirements_gcdt.txt` gcdt and gcdt plugins you use to deploy your service to AWS
 
 The easiest way to install gcdt is via pip and virtualenv.
 
@@ -55,7 +66,7 @@ This is also a best practice to use the `requirements_gcdt.txt` file on your bui
 
 ### Setup virtualenv
 
-We sure every Python dev uses virtualenv on a day to day basis. Using virtualenvs for Python is considered best practise. This is what you need to do:
+Using virtualenvs for Python is considered best practice. This is what you need to do:
 * create a virtualenv ('$ virtualenv venv')
 * install the packages you want to use (see above)
 * a virtualenv works basically like every other technical device, you need to switch it on before you can use it ('$ source ./venv/bin/activate')

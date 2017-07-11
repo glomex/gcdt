@@ -13,33 +13,19 @@ You can find a solution on [here](http://stackoverflow.com/questions/24257803/di
 
 ### Python package errors
 
-**Please ensure that you have the latest version of `pip` and `virtualenv`**
+**Please ensure that you have the latest version of `pip`, `setuptools` and `virtualenv`**
 
-If you have such error:
+If you have error like this:
 ```bash
-pip._vendor.pkg_resources.DistributionNotFound: The 'ruamel.ordereddict' distribution was not found and is required by ruamel.yaml
+pip._vendor.pkg_resources.DistributionNotFound:
 ```
-you need to upgrade `pip` with latest version:
+or
 ```bash
-$ pip install pip --upgrade
-```
-The cause of such error could be the old version of `virtualenv`:
-```python
-Traceback (most recent call last):
-  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/bin/kumo", line 5, in <module>
-    from pkg_resources import load_entry_point
-  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 3018, in <module>
-    working_set = WorkingSet._build_master()
-  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 612, in _build_master
-    ws.require(__requires__)
-  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 918, in require
-    needed = self.resolve(parse_requirements(requirements))
-  File "/var/lib/jenkins/workspace/Infrastructure/mes-ftp/gcdtauto/venv/local/lib/python2.7/dist-packages/pkg_resources/__init__.py", line 805, in resolve
-    raise DistributionNotFound(req)
 pkg_resources.DistributionNotFound: regex==2017.6.07
 ```
-Update `virtualenv`:
+you should update your `pip` and `virtualenv` packages
 ```bash
+$ pip install pip --upgrade
 $ pip install virtualenv --upgrade
 ```
 
