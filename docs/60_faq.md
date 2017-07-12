@@ -25,8 +25,8 @@ pkg_resources.DistributionNotFound: regex==2017.6.07
 ```
 you should update your `pip` and `virtualenv` packages
 ```bash
-$ pip install pip --upgrade
-$ pip install virtualenv --upgrade
+$ pip install -U pip
+$ pip install -U virtualenv
 ```
 
 ### Bundling error
@@ -54,15 +54,15 @@ $ pip install -U -r requirements_gcdt.txt
 
 ### Missing configuration error
 
-After updating `gcdt` to the latest version you saw such error:
+After updating `gcdt` to the latest version you get the following error:
 ```bash
 Configuration missing for ‘kumo’
 ```
-This error appear if you used `hocon` based configs without installed `glomex-config-reader` plugin. You can install it or use [conf2json](http://sre-docs.glomex.cloud/glomex-config-reader/userguide/40_glomex_config_reader.html#command-conf2json) util (only for glomex users) to transform your `hocon` configs into `json` one.
+This error appears if you used `hocon` based configs without having installed the `glomex-config-reader` plugin. You can install it or use [conf2json](http://sre-docs.glomex.cloud/glomex-config-reader/userguide/40_glomex_config_reader.html#command-conf2json) util (only for glomex users) to transform your `hocon` configs into `json` one.
 
 ### Environment variable error
 
-If you run any `gcdt` commands (kumo, tenkai, ramuda etc) and have such error:
+If you run any `gcdt` commands (kumo, tenkai, ramuda etc) and get the following error:
 ```
 ERROR: 'ENV' environment variable not set!
 ```

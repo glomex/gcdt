@@ -49,7 +49,7 @@ zips all the files belonging to your lambda according to your config and require
 
 #### deploy
 
-Deploy a AWS Lambda function to AWS. If the lambda function is non-existent it will create a new one.
+Deploy an AWS Lambda function to AWS. If the lambda function is non-existent it will create a new one.
 
 For an existing lambda function ramuda checks whether the hashcode of the bundle has changed and updates the lambda function accordingly. This feature was added to ramuda so we are able to compare the hashcodes locally and save time for bundle uploads to AWS.
 
