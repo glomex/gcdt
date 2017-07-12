@@ -76,10 +76,9 @@ Further settings files, depending on your environments in the format of `gcdt_<E
 
 #### Config file example
 
-``` js
+```json
 "cloudformation": {
     "StackName": "sample-stack"
-    ...
 }
 ```
 You like examples better than documentation? Check out our sample-stack at https://github.com/glomex/gcdt-sample-stack/tree/master/infrastructure
@@ -89,19 +88,16 @@ You like examples better than documentation? Check out our sample-stack at https
 There is a new Feature in CloudFormation which lets a User specify a Role which shall be used to execute the Stack. Docs can be found at http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html
 This can be used to limit access of users drastically and only give CloudFormation the permission to do all the heavy lifting.
 
-``` js
+```json
 "cloudformation": {
-    ...
     "RoleARN": "arn:aws:iam::<AccountID>:role/<CloudFormationRoleName>"
-    ...
 }
 ```
 Make sure the role may be assumed by CloudFormation. See also: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html
 
 #### Setting the ENV variable
 
-If you want to set the environment variable ENV to 'DEV' you can do that as follows:
-
+You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
 ``` bash
 export ENV=DEV
 ```

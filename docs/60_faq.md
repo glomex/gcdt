@@ -66,7 +66,7 @@ If you run any `gcdt` commands (kumo, tenkai, ramuda etc) and have such error:
 ```
 ERROR: 'ENV' environment variable not set!
 ```
-please be sure that you provide the correct environment variables (ENV=PROD/DEV/etc.)
+Environment variable "ENV" indicated the account/staging area you want to work with. This parameter tells the tools which config file to use. Please be sure that you provide the correct environment variables (ENV=PROD/DEV/etc.)
 ```bash
 $ export ENV=DEV
 ```

@@ -33,7 +33,7 @@ codedeploy -> folder containing your deployment bundle
 
 codedeploy_env.conf -> settings for your code
 
-```text
+```json
 "codedeploy": {
     "applicationName": "mep-dev-cms-stack2-mediaExchangeCms-F5PZ6BM2TI8",
     "deploymentGroupName": "mep-dev-cms-stack2-mediaExchangeCmsDg-1S2MHZ0NEB5MN",
@@ -59,8 +59,7 @@ If you need a convenient way of using the stack output during codedeploy on your
 
 #### Setting the ENV variable
 
-If you want to set the environment variable ENV to 'DEV' you can do that as follows:
-
+You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
 ``` bash
 export ENV=DEV
 ```

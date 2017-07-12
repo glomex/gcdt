@@ -10,7 +10,7 @@ glomex-cloud-deployment-tools
 
 #### Setting the ENV variable
 
-For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
+You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
 
 ``` bash
 export ENV=DEV
