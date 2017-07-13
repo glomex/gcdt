@@ -43,6 +43,6 @@ We have configuration on the following levels:
 
 Configuration is assembled in multiple levels:
 
-![gcdt configuration defaults](/docs/_static/images/gcdt_configuration.png "gcdt configuration defaults")
+![gcdt configuration defaults](_static/images/gcdt_configuration.png "gcdt configuration defaults")
 
 The multiple levels of configurations represent different stages in the lifecycle process. This allows to have a very generic "catch-all" configuration but to override this configuration in specific cases when we have more specific information. Like when using a plugin. For example the glomex_config_reader works on hocon files so it looks for files with a `.conf` extension whereas the gcdt_config_reader looks for `.json` config files.
