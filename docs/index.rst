@@ -5,6 +5,7 @@ glomex-cloud-deployment-tools
    :glob:
 
    02_introduction
+   03_getting_started
    05_overview
    07_installation
    10_gcdt

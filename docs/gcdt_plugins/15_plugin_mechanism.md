@@ -67,7 +67,7 @@ The gcdt lifecycle is generic. This means the gcdt lifecycle is the same for eac
 
 The coarse grained gcdt lifecycle looks like that:
 
-![gcdt_lifecycle](/docs/_static/images/gcdt_lifecycle.png)
+![gcdt_lifecycle](_static/images/gcdt_lifecycle.png)
 
 If during processing of a lifecycle an error occurs then the processing stops.
 
