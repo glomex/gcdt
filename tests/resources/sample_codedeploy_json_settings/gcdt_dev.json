@@ -1,0 +1,14 @@
+{
+  "tenkai": {
+    "codedeploy": {
+      "applicationName": "TenkaiUnitTestApplicationName",
+      "deploymentGroupName": "TenkaiUnitTestDeploymentGroup",
+      "deploymentConfigName": "TenkaiUnitTestDeploymentConfig",
+      "artifactsBucket": "tenkai-unit-test-deployment"
+    },
+
+    "settings": {
+      "accountId": "lookup:stack:infra-dev:AWSAccountId"
+    }
+  }
+}

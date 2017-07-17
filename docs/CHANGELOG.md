@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.1.415] - 2017-07-13
+## [0.1.418] - 2017-07-17
 ### Added
-- getting started guide docu
+- ramuda & tenkai settings files - json format (#295)
 
-## [0.1.414] - 2017-07-12
+## [0.1.417] - 2017-07-13
+### Added
+- getting started guide (#312)
+
+## [0.1.415] - 2017-07-12
 ### Fixed
 - kumo update when using the artifactBucket setting (#332)
 

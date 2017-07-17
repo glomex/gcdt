@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+import tarfile
 import subprocess
 import time
 import random
@@ -166,3 +167,25 @@ def list_zip(input_zip):
     input_zip = ZipFile(io.BytesIO(input_zip))
     for name in input_zip.namelist():
         yield name
+
+
+def read_file_from_zip(input_zip, name):
+    """Read file contents of a single file from zip_bytes content."""
+    # use string as buffer
+    input_zip = ZipFile(io.BytesIO(input_zip))
+    if name in input_zip.namelist():
+        with input_zip.open(name) as zfile:
+            return zfile.read()
+
+
+def list_tarfile(tarfile_name):
+    """list tarfile content."""
+    tfile = tarfile.open(tarfile_name)
+    return [t.name for t in tfile.getmembers()]
+
+
+def read_file_from_tarfile(tarfile_name, name):
+    """Read file contents of a single file from tarfile."""
+    tfile = tarfile.open(tarfile_name)
+    if name in [t.name for t in tfile.getmembers()]:
+        return tfile.extractfile(name).read()

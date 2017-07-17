@@ -2,9 +2,11 @@
 
 `ramuda` (ラムダ from Japanese: lambda) is gcdts AWS lambda deployment tool.
 
+
 ### Related documents
 
 * [AWS Lambda service](https://aws.amazon.com/lambda/)
+
 
 ### Usage
 
@@ -41,11 +43,14 @@ Options:
 --tail                  continuously output logs (can't use '--end'), stop 'Ctrl-C'
 ```
 
+
 #### clean
 removes local bundle files.
 
+
 #### bundle
 zips all the files belonging to your lambda according to your config and requirements.txt and puts it in your current working directory as `bundle.zip`. Useful for debugging as you can still provide different environments.
+
 
 #### deploy
 
@@ -59,6 +64,7 @@ If you can not reuse ('--keep') the virtualenv for example in case you deploy fr
 
 In any case configuration will be updated and an alias called "ACTIVE" will be set to this version.
 
+
 #### list
 lists all existing lambda functions including additional information like config and active version:
 ```bash
@@ -71,6 +77,7 @@ dp-dev-store-redshift-create-cdn-tables
 	CodeSha256: KY0Xk+g/Gt69V0siRhgaG7zWbg234dmb2hoz0NHIa3A=
 ```
 
+
 #### metrics
 displays metric for a given lambda:
 ```bash
@@ -81,19 +88,25 @@ dp-dev-ingest-lambda-cdnnorm
 	Throttles 13
 ```
 
+
 #### wire
 "wires" the lambda function to its event configuration. This actually activates the lambda function.
 
+
 #### unwire
 delets the event configuration for the lambda function
+
 
 #### delete
 deletes a lambda function
 
 If you use the `--delete-logs` the cloudwatch log group associated to the AWS Lambda function is deleted including log entries, too. This helps to save cost for items used in testing.
 
+
 #### rollback
 sets the active version to ACTIVE -1 or to a given version
+
+
 
 #### invoke
 
@@ -114,6 +127,7 @@ $ ramuda invoke my_hello_world \
 ```
 
 The preceding invoke command specifies RequestResponse as the invocation type, which returns a response immediately in response to the function execution. Alternatively, you can specify Event as the invocation type to invoke the function asynchronously.
+
 
 #### logs
 
@@ -156,10 +170,13 @@ Use 'Ctrl-C' to exit tail mode
 ^CReceived SIGINT signal - exiting command 'ramuda logs'
 ```
 
+
 #### version
 will print the version of gcdt you are using
 
+
 ### Folder Layout
+
 
 ### Sample config file
 
@@ -236,7 +253,9 @@ sample gcdt_dev.json file:
 }
 ```
 
+
 ### ramuda configuration as part of the gcdt_<env>.json file
+
 
 #### log retention
 
@@ -250,6 +269,7 @@ Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 1
     }
 }
 ```
+
 
 #### S3 upload
 ramuda can upload your lambda functions to S3 instead of inline through the API.
@@ -272,6 +292,7 @@ You you need to set an environment variable "ENV" which indicates the account/st
 export ENV=DEV
 ```
 
+
 ### runtime support
 
 gcdt supports the `nodejs4.3`, `nodejs6.10`, `python2.7`, `python3.6` runtimes.
@@ -293,6 +314,7 @@ At this point the following features are implemented:
 
 Note: for this to work you need to **have npm installed** on the machine you want to run the ramuda bundling!
 
+
 #### AWS Lambda environment variables
 
 Ramuda supports AWS Lambda environment variables. You can specify them within the `lambda` section.
@@ -305,6 +327,28 @@ Ramuda supports AWS Lambda environment variables. You can specify them within th
 ```
 
 More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html).
+
+
+#### Adding a settings.json file
+
+Ramuda supports a settings section. If used a `settings.json` file is added to the zip bundle. You can specify the settings within the `ramuda` section.
+
+``` json
+    ...
+    "settings": {
+        "MYVALUE": "FOO"
+    }
+```
+
+You can use lookups like for the rest of the configuration. Note that the values are looked up BEFORE the AWS Lambda function is deployed. If values change during the AWS Lambda function lifecycle it does not recognise the changes. For values that must be updated you should lookup the values in your code using for example credstash.
+
+``` json
+    ...
+    "settings": {
+        "accountId": "lookup:stack:infra-dev:AWSAccountId"
+    }
+```
+
 
 #### Defining dependencies for your NodeJs lambda function
 
@@ -322,6 +366,7 @@ A sample `package.json` file to that defines a dependency to the `1337` npm modu
 }
 ```
 
+
 #### Sample NodeJs lambda function
 
 From using lambda extensively we find it a good practise to implement the `ping` feature. With the ping `ramdua` automatically checks if your code is running fine on AWS.
@@ -330,6 +375,7 @@ From using lambda extensively we find it a good practise to implement the `ping`
 
  ```javascript
 var l33t = require('1337')
+
 
 exports.handler = function(event, context, callback) {
     console.log( "event", event );
@@ -343,6 +389,7 @@ exports.handler = function(event, context, callback) {
     }
 };
 ```
+
 
 ### Environment specific configuration for your lambda functions
 

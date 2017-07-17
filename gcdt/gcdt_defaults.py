@@ -28,6 +28,7 @@ DEFAULT_CONFIG = {
         'non_config_commands': ['logs']  # this command does not require config
     },
     'tenkai': {
+        'settings_file': 'settings.json',
         'stack_output_file': 'stack_output.yml'
     }
 }
