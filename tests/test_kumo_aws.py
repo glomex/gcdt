@@ -394,6 +394,76 @@ def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
     assert exit_code == 0
 
 
+# @pytest.mark.aws
+# @check_preconditions
+# def test_update_stack_artifactbucket(awsclient, simple_cloudformation_stack,
+#                               temp_cloudformation_policy, cleanup_roles, cleanup_buckets):
+#     # create a stack we use for the test lifecycle
+#     cloudformation_simple_stack, _ = load_cloudformation_template(
+#         here('resources/simple_cloudformation_stack/cloudformation.py')
+#     )
+#
+#     upload_conf = {
+#         'cloudformation': {
+#             'StackName': "infra-dev-kumo-sample-stack",
+#             'InstanceType': "t2.micro",
+#             'artifactBucket': "unittest-kumo-artifact-bucket"
+#         }
+#     }
+#
+#     region = awsclient.get_client('s3').meta.region_name
+#     account = os.getenv('ACCOUNT', None)
+#     # add account prefix to artifact bucket config
+#     if account:
+#         upload_conf['cloudformation']['artifactBucket'] = \
+#             '%s-unittest-kumo-artifact-bucket' % account
+#
+#     artifact_bucket = _get_artifact_bucket(upload_conf)
+#     prepare_artifacts_bucket(awsclient, artifact_bucket)
+#     cleanup_buckets.append(artifact_bucket)
+#     dest_key = 'kumo/%s/%s-cloudformation.json' % (region,
+#                                                    _get_stack_name(upload_conf))
+#     expected_s3url = 'https://s3-%s.amazonaws.com/%s/%s' % (region,
+#                                                             artifact_bucket,
+#                                                             dest_key)
+#     cloudformation_simple_stack, _ = load_cloudformation_template(
+#         here('resources/simple_cloudformation_stack/cloudformation.py')
+#     )
+#     actual_s3url = _s3_upload(awsclient, upload_conf,
+#                               cloudformation_simple_stack)
+#     assert expected_s3url == actual_s3url
+#
+#     # create role to use for cloudformation update
+#     role = create_role_helper(
+#         awsclient,
+#         'unittest_%s_kumo' % helpers.random_string(),
+#         policies=[
+#             temp_cloudformation_policy,
+#             'arn:aws:iam::aws:policy/AWSCodeDeployReadOnlyAccess'
+#         ],
+#         principal_service=['cloudformation.amazonaws.com']
+#     )
+#     cleanup_roles.append(role['RoleName'])
+#
+#     config_rolearn = upload_conf
+#     config_rolearn['cloudformation']['RoleARN'] = role['Arn']
+#
+#     change_set_name, stackname, change_set_type = \
+#         create_change_set(awsclient, config_rolearn,
+#                           cloudformation_simple_stack)
+#     assert stackname == _get_stack_name(config_rolearn)
+#     assert change_set_name != ''
+#     assert change_set_type == 'UPDATE'
+#     describe_change_set(awsclient, change_set_name, stackname)
+#
+#     # update the stack
+#     changed = get_parameter_diff(awsclient, config_rolearn)
+#     assert not changed
+#     exit_code = deploy_stack(awsclient, config_rolearn,
+#                              cloudformation_simple_stack,
+#                              override_stack_policy=False)
+#     assert exit_code == 0
+
 @pytest.mark.aws
 @check_preconditions
 def test_describe_change_set_on_new_stack(awsclient):

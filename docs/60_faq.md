@@ -11,25 +11,74 @@ must supply either home or prefix/exec-prefix -- not both
 
 You can find a solution on [here](http://stackoverflow.com/questions/24257803/distutilsoptionerror-must-supply-either-home-or-prefix-exec-prefix-not-both)
 
+### Python package errors
 
-### Environment variables
+**Please ensure that you have the latest version of `pip`, `setuptools` and `virtualenv`**
 
-Be sure to provide the correct environment variables (ENV=PROD/DEV/etc.)
+If you have error like this:
+```bash
+pip._vendor.pkg_resources.DistributionNotFound:
+```
+or
+```bash
+pkg_resources.DistributionNotFound: regex==2017.6.07
+```
+you should update your `pip` and `virtualenv` packages
+```bash
+$ pip install -U pip
+$ pip install -U virtualenv
+```
 
+### Bundling error
+
+This error is usually caused by not having installed the `gcdt-bundler` plugin:
+```python
+(.python) root@:/app# AWS_PROFILE=superuser-dev ENV=qa ramuda deploy
+ERROR: u'_zipfile'
+ERROR: u'_zipfile'
+Traceback (most recent call last):
+  File "/root/.python/bin/ramuda", line 11, in <module>
+    sys.exit(main())
+  File "/root/.python/local/lib/python2.7/site-packages/gcdt/ramuda_main.py", line 255, in main
+    dispatch_only=['version', 'clean']))
+  File "/root/.python/local/lib/python2.7/site-packages/gcdt/gcdt_lifecycle.py", line 195, in main
+    return lifecycle(awsclient, env, tool, command, arguments)
+  File "/root/.python/local/lib/python2.7/site-packages/gcdt/gcdt_lifecycle.py", line 142, in lifecycle
+    raise(e)
+KeyError: u'_zipfile'
+```
+You need to add `gcdt-bundler` into *requirements_gcdt.txt* and do:
+```bash
+$ pip install -U -r requirements_gcdt.txt
+```
+
+### Missing configuration error
+
+After updating `gcdt` to the latest version you get the following error:
+```bash
+Configuration missing for ‘kumo’
+```
+This error appears if you used `hocon` based configs without having installed the `glomex-config-reader` plugin. You can install it or use [conf2json](http://sre-docs.glomex.cloud/glomex-config-reader/userguide/40_glomex_config_reader.html#command-conf2json) util (only for glomex users) to transform your `hocon` configs into `json` one.
+
+### Environment variable error
+
+If you run any `gcdt` commands (kumo, tenkai, ramuda etc) and get the following error:
+```
+ERROR: 'ENV' environment variable not set!
+```
+Environment variable "ENV" indicated the account/staging area you want to work with. This parameter tells the tools which config file to use. Please be sure that you provide the correct environment variables (ENV=PROD/DEV/etc.)
+```bash
+$ export ENV=DEV
+```
 
 ### Using hooks in gcdt
 
 We implemented hooks in gcdt similar to the plugin mechanism.
- 
+
 You can use hooks in gcdt in the following places:
- 
+
 * use hooks in a `cloudformation.py` template
 * use hooks in a `gcdt_<env>.py` config file
 * use hooks in a `hookfile.py`. Please specify the location of the `hookfile` in your config file.
 
 For details on gcdt_lifecycle and gcdt_signals please take a look into the gcdt-plugins section of this documentation.
-
-
-### Why not elastic beanstalk
-
-At glomex we adhere to infrastructure-as-code and use cloudformation. elastic beanstalk within cloudformation makes little sense since this will again set up another cloudformation stack. so everything you can do with elastic beanstalk you can do directly with cloudformation (and more). this way you directly benefit from improvements we make to gcdt tooling and standards that are based on this toolchain.
