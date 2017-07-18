@@ -11,7 +11,7 @@ import botocore.session
 import os
 from docopt import docopt
 
-from gcdt.utils import GracefulExit, signal_handler
+from gcdt.utils import GracefulExit, signal_handler, fix_old_kumo_config
 from . import gcdt_signals
 from .gcdt_awsclient import AWSClient
 from .gcdt_cmd_dispatcher import cmd, get_command
@@ -80,6 +80,9 @@ def lifecycle(awsclient, env, tool, command, arguments):
     if 'hookfile' in config:
         # load hooks from hookfile
         _load_hooks(config['hookfile'])
+    if 'kumo' in config:
+        # deprecated: this needs to be removed once all old-style "cloudformation" entries are gone
+        fix_old_kumo_config(config)
 
     ## lookup
     # credential retrieval should be done using lookups

@@ -8,7 +8,7 @@ import pytest
 from gcdt_bundler.bundler import bundle_revision
 
 from gcdt.kumo_core import deploy_stack, load_cloudformation_template, delete_stack, _get_stack_name
-from gcdt.utils import are_credentials_still_valid
+from gcdt.utils import are_credentials_still_valid, fix_old_kumo_config
 from gcdt.servicediscovery import get_outputs_for_stack
 from gcdt.tenkai_core import deploy as tenkai_deploy, deployment_status
 from gcdt.gcdt_config_reader import read_json_config
@@ -20,9 +20,9 @@ log = logging.getLogger(__name__)
 
 
 # read config
-config_sample_codeploy_stack = read_json_config(
+config_sample_codeploy_stack = fix_old_kumo_config(read_json_config(
     here('resources/sample_codedeploy_app/gcdt_dev.json')
-)['kumo']
+))['kumo']
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'

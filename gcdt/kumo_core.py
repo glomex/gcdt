@@ -67,7 +67,7 @@ def get_parameter_diff(awsclient, config):
     """
     client_cf = awsclient.get_client('cloudformation')
     try:
-        stackname = config['cloudformation']['StackName']
+        stackname = config['stack']['StackName']
         if stackname:
             response = client_cf.describe_stacks(StackName=stackname)
             if response['Stacks']:
@@ -95,7 +95,7 @@ def get_parameter_diff(awsclient, config):
                 # can not compare list with str!!
                 # if ',' in old:
                 #    old = old.split(',')
-                new = config['cloudformation'][param['ParameterKey']]
+                new = config['parameters'][param['ParameterKey']]
                 if old != new:
                     if old.startswith('***'):
                         # parameter is configured with `NoEcho=True`
@@ -280,7 +280,8 @@ def _generate_parameter_entry(conf, raw_param):
 
 
 def _get_conf_value(conf, raw_param):
-    conf_value = conf['cloudformation'][raw_param]
+    #conf_value = conf['cloudformation'][raw_param]
+    conf_value = conf['parameters'][raw_param]
     if isinstance(conf_value, list):
         # if list or array then join to comma separated list
         return ','.join(conf_value)
@@ -291,16 +292,17 @@ def _get_conf_value(conf, raw_param):
 def _generate_parameters(conf):
     # generate the parameter list for the cloudformation template from the
     # conf keys
-    raw_parameters = []
+    #raw_parameters = []
     parameter_list = []
     # this looks weird since it should work only on the 'cloudformation' config
     # for item in conf.iterkeys():
     #    for key in conf[item].iterkeys():
     # for key in conf['cloudformation'].iterkeys():
-    for key in conf['cloudformation'].keys():
-        if key not in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
-            raw_parameters.append(key)
-    for param in raw_parameters:
+    #for key in conf['cloudformation'].keys():
+    #    if key not in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
+    #        raw_parameters.append(key)
+    #for param in raw_parameters:
+    for param in conf.get('parameters', {}).keys():
         entry = _generate_parameter_entry(conf, param)
         parameter_list.append(entry)
 
@@ -417,7 +419,7 @@ def _create_stack(awsclient, conf, cloudformation, parameters):
     # create stack with all the information we have
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['cloudformation'].get('RoleARN', None)
+    rolearn = conf['stack'].get('RoleARN', None)
 
     _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                hook='pre_create_hook')
@@ -463,7 +465,7 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
     exit_code = 0
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['cloudformation'].get('RoleARN', None)
+    rolearn = conf['stack'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
 
     try:
@@ -517,7 +519,7 @@ def delete_stack(awsclient, conf, feedback=True):
     """
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['cloudformation'].get('RoleARN', None)
+    rolearn = conf['stack'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
 
     request = {
@@ -583,8 +585,6 @@ def create_change_set(awsclient, conf, cloudformation):
         ChangeSetName=change_set_name,
         ChangeSetType=change_set_type
     )
-    # print json2table(response)
-    # TODO catch nonexistant stack (ValidationError)
     return change_set_name, stack_name, change_set_type
 
 
@@ -629,11 +629,11 @@ def delete_change_set(awsclient, change_set_name, stack_name):
 
 
 def _get_stack_name(conf):
-    return conf['cloudformation']['StackName']
+    return conf['stack']['StackName']
 
 
 def _get_artifact_bucket(conf):
-    bucket = conf['cloudformation'].get('artifactBucket')
+    bucket = conf['stack'].get('artifactBucket')
     if bucket:
         return bucket
 

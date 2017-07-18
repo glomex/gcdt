@@ -59,6 +59,7 @@ def test_preview_cmd(awsclient, simple_cloudformation_stack,
         awsclient, 'kumo', 'preview',
         config_base_name='gcdt_large',
         location=here('./resources/simple_cloudformation_stack/'))
+    #assert tooldata['config'] == {}
     preview_cmd(**tooldata)
     out, err = capsys.readouterr()
     # verify diff results

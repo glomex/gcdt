@@ -8,7 +8,8 @@ from collections import OrderedDict
 import pytest
 
 from gcdt.utils import version, __version__, retries,  \
-    get_command, dict_merge, get_env, get_context, flatten, json2table
+    get_command, dict_merge, get_env, get_context, flatten, json2table, \
+    fix_old_kumo_config
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
 
 from . import here
@@ -211,6 +212,74 @@ def test_json2table_exception():
     assert actual == data
 
 
+def test_fix_old_kumo_config():
+    config = {
+        'kumo': {
+            'cloudformation': {
+                'StackName': 'my_stack_name',
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
+
+
+def test_fix_old_kumo_config_no_change():
+    config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
+
+
+def test_fix_old_kumo_config_no_parameters():
+    config = {
+        'kumo': {
+            'cloudformation': {
+                'StackName': 'my_stack_name',
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
 
 # TODO get_outputs_for_stack
 # TODO test_make_command

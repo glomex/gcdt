@@ -288,3 +288,18 @@ def json2table(json):
     except Exception as e:
         print(e)
         return json
+
+
+def fix_old_kumo_config(config):
+    # copied from gcdt-config-reader
+    if config.get('kumo', {}).get('cloudformation', {}):
+        cloudformation = config['kumo'].pop('cloudformation')
+        stack = {}
+        for key in cloudformation.keys():
+            if key in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
+                stack[key] = cloudformation.pop(key)
+        if stack:
+            config['kumo']['stack'] = stack
+        if cloudformation:
+            config['kumo']['parameters'] = cloudformation
+    return config

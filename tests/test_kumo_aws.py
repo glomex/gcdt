@@ -13,7 +13,7 @@ from gcdt.kumo_core import load_cloudformation_template, \
     _get_artifact_bucket, _s3_upload, _get_stack_state, delete_change_set
 from gcdt.kumo_util import ensure_ebs_volume_tags_ec2_instance, \
     ensure_ebs_volume_tags_autoscaling_group
-from gcdt.utils import are_credentials_still_valid
+from gcdt.utils import are_credentials_still_valid, fix_old_kumo_config
 from gcdt.servicediscovery import get_outputs_for_stack
 from gcdt.s3 import prepare_artifacts_bucket
 from gcdt.gcdt_config_reader import read_json_config
@@ -27,17 +27,17 @@ from . import here
 
 
 # read template and config
-config_simple_stack = read_json_config(
+config_simple_stack = fix_old_kumo_config(read_json_config(
     here('resources/simple_cloudformation_stack/gcdt_dev.json')
-)['kumo']
+))['kumo']
 
-config_ec2 = read_json_config(
+config_ec2 = fix_old_kumo_config(read_json_config(
     here('resources/sample_ec2_cloudformation_stack/gcdt_dev.json')
-)['kumo']
+))['kumo']
 
-config_autoscaling = read_json_config(
+config_autoscaling = fix_old_kumo_config(read_json_config(
     here('resources/sample_autoscaling_cloudformation_stack/gcdt_dev.json')
-)['kumo']
+))['kumo']
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'
@@ -87,9 +87,9 @@ def sample_cloudformation_stack_with_hooks(awsclient):
     cloudformation_stack, _ = load_cloudformation_template(
         here('resources/sample_cloudformation_stack_with_hooks/cloudformation.py')
     )
-    config_stack = read_json_config(
+    config_stack = fix_old_kumo_config(read_json_config(
         here('resources/sample_cloudformation_stack_with_hooks/gcdt_dev.json')
-    )['kumo']
+    ))['kumo']
     exit_code = deploy_stack(awsclient, config_stack,
                              cloudformation_stack,
                              override_stack_policy=False)
@@ -110,7 +110,7 @@ def test_s3_upload(cleanup_buckets, awsclient):
     #)
 
     upload_conf = {
-        'cloudformation': {
+        'stack': {
             'StackName': "infra-dev-kumo-sample-stack",
             'InstanceType': "t2.micro",
             'artifactBucket': "unittest-kumo-artifact-bucket"
@@ -121,7 +121,7 @@ def test_s3_upload(cleanup_buckets, awsclient):
     account = os.getenv('ACCOUNT', None)
     # add account prefix to artifact bucket config
     if account:
-        upload_conf['cloudformation']['artifactBucket'] = \
+        upload_conf['stack']['artifactBucket'] = \
             '%s-unittest-kumo-artifact-bucket' % account
 
     artifact_bucket = _get_artifact_bucket(upload_conf)
@@ -344,7 +344,7 @@ def test_create_stack_rolearn(
     cleanup_roles.append(role['RoleName'])
 
     config_rolearn = deepcopy(config_simple_stack)
-    config_rolearn['cloudformation']['RoleARN'] = role['Arn']
+    config_rolearn['stack']['RoleARN'] = role['Arn']
 
     exit_code = deploy_stack(awsclient, config_rolearn,
                              cloudformation_simple_stack,
@@ -375,7 +375,7 @@ def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
     cleanup_roles.append(role['RoleName'])
 
     config_rolearn = deepcopy(config_simple_stack)
-    config_rolearn['cloudformation']['RoleARN'] = role['Arn']
+    config_rolearn['stack']['RoleARN'] = role['Arn']
 
     change_set_name, stackname, change_set_type = \
         create_change_set(awsclient, config_rolearn,
