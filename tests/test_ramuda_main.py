@@ -17,7 +17,7 @@ from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata, \
 from gcdt_testtools.helpers_aws import create_role_helper
 from gcdt_testtools.helpers_aws import awsclient, temp_bucket  # fixtures!
 from .test_ramuda_aws import vendored_folder, temp_lambda, cleanup_lambdas  # fixtures!
-from gcdt_testtools.helpers import temp_folder  # fixtures !
+from gcdt_testtools.helpers import temp_folder, logcapture  # fixtures !
 from gcdt_testtools import helpers
 
 # note: xzy_main tests have a more "integrative" character so focus is to make
@@ -25,10 +25,14 @@ from gcdt_testtools import helpers
 log = logging.getLogger(__name__)
 
 
-def test_version_cmd(capsys):
+def test_version_cmd(logcapture):
     version_cmd()
-    out, err = capsys.readouterr()
-    assert out.startswith('gcdt version')
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert records[1][2].startswith('gcdt plugins:')
 
 
 def test_clean_cmd(temp_folder):

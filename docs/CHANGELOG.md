@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.1.420] - 2017-07-18
 ### Added
 - kumo add SNS notifications (#185)
-- logcapture mecahnism for tests (#285)
+- logcapture mechanism for tests (#285)
 ### Deprecated
 - kumo "cloudformation" config section, use "parameters" & "stack" instead (#337)
 

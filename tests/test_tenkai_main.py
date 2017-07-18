@@ -11,6 +11,7 @@ from gcdt_bundler.bundler import bundle_revision
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
 from gcdt_testtools.helpers_aws import awsclient  # fixtures !
 from .test_tenkai_aws import sample_codedeploy_app  # fixtures !
+from gcdt_testtools.helpers import logcapture  # fixtures!
 from . import here
 
 
@@ -38,10 +39,14 @@ def sample_codedeploy_app_working_folder():
     os.chdir(cwd)  # cd back to original folder
 
 
-def test_version_cmd(capsys):
+def test_version_cmd(logcapture):
     version_cmd()
-    out, err = capsys.readouterr()
-    assert out.startswith('gcdt version')
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert records[1][2].startswith('gcdt plugins:')
 
 
 @pytest.mark.aws

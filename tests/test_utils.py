@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 import pytest
 
-from gcdt.utils import version, __version__, retries,  \
+from gcdt.utils import retries,  \
     get_command, dict_merge, get_env, get_context, flatten, json2table, \
     fix_old_kumo_config, dict_selective_merge
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
@@ -18,16 +18,7 @@ from . import here
 
 PY3 = sys.version_info[0] >= 3
 
-
-# would love to use logging for that...
-def test_version(logcapture):
-    version()
-    records = list(logcapture.actual())
-
-    assert records[0][1] == 'INFO'
-    assert records[0][2].startswith('gcdt version ')
-    assert records[1][1] == 'INFO'
-    assert records[1][2].startswith('gcdt plugins:')
+# Note: version() is tested via multiple test_version_cmd in test_*_main.py
 
 
 def test_retries_backoff():

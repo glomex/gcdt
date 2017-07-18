@@ -19,8 +19,11 @@ from .s3 import upload_file_to_s3
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
 from gcdt.utils import GracefulExit, json2table, dict_merge, dict_selective_merge
+from gcdt.gcdt_logging import getLogger
 
-log = logging.getLogger(__name__)
+
+#log = logging.getLogger(__name__)
+log = getLogger(__name__)
 
 
 def load_cloudformation_template(path=None):
