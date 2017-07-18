@@ -7,30 +7,18 @@ from collections import OrderedDict
 
 import pytest
 
-from gcdt.utils import version, __version__, retries,  \
-    get_command, dict_merge, get_env, get_context, flatten, json2table
+from gcdt.utils import retries,  \
+    get_command, dict_merge, get_env, get_context, flatten, json2table, \
+    fix_old_kumo_config, dict_selective_merge
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
+from gcdt_testtools.helpers import logcapture  # fixtures!
 
 from . import here
 
 
 PY3 = sys.version_info[0] >= 3
 
-
-def test_version(capsys):
-    version()
-    out, err = capsys.readouterr()
-    assert out.strip().startswith('gcdt version %s' % __version__)
-
-
-# would love to use logging for that...
-#def test_version(caplog):
-#    # https://github.com/eisensheng/pytest-catchlog
-#    version()
-#
-#    record_tuples = list(caplog.records)
-#    assert record_tuples[0].getMessage().startswith('gcdt version ')
-#    assert record_tuples[0].levelno == logging.INFO
+# Note: version() is tested via multiple test_version_cmd in test_*_main.py
 
 
 def test_retries_backoff():
@@ -134,6 +122,16 @@ def test_dict_merge():
     assert a == {'1': 1, '2': [2, 2], '3': 3, '4': [4]}
 
 
+def test_dict_selective_merge():
+    a = {'1': 1, '2': [2], '3': {'3': 3}}
+
+    dict_selective_merge(a, {'4': 4, '5': 5}, ['5'])
+    assert a == {'1': 1, '2': [2], '3': {'3': 3}, '5': 5}
+
+    dict_selective_merge(a, {'6': 6}, ['7'])
+    assert a == {'1': 1, '2': [2], '3': {'3': 3}, '5': 5}
+
+
 def test_get_env(preserve_env):
     # used in cloudformation!
     os.environ['ENV'] = 'LOCAL'
@@ -211,6 +209,74 @@ def test_json2table_exception():
     assert actual == data
 
 
+def test_fix_old_kumo_config():
+    config = {
+        'kumo': {
+            'cloudformation': {
+                'StackName': 'my_stack_name',
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
+
+
+def test_fix_old_kumo_config_no_change():
+    config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            },
+            'parameters': {
+                'InstanceType': 't2.micro'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
+
+
+def test_fix_old_kumo_config_no_parameters():
+    config = {
+        'kumo': {
+            'cloudformation': {
+                'StackName': 'my_stack_name',
+            }
+        }
+    }
+    exp_config = {
+        'kumo': {
+            'stack': {
+                'StackName': 'my_stack_name'
+            }
+        }
+    }
+
+    fix_old_kumo_config(config)
+    assert config == exp_config
 
 # TODO get_outputs_for_stack
 # TODO test_make_command

@@ -18,7 +18,7 @@ from gcdt_testtools import helpers
 from .placebo_awsclient import PlaceboAWSClient
 from gcdt import __version__
 from gcdt.gcdt_config_reader import read_json_config
-from gcdt.utils import get_env
+from gcdt.utils import get_env, fix_old_kumo_config
 
 log = logging.getLogger(__name__)
 
@@ -370,7 +370,7 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
         gcdt_config_file = os.path.join(location,
                                         '%s_%s.json' % (config_base_name, env))
         context = {'_awsclient': awsclient, 'tool': tool, 'command': command}
-        config = read_json_config(gcdt_config_file)[tool]
+        config = fix_old_kumo_config(read_json_config(gcdt_config_file))[tool]
         _resolve_lookups(context, config, config.get('lookups',
                                                      ['secret', 'ssl', 'stack',
                                                       'baseami']))

@@ -220,6 +220,28 @@ http://mathieu.agopian.info/presentations/2015_06_djangocon_europe/
 
 There are many arguments in favour of pytest. For us the most important is pytest fixtures which provides us with a reliable and reusable mechanism to prepare and cleanup resources used during testing.
 
+
+#### Capturing of log output during test
+
+In our tests we use a `logcapture` fixture from gcdt_testtools.helpers to capture log output. The fixture use the textfixtures package under the hood.
+
+use it like this:
+``` python
+logcapture.check(
+    ('root', 'INFO', 'a message'),
+    ('root', 'ERROR', 'another error'),
+)
+```
+
+or:
+``` python
+records = list(logcapture.actual())
+assert records[0][2] == 'a message'
+```
+
+details here: http://testfixtures.readthedocs.io/en/latest/logging.html
+
+
 #### Use Sphinx, Readthedocs, and Markdown for documentation
 
 Many, many documentation tools populate this space since it is so easy to come up with something. However for Open Source projects Readthedocs is the dominant platform to host the documentation.

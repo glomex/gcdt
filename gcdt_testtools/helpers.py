@@ -12,6 +12,7 @@ import io
 from zipfile import ZipFile
 
 import pytest
+from testfixtures import LogCapture
 
 
 # http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
@@ -189,3 +190,12 @@ def read_file_from_tarfile(tarfile_name, name):
     tfile = tarfile.open(tarfile_name)
     if name in [t.name for t in tfile.getmembers()]:
         return tfile.extractfile(name).read()
+
+
+@pytest.fixture(scope='function')
+def logcapture():
+    """Access and control log capturing.
+    """
+    # http://testfixtures.readthedocs.io/en/latest/logging.html
+    with LogCapture() as l:
+        yield l

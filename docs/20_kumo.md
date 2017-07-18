@@ -74,14 +74,16 @@ def generate_template():
 
 Further settings files, depending on your environments in the format of `gcdt_<ENV>.json`
 
+
 #### Config file example
 
 ```json
-"cloudformation": {
+"stack": {
     "StackName": "sample-stack"
 }
 ```
 You like examples better than documentation? Check out our sample-stack at https://github.com/glomex/gcdt-sample-stack/tree/master/infrastructure
+
 
 #### Configuring RoleARN for a cloudformation stack
 
@@ -89,11 +91,32 @@ There is a new Feature in CloudFormation which lets a User specify a Role which 
 This can be used to limit access of users drastically and only give CloudFormation the permission to do all the heavy lifting.
 
 ```json
-"cloudformation": {
+"stack": {
     "RoleARN": "arn:aws:iam::<AccountID>:role/<CloudFormationRoleName>"
 }
 ```
 Make sure the role may be assumed by CloudFormation. See also: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html
+
+
+#### Configuring NotificationARNs for a cloudformation stack
+
+Amazon Simple Notification Service topic Amazon Resource Names (ARNs) that AWS CloudFormation associates with the stack. 
+
+```json
+{
+  "kumo": {
+    "stack": {
+      "StackName": "infra-dev-kumo-sample-stack",
+      "NotificationARNs": [
+        "arn:aws:sns:eu-west-1:123456789012:mytopic1",
+        "arn:aws:sns:eu-west-1:123456789012:mytopic2"
+      ]
+    },
+    ...
+```
+
+Specify an empty list to remove all notification topics.
+
 
 #### Setting the ENV variable
 
@@ -109,6 +132,7 @@ export ENV=DEV_eu-west-1
 ```
 
 Will load the config file named `gcdt_dev_eu-west-1.json`
+
 
 ### Howto
 1. create and fill `cloudformation.py` with the contents of your stack

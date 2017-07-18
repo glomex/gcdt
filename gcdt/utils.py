@@ -14,7 +14,6 @@ from . import __version__
 from .package_utils import get_package_versions
 from .gcdt_plugins import get_plugin_versions
 from .gcdt_logging import getLogger
-#from .gcdt_lifecycle import GracefulExit
 
 PY3 = sys.version_info[0] >= 3
 
@@ -27,15 +26,15 @@ log = getLogger(__name__)
 
 def version():
     """Print version of gcdt tools and plugins."""
-    print('gcdt version %s' % __version__)
-    print('gcdt plugins:')
+    log.info('gcdt version %s' % __version__)
+    log.info('gcdt plugins:')
     for p, v in get_plugin_versions().items():
-        print(' * %s version %s' % (p, v))
+        log.info(' * %s version %s' % (p, v))
     generators = get_plugin_versions('gcdtgen10')
     if generators:
-        print('gcdt scaffolding generators:')
+        log.info('gcdt scaffolding generators:')
         for p, v in generators.items():
-            print(' * %s version %s' % (p, v))
+            log.info(' * %s version %s' % (p, v))
 
 
 def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
@@ -79,6 +78,8 @@ def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
             for tries_remaining in tries:
                 try:
                     return func(*args, **kwargs)
+                except GracefulExit:
+                    raise
                 except exceptions as e:
                     if tries_remaining > 0:
                         if hook is not None:
@@ -89,26 +90,6 @@ def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
                         raise
         return f2
     return dec
-
-
-# TODO check if this is used and move to hocon config reader
-'''
-def read_gcdt_user_config_value(key, default=None, gcdt_file=None):
-    """Read .gcdt config file from user home and return value for key.
-    Configuration keys are in the form <command>.<key>
-
-    :return: value if present, or default
-    """
-    extension = 'gcdt'
-    if not gcdt_file:
-        gcdt_file = os.path.expanduser('~') + '/.' + extension
-    try:
-        config = ConfigFactory.parse_file(gcdt_file)
-        value = config.get(key)
-    except Exception:
-        value = default
-    return value
-'''
 
 
 def _get_user():
@@ -157,7 +138,6 @@ def get_command(arguments):
     :param arguments parsed by docopt:
     :return: command
     """
-    #return [k for k, v in arguments.iteritems()
     return [k for k, v in arguments.items()
             if not k.startswith('-') and v is True][0]
 
@@ -197,20 +177,33 @@ def check_gcdt_update():
 
 # adapted from:
 # http://stackoverflow.com/questions/7204805/dictionaries-of-dictionaries-merge/7205107#7205107
-def dict_merge(a, b, path=None):
-    """merges b into a"""
+def dict_selective_merge(a, b, selection, path=None):
+    """Conditionally merges b into a if b's keys are contained in selection
+
+    :param a:
+    :param b:
+    :param selection: limit merge to these top-level keys
+    :param path:
+    :return:
+    """
     if path is None:
         path = []
     for key in b:
-        if key in a:
-            if isinstance(a[key], dict) and isinstance(b[key], dict):
-                dict_merge(a[key], b[key], path + [str(key)])
-            elif a[key] != b[key]:
-                # update the value
+        if key in selection:
+            if key in a:
+                if isinstance(a[key], dict) and isinstance(b[key], dict):
+                    dict_selective_merge(a[key], b[key], b[key].keys(), path + [str(key)])
+                elif a[key] != b[key]:
+                    # update the value
+                    a[key] = b[key]
+            else:
                 a[key] = b[key]
-        else:
-            a[key] = b[key]
     return a
+
+
+def dict_merge(a, b, path=None):
+    """merges b into a"""
+    return dict_selective_merge(a, b, b.keys(), path)
 
 
 # TODO test this properly!
@@ -288,3 +281,21 @@ def json2table(json):
     except Exception as e:
         print(e)
         return json
+
+
+def fix_old_kumo_config(config):
+    # DEPRECATED since 0.1.420
+    if config.get('kumo', {}).get('cloudformation', {}):
+        log.warn('kumo config contains a deprecated "cloudformation" section!')
+        cloudformation = config['kumo'].pop('cloudformation')
+        stack = {}
+        for key in cloudformation.keys():
+            if key in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
+                stack[key] = cloudformation.pop(key)
+        if stack:
+            config['kumo']['stack'] = stack
+        if cloudformation:
+            config['kumo']['parameters'] = cloudformation
+        log.warn('Your kumo config should look like this:')
+        log.warn(config['kumo'])
+    return config

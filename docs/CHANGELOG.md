@@ -5,9 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.420] - 2017-07-18
+### Added
+- kumo add SNS notifications (#185)
+- logcapture mechanism for tests (#285)
+### Deprecated
+- kumo "cloudformation" config section, use "parameters" & "stack" instead (#337)
+
 ## [0.1.419] - 2017-07-17
 ### Added
-- kumo] add status message for empty changeset (#126)
+- kumo add status message for empty changeset (#126)
 
 ## [0.1.418] - 2017-07-17
 ### Added

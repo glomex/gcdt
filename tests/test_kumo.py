@@ -54,8 +54,10 @@ def test_simple_cloudformation_stack():
     assert_true(success)
 
     config = {
-        'cloudformation': {
-            'StackName': "infra-dev-kumo-sample-stack",
+        'stack': {
+            'StackName': "infra-dev-kumo-sample-stack"
+        },
+        'parameters': {
             'InstanceType': "t2.micro"
         }
     }
@@ -137,7 +139,7 @@ def test_parameter_substitution():
         }
     ]
     conf = {
-        'cloudformation': {
+        'parameters': {
             'ConfigOne': 'value1',
             'ConfigTwo': ['value2', 'value3']
         }
@@ -149,8 +151,10 @@ def test_parameter_substitution():
 
 def test_parameter_substitution_reserved_terms():
     conf = {
-        'cloudformation': {
-            'ConfigOne': 'value1',
+        'parameters': {
+            'ConfigOne': 'value1'
+        },
+        'stack': {
             'StackName': 'value2',
             'TemplateBody': 'value3',
             'artifactBucket': 'value4',
@@ -169,7 +173,7 @@ def test_parameter_substitution_reserved_terms():
 
 def test_get_conf_value():
     config = {
-        'cloudformation': {
+        'parameters': {
             'ConfigOne': 'value1'
         }
     }
@@ -178,7 +182,7 @@ def test_get_conf_value():
 
 def test_get_conf_value_list():
     config = {
-        'cloudformation': {
+        'parameters': {
             'ConfigOne': ['a', 'b', 'c']
         }
     }
@@ -188,7 +192,7 @@ def test_get_conf_value_list():
 @raises(KeyError)
 def test_get_conf_value_unknown():
     config = {
-        'cloudformation': {
+        'parameters': {
             'ConfigOne': ['a', 'b', 'c']
         }
     }
@@ -197,7 +201,7 @@ def test_get_conf_value_unknown():
 
 def test_generate_parameter_entry():
     config = {
-        'cloudformation': {
+        'parameters': {
             'ConfigOne': 'value1'
         }
     }

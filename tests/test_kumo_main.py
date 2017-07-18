@@ -15,7 +15,7 @@ from gcdt_testtools.helpers_aws import awsclient  # fixtures!
 from .test_kumo_aws import simple_cloudformation_stack  # fixtures!
 from .test_kumo_aws import simple_cloudformation_stack_folder  # fixtures!
 from .test_kumo_aws import sample_ec2_cloudformation_stack_folder  # fixtures!
-from gcdt_testtools.helpers import temp_folder  # fixtures!
+from gcdt_testtools.helpers import temp_folder, logcapture  # fixtures!
 from . import here
 
 
@@ -32,10 +32,14 @@ def test_load_template(capsys):
     assert 'could not load cloudformation.py, bailing out...\n' in out
 
 
-def test_version_cmd(capsys):
+def test_version_cmd(logcapture):
     version_cmd()
-    out, err = capsys.readouterr()
-    assert out.startswith('gcdt version')
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert records[1][2].startswith('gcdt plugins:')
 
 
 @pytest.mark.aws

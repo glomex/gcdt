@@ -49,8 +49,10 @@ def post_hook(awsclient, config, parameters, stack_outputs, stack_state):
 
     #assert config == ConfigTree([('cloudformation', ConfigTree([('StackName', 'infra-dev-kumo-sample-stack-with-hooks'), ('InstanceType', 't2.medium')]))])
     exp_config = {
-        'cloudformation': {
-            'StackName': 'infra-dev-kumo-sample-stack-with-hooks',
+        'stack': {
+            'StackName': 'infra-dev-kumo-sample-stack-with-hooks'
+        },
+        'parameters': {
             'InstanceType': 't2.medium'
         }
     }
