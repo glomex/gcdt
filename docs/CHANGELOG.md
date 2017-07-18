@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.422] - 2017-07-18
+### Fixed
+- fix warning message for deprecated format (#337)
+
 ## [0.1.421] - 2017-07-18
 ### Fixed
 - dependencies for logcapture mechanism (#285)
