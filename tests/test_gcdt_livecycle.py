@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import os
 import textwrap
+import logging
 
 import pytest
 import mock

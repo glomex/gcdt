@@ -9,6 +9,7 @@ from copy import deepcopy
 import pytest
 
 from gcdt.gcdt_logging import logging_config, GcdtFormatter
+from gcdt_testtools.helpers import logcapture  # fixture!
 
 
 def test_gcdt_logging_config_debug(capsys):
@@ -26,7 +27,7 @@ def test_gcdt_logging_config_debug(capsys):
     out, err = capsys.readouterr()
 
     assert out == textwrap.dedent("""\
-        DEBUG: test_gcdt_logging: 21: debug message
+        DEBUG: test_gcdt_logging: 22: debug message
         info message
         WARNING: warning message
         ERROR: error message
@@ -45,7 +46,6 @@ def test_gcdt_logging_config_default(capsys):
     log.info('info message')
     log.warning('warning message')
     log.error('error message')
-    #log.error(log.handlers[0].formatter)
 
     out, err = capsys.readouterr()
 
@@ -54,11 +54,6 @@ def test_gcdt_logging_config_default(capsys):
         WARNING: warning message
         ERROR: error message
     """)
-    # assert out == textwrap.dedent("""\
-    #    info message
-    #    warning message
-    #    error message
-    # """)
 
 
 def test_gcdt_formatter_info(capsys):
@@ -94,10 +89,8 @@ def test_gcdt_formatter_warning(capsys):
     assert GcdtFormatter().format(rec) == 'WARNING: warning message'
 
 
-def test_log_capturing(caplog):
-    # https://github.com/eisensheng/pytest-catchlog
+def test_log_capturing(logcapture):
     getLogger().info('boo %s', 'arg')
-
-    assert caplog.record_tuples == [
-        ('root', logging.INFO, 'boo arg'),
+    assert list(logcapture.actual()) == [
+        ('root', 'INFO', 'boo arg'),
     ]

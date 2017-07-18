@@ -9,8 +9,9 @@ import pytest
 
 from gcdt.utils import version, __version__, retries,  \
     get_command, dict_merge, get_env, get_context, flatten, json2table, \
-    fix_old_kumo_config
+    fix_old_kumo_config, dict_selective_merge
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
+from gcdt_testtools.helpers import logcapture  # fixtures!
 
 from . import here
 
@@ -18,20 +19,15 @@ from . import here
 PY3 = sys.version_info[0] >= 3
 
 
-def test_version(capsys):
-    version()
-    out, err = capsys.readouterr()
-    assert out.strip().startswith('gcdt version %s' % __version__)
-
-
 # would love to use logging for that...
-#def test_version(caplog):
-#    # https://github.com/eisensheng/pytest-catchlog
-#    version()
-#
-#    record_tuples = list(caplog.records)
-#    assert record_tuples[0].getMessage().startswith('gcdt version ')
-#    assert record_tuples[0].levelno == logging.INFO
+def test_version(logcapture):
+    version()
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert records[1][2].startswith('gcdt plugins:')
 
 
 def test_retries_backoff():
@@ -133,6 +129,16 @@ def test_dict_merge():
 
     dict_merge(a, {'2': [2, 2], '4': [4]})
     assert a == {'1': 1, '2': [2, 2], '3': 3, '4': [4]}
+
+
+def test_dict_selective_merge():
+    a = {'1': 1, '2': [2], '3': {'3': 3}}
+
+    dict_selective_merge(a, {'4': 4, '5': 5}, ['5'])
+    assert a == {'1': 1, '2': [2], '3': {'3': 3}, '5': 5}
+
+    dict_selective_merge(a, {'6': 6}, ['7'])
+    assert a == {'1': 1, '2': [2], '3': {'3': 3}, '5': 5}
 
 
 def test_get_env(preserve_env):
