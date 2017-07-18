@@ -5,6 +5,7 @@ import getpass
 import subprocess
 from time import sleep
 import collections
+import json
 
 import os
 from clint.textui import prompt, colored
@@ -297,5 +298,5 @@ def fix_old_kumo_config(config):
         if cloudformation:
             config['kumo']['parameters'] = cloudformation
         log.warn('Your kumo config should look like this:')
-        log.warn(config['kumo'])
+        log.warn(json.dumps(config['kumo']))
     return config
