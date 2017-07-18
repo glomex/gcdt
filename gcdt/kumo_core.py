@@ -18,7 +18,7 @@ from .utils import get_env
 from .s3 import upload_file_to_s3
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
-from gcdt.utils import GracefulExit, json2table
+from gcdt.utils import GracefulExit, json2table, dict_merge, dict_selective_merge
 
 log = logging.getLogger(__name__)
 
@@ -280,7 +280,6 @@ def _generate_parameter_entry(conf, raw_param):
 
 
 def _get_conf_value(conf, raw_param):
-    #conf_value = conf['cloudformation'][raw_param]
     conf_value = conf['parameters'][raw_param]
     if isinstance(conf_value, list):
         # if list or array then join to comma separated list
@@ -292,16 +291,7 @@ def _get_conf_value(conf, raw_param):
 def _generate_parameters(conf):
     # generate the parameter list for the cloudformation template from the
     # conf keys
-    #raw_parameters = []
     parameter_list = []
-    # this looks weird since it should work only on the 'cloudformation' config
-    # for item in conf.iterkeys():
-    #    for key in conf[item].iterkeys():
-    # for key in conf['cloudformation'].iterkeys():
-    #for key in conf['cloudformation'].keys():
-    #    if key not in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
-    #        raw_parameters.append(key)
-    #for param in raw_parameters:
     for param in conf.get('parameters', {}).keys():
         entry = _generate_parameter_entry(conf, param)
         parameter_list.append(entry)
@@ -419,25 +409,23 @@ def _create_stack(awsclient, conf, cloudformation, parameters):
     # create stack with all the information we have
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['stack'].get('RoleARN', None)
 
     _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                hook='pre_create_hook')
 
     request = {
-        'StackName': stackname,
+        #'StackName': stackname,
         'Parameters': parameters,
         'Capabilities': ['CAPABILITY_IAM'],
         'StackPolicyBody': _get_stack_policy(cloudformation)
     }
+    dict_selective_merge(request, conf['stack'],
+                         ['StackName', 'RoleARN', 'NotificationARNs'])
 
     if _get_artifact_bucket(conf):
         request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
     else:
         request['TemplateBody'] = cloudformation.generate_template()
-
-    if rolearn:
-        request['RoleARN'] = rolearn
 
     response = client_cf.create_stack(**request)
 
@@ -465,29 +453,28 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
     exit_code = 0
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['stack'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
 
     try:
         _call_hook(awsclient, conf, stackname, parameters, cloudformation,
                    hook='pre_update_hook')
         request = {
-            'StackName': stackname,
             'Parameters': parameters,
             'Capabilities': ['CAPABILITY_IAM'],
             'StackPolicyBody': _get_stack_policy(cloudformation),
             'StackPolicyDuringUpdateBody': _get_stack_policy_during_update(
                 cloudformation, override_stack_policy),
+            #**{} if 'NotificationARNs' in conf['stack']  # not in Python < 3.5!
         }
+
+        dict_selective_merge(request, conf['stack'],
+                             ['StackName', 'RoleARN', 'NotificationARNs'])
 
         if _get_artifact_bucket(conf):
             request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
         else:
             # if we have no artifacts bucket configured then upload the template directly
             request['TemplateBody'] = cloudformation.generate_template()
-
-        if rolearn:
-            request['RoleARN'] = rolearn
 
         response = client_cf.update_stack(**request)
 
@@ -519,15 +506,10 @@ def delete_stack(awsclient, conf, feedback=True):
     """
     client_cf = awsclient.get_client('cloudformation')
     stackname = _get_stack_name(conf)
-    rolearn = conf['stack'].get('RoleARN', None)
     last_event = _get_stack_events_last_timestamp(awsclient, stackname)
 
-    request = {
-        'StackName': stackname,
-    }
-
-    if rolearn:
-        request['RoleARN'] = rolearn
+    request = {}
+    dict_selective_merge(request, conf['stack'], ['StackName', 'RoleARN'])
 
     response = client_cf.delete_stack(**request)
 
@@ -575,16 +557,18 @@ def create_change_set(awsclient, conf, cloudformation):
     else:
         change_set_type = 'CREATE'
 
-    response = client.create_change_set(
-        StackName=stack_name,
-        TemplateBody=cloudformation.generate_template(),
-        Parameters=_generate_parameters(conf),
-        Capabilities=[
-            'CAPABILITY_IAM',
-        ],
-        ChangeSetName=change_set_name,
-        ChangeSetType=change_set_type
-    )
+    request = {
+        #'StackName': stack_name,
+        'TemplateBody': cloudformation.generate_template(),
+        'Parameters': _generate_parameters(conf),
+        'Capabilities': ['CAPABILITY_IAM'],
+        'ChangeSetName': change_set_name,
+        'ChangeSetType': change_set_type
+    }
+    dict_selective_merge(request, conf['stack'],
+                         ['StackName', 'RoleARN', 'NotificationARNs'])
+
+    response = client.create_change_set(**request)
     return change_set_name, stack_name, change_set_type
 
 
