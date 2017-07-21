@@ -49,7 +49,6 @@ codedeploy_env.conf -> settings for your code
 
 ### tenkai configuration
 
-
 #### add stack_output.yml to your tenkai bundle
 
 If you need a convenient way of using the stack output during codedeploy on your instance then you can use this feature.
@@ -82,6 +81,21 @@ You can use lookups like for the rest of the configuration. Note that the values
         "accountId": "lookup:stack:infra-dev:AWSAccountId"
     }
 ```
+
+
+#### Configure log group
+In case `tenkai deploy` fails we attempt to provide the log output from the ec2 instance to ease your troubleshooting. The default log group is '/var/log/messages'. In case your ec2 instances are configured to log into another log group you can provide the necessary log group configuration to tenkai like this:
+
+``` json
+"tenkai": {
+    ...
+    "deployment": {
+        "LogGroup": "/my/loggroup"
+    }
+}
+```
+
+Note: as a convention each ec2 instances has its own log stream with using the instanceId as name of the stream.
 
 
 #### Setting the ENV variable
