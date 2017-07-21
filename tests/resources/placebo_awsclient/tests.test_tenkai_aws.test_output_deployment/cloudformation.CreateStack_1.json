@@ -1,0 +1,17 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/e24920c0-6e28-11e7-8412-50a6863366c5", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "e24306c8-6e28-11e7-bc78-f50705445538", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "e24306c8-6e28-11e7-bc78-f50705445538", 
+                "date": "Fri, 21 Jul 2017 15:25:53 GMT", 
+                "content-length": "393", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

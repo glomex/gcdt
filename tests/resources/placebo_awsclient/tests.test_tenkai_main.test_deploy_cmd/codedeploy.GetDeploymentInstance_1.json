@@ -1,0 +1,242 @@
+{
+    "status_code": 200, 
+    "data": {
+        "instanceSummary": {
+            "instanceId": "arn:aws:ec2:eu-west-1:420189626185:instance/i-01811c3b0b6463140", 
+            "status": "Succeeded", 
+            "deploymentId": "d-UMG0LSLDN", 
+            "lastUpdatedAt": {
+                "hour": 13, 
+                "__class__": "datetime", 
+                "month": 7, 
+                "second": 26, 
+                "microsecond": 595000, 
+                "year": 2017, 
+                "day": 21, 
+                "minute": 57
+            }, 
+            "lifecycleEvents": [
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 16, 
+                        "microsecond": 51000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 15, 
+                        "microsecond": 965000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "ApplicationStop"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 17, 
+                        "microsecond": 652000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 17, 
+                        "microsecond": 252000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "DownloadBundle"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 20, 
+                        "microsecond": 30000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 19, 
+                        "microsecond": 948000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "BeforeInstall"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 21, 
+                        "microsecond": 218000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 21, 
+                        "microsecond": 148000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "Install"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 22, 
+                        "microsecond": 513000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 22, 
+                        "microsecond": 426000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "AfterInstall"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 24, 
+                        "microsecond": 85000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 23, 
+                        "microsecond": 991000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "ApplicationStart"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 25, 
+                        "microsecond": 631000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 13, 
+                        "__class__": "datetime", 
+                        "month": 7, 
+                        "second": 25, 
+                        "microsecond": 559000, 
+                        "year": 2017, 
+                        "day": 21, 
+                        "minute": 57
+                    }, 
+                    "lifecycleEventName": "ValidateService"
+                }
+            ]
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "cb32f75e-6e0b-11e7-b155-537e6d077bd1", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "cb32f75e-6e0b-11e7-b155-537e6d077bd1", 
+                "content-length": "1638", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}
