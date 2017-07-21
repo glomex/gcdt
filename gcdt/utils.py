@@ -26,7 +26,7 @@ log = getLogger(__name__)
 
 
 def version():
-    """Print version of gcdt tools and plugins."""
+    """Output version of gcdt tools and plugins."""
     log.info('gcdt version %s' % __version__)
     log.info('gcdt plugins:')
     for p, v in get_plugin_versions().items():
@@ -153,11 +153,11 @@ def execute_scripts(scripts):
 
 def _execute_script(file_name):
     if os.path.isfile(file_name):
-        print('Executing %s ...' % file_name)
+        log.info('Executing %s ...' % file_name)
         exit_code = subprocess.call([file_name, '-e'])
         return exit_code
     else:
-        print('No file found matching %s...' % file_name)
+        log.warn('No file found matching %s...' % file_name)
         return 1
 
 
@@ -168,12 +168,12 @@ def check_gcdt_update():
     try:
         inst_version, latest_version = get_package_versions('gcdt')
         if inst_version < latest_version:
-            print(colored.yellow('Please consider an update to gcdt version: %s' %
-                                 latest_version))
+            log.warn('Please consider an update to gcdt version: %s' %
+                                 latest_version)
     except GracefulExit:
         raise
     except Exception:
-        print(colored.yellow('PyPi appears to be down - we currently can\'t check for newer gcdt versions'))
+        log.warn('PyPi appears to be down - we currently can\'t check for newer gcdt versions')
 
 
 # adapted from:
@@ -223,7 +223,7 @@ def are_credentials_still_valid(awsclient):
         raise
     except Exception as e:
         log.debug(e)
-        print(e)
+        log.error(e)
         return 1
     return 0
 
@@ -242,7 +242,7 @@ def flatten(lis):
 
 class GracefulExit(Exception):
     """
-    transport the signal information 
+    transport the signal information
     note: if you capture Exception you have to deal with this case, too
     """
     pass
@@ -280,14 +280,15 @@ def json2table(json):
     except GracefulExit:
         raise
     except Exception as e:
-        print(e)
+        log.error(e)
         return json
 
 
-def fix_old_kumo_config(config):
+def fix_old_kumo_config(config, silent=False):
     # DEPRECATED since 0.1.420
     if config.get('kumo', {}).get('cloudformation', {}):
-        log.warn('kumo config contains a deprecated "cloudformation" section!')
+        if not silent:
+            log.warn('kumo config contains a deprecated "cloudformation" section!')
         cloudformation = config['kumo'].pop('cloudformation')
         stack = {}
         for key in cloudformation.keys():
@@ -297,6 +298,7 @@ def fix_old_kumo_config(config):
             config['kumo']['stack'] = stack
         if cloudformation:
             config['kumo']['parameters'] = cloudformation
-        log.warn('Your kumo config should look like this:')
-        log.warn(json.dumps(config['kumo']))
+        if not silent:
+            log.warn('Your kumo config should look like this:')
+            log.warn(json.dumps(config['kumo']))
     return config

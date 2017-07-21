@@ -4,6 +4,8 @@
 from __future__ import unicode_literals, print_function
 import logging
 
+from clint.packages.colorama import Fore
+
 
 class GcdtFormatter(logging.Formatter):
     """Give us details in case we use DEBUG level, for INFO no details.
@@ -17,8 +19,10 @@ class GcdtFormatter(logging.Formatter):
     # was: '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     def format(self, record):
         FORMATS = {
-            logging.DEBUG: "DEBUG: %(module)s: %(lineno)d: %(message)s",
-            logging.INFO: "%(message)s"
+            logging.DEBUG: Fore.BLUE + 'DEBUG: %(module)s: %(lineno)d: %(message)s' + Fore.RESET,
+            logging.INFO: '%(message)s',
+            logging.WARNING: Fore.YELLOW + '%(levelname)s: %(message)s' + Fore.RESET,
+            logging.ERROR: Fore.RED + '%(levelname)s: %(message)s' + Fore.RESET
         }
         format = FORMATS.get(record.levelno, "%(levelname)s: %(message)s")
         record.message = record.getMessage()
@@ -69,25 +73,3 @@ def getLogger(name):
     # note: the level might be adjusted via '-v' option
     logger.setLevel(logging_config['loggers']['gcdt']['level'])
     return logger
-
-
-# TODO: I do not think this is used??
-'''
-def _json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
-
-    # Easy support to add ISO datetime
-    # serialization for json.dumps
-    if isinstance(obj, Decimal):
-        return str(obj)
-
-    if isinstance(obj, datetime):
-        serial = obj.isoformat()
-        return serial
-    raise TypeError("Type not serializable")
-
-
-def log_json(log_entry_dict):
-    return json.dumps(log_entry_dict, sort_keys=True, indent=4,
-                      separators=(',', ': '), default=_json_serial)
-'''

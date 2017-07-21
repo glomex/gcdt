@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import logging
-from logging.config import dictConfig
 from logging import getLogger, LogRecord
-#from logging import LogRecord
-#import textwrap
-from copy import deepcopy
 
 import pytest
 #from testfixtures import LogCapture
+from clint.packages.colorama import Fore
 
 from gcdt.gcdt_logging import logging_config, GcdtFormatter
 from gcdt_testtools.helpers import logcapture  # fixture!
@@ -111,8 +108,8 @@ def test_gcdt_formatter_debug(capsys):
                     './test_gcdt_logging.py', 26, 'debug message',
                     None, None)
 
-    assert GcdtFormatter().format(
-        rec) == 'DEBUG: test_gcdt_logging: 26: debug message'
+    assert GcdtFormatter().format(rec) == \
+           Fore.BLUE + 'DEBUG: test_gcdt_logging: 26: debug message' + Fore.RESET
 
 
 def test_gcdt_formatter_error(capsys):
@@ -120,7 +117,8 @@ def test_gcdt_formatter_error(capsys):
                     './test_gcdt_logging.py', 26, 'error message',
                     None, None)
 
-    assert GcdtFormatter().format(rec) == 'ERROR: error message'
+    assert GcdtFormatter().format(rec) == \
+           Fore.RED + 'ERROR: error message' + Fore.RESET
 
 
 def test_gcdt_formatter_warning(capsys):
@@ -128,7 +126,8 @@ def test_gcdt_formatter_warning(capsys):
                     './test_gcdt_logging.py', 26, 'warning message',
                     None, None)
 
-    assert GcdtFormatter().format(rec) == 'WARNING: warning message'
+    assert GcdtFormatter().format(rec) == \
+           Fore.YELLOW + 'WARNING: warning message' + Fore.RESET
 
 
 def test_log_capturing(logcapture):

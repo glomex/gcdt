@@ -61,10 +61,11 @@ def test_deploy_cmd(awsclient, sample_codedeploy_app,
     deploy_cmd(**tooldata)
 
 
-def test_bundle_cmd(capsys):
+def test_bundle_cmd(logcapture):
     tooldata = {
-        'context': {'_bundle_file': 'some_file'}
+        'context': {'_bundle_file': 'test_file'}
     }
     bundle_cmd(**tooldata)
-    out, err = capsys.readouterr()
-    assert out == 'created bundle at some_file\n'
+    records = list(logcapture.actual())
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('created bundle at test_file')

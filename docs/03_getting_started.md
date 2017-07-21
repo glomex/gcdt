@@ -98,7 +98,7 @@ Let's create a simple `gcdts_dev.json`*(please change all values according your 
   "kumo": {
     "stack": {
       "StackName": "gcdt-sample-stack"
-    }
+    },
     "parameters": {
       "VPCId": "lookup:stack:<stack-name>:DefaultVPCId",
       "ScaleMinCapacity": "1",

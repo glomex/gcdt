@@ -6,14 +6,20 @@ botocore docs: http://botocore.readthedocs.io/en/latest/reference/services/logs.
 
 from __future__ import unicode_literals, print_function
 
+import maya
+from .gcdt_logging import getLogger
+
 from .utils import GracefulExit
+
+
+log = getLogger(__name__)
 
 
 def delete_log_group(awsclient, log_group_name):
     """Delete the specified log group
-    
+
     :param log_group_name: log group name
-    :return: 
+    :return:
     """
     client_logs = awsclient.get_client('logs')
 
@@ -96,7 +102,7 @@ def describe_log_group(awsclient, log_group_name):
     if response['logGroups']:
         return response['logGroups'][0]
     else:
-        return {}
+        return
 
 
 def describe_log_stream(awsclient, log_group_name, log_stream_name):
@@ -108,14 +114,15 @@ def describe_log_stream(awsclient, log_group_name, log_stream_name):
     """
     client_logs = awsclient.get_client('logs')
 
-    response = client_logs.describe_log_groups(
-        logGroupNamePrefix=log_group_name,
+    response = client_logs.describe_log_streams(
+        logGroupName=log_group_name,
+        logStreamNamePrefix=log_stream_name,
         limit=1
     )
-    if response['logGroups']:
-        return response['logGroups'][0]
+    if response['logStreams']:
+        return response['logStreams'][0]
     else:
-        return {}
+        return
 
 
 '''
@@ -178,26 +185,67 @@ def put_log_events(awsclient, log_group_name, log_stream_name, log_events,
 
     response = client_logs.put_log_events(**request)
     if 'rejectedLogEventsInfo' in response:
-        print(response['rejectedLogEventsInfo'])
+        log.warn(response['rejectedLogEventsInfo'])
     if 'nextSequenceToken' in response:
         return response['nextSequenceToken']
 
 
-'''
-def get_log_events(awsclient, log_group_name, log_stream_name):
+def get_log_events(awsclient, log_group_name, log_stream_name, start_ts=None):
     """Get log events for the specified log group and stream.
+    this is used in tenkai output instance diagnostics
 
     :param log_group_name: log group name
     :param log_stream_name: log stream name
+    :param start_ts: timestamp
     :return:
     """
     client_logs = awsclient.get_client('logs')
 
-    response = client_logs.get_log_events(
-        logGroupName=log_group_name,
-        logStreamName=log_stream_name,
-    )
+    request = {
+        'logGroupName': log_group_name,
+        'logStreamName': log_stream_name
+    }
+    if start_ts:
+        request['startTime'] = start_ts
+
+    # TODO exhaust the events!
+    response = client_logs.get_log_events(**request)
 
     if 'events' in response and response['events']:
-        return response['events']
-'''
+        return [{'timestamp': e['timestamp'], 'message': e['message']}
+                for e in response['events']]
+
+
+def check_log_stream_exists(awsclient, log_group_name, log_stream_name):
+    """Check
+
+    :param log_group_name: log group name
+    :param log_stream_name: log stream name
+    :return: True / False
+    """
+    lg = describe_log_group(awsclient, log_group_name)
+    if lg and lg['logGroupName'] == log_group_name:
+        stream = describe_log_stream(awsclient, log_group_name, log_stream_name)
+        if stream and stream['logStreamName'] == log_stream_name:
+            return True
+    return False
+
+
+def decode_format_timestamp(timestamp):
+    """Convert unix timestamp (millis) into date & time we use in logs output.
+
+    :param timestamp: unix timestamp in millis
+    :return: date, time in UTC
+    """
+    dt = maya.MayaDT(timestamp / 1000).datetime(naive=True)
+    return dt.strftime('%Y-%m-%d'), dt.strftime('%H:%M:%S')
+
+
+def datetime_to_timestamp(dt):
+    """Convert datetime to millis since epoc.
+
+    :param dt:
+    :return: milliseconds since 1970-01-01
+    """
+    # return int((dt - datetime.datetime(1970, 1, 1)).total_seconds() * 1000)
+    return int(maya.MayaDT.from_datetime(dt)._epoch * 1000)
