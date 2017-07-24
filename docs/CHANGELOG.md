@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [0.1.423] - 2017-07-21
-### Fixed
+### Added
 - tenkai: improve output in case of errors (#316)
 
 ## [0.1.422] - 2017-07-18
