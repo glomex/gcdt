@@ -9,7 +9,6 @@ except ImportError:
     from io import StringIO
 from tempfile import NamedTemporaryFile
 import time
-import datetime
 
 from s3transfer.subscribers import BaseSubscriber
 from nose.tools import assert_regexp_matches
@@ -22,7 +21,7 @@ from gcdt.ramuda_utils import unit, \
     aggregate_datapoints, create_sha256, ProgressPercentage, \
     list_of_dict_equals, create_aws_s3_arn, get_rule_name_from_event_arn, \
     get_bucket_from_s3_arn, build_filter_rules, create_sha256_urlsafe, \
-    check_and_format_logs_params, decode_format_timestamp, datetime_to_timestamp
+    check_and_format_logs_params
 from gcdt.utils import json2table
 from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
     cleanup_tempfiles
@@ -192,16 +191,3 @@ def test_check_and_format_logs_params(mocked_maya_now, start, end, tail, exp_sta
         assert end_ts is None
     else:
         assert end_ts == maya.parse(exp_end_ts).datetime(naive=True)
-
-
-def test_decode_format_timestamp():
-    timestamp = 1499353246961  # in millis
-    exp_date = '2017-07-06'
-    exp_time = '15:00:46'
-    assert decode_format_timestamp(timestamp) == (exp_date, exp_time)
-
-
-def test_datetime_to_timestamp():
-    exp_timestamp = 1499353246961  # in millis
-    dt = maya.when('2017-07-06 15:00:46.961').datetime(naive=True)
-    assert datetime_to_timestamp(dt) == exp_timestamp

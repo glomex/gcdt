@@ -2,7 +2,6 @@
 from __future__ import unicode_literals, print_function
 
 import base64
-import datetime
 import hashlib
 import logging
 import sys
@@ -11,9 +10,9 @@ import time
 
 import maya
 import os
+from gcdt.utils import GracefulExit
 from s3transfer import S3Transfer
 
-from gcdt.utils import GracefulExit
 from . import utils
 
 PY3 = sys.version_info[0] >= 3
@@ -225,23 +224,3 @@ def check_and_format_logs_params(start, end, tail):
     else:
         end_dt = None
     return start_dt, end_dt
-
-
-def decode_format_timestamp(timestamp):
-    """Convert unix timestamp (millis) into date & time we use in logs output.
-
-    :param timestamp: unix timestamp in millis
-    :return: date, time in UTC
-    """
-    dt = maya.MayaDT(timestamp/1000).datetime(naive=True)
-    return dt.strftime('%Y-%m-%d'), dt.strftime('%H:%M:%S')
-
-
-def datetime_to_timestamp(dt):
-    """Convert datetime to millis since epoc.
-
-    :param dt:
-    :return: milliseconds since 1970-01-01
-    """
-    #return int((dt - datetime.datetime(1970, 1, 1)).total_seconds() * 1000)
-    return int(maya.MayaDT.from_datetime(dt)._epoch * 1000)

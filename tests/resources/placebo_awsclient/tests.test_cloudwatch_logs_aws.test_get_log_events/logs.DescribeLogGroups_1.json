@@ -1,0 +1,26 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "9ad80a78-6e09-11e7-b223-f9e17d7eea75", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "9ad80a78-6e09-11e7-b223-f9e17d7eea75", 
+                "date": "Fri, 21 Jul 2017 11:41:58 GMT", 
+                "content-length": "253", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }, 
+        "logGroups": [
+            {
+                "storedBytes": 0, 
+                "metricFilterCount": 0, 
+                "creationTime": 1500637318515, 
+                "logGroupName": "/aws/lambda/unittest_loggroup_itqubw", 
+                "retentionInDays": 545, 
+                "arn": "arn:aws:logs:eu-west-1:420189626185:log-group:/aws/lambda/unittest_loggroup_itqubw:*"
+            }
+        ]
+    }
+}

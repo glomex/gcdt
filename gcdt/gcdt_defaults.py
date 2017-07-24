@@ -29,7 +29,8 @@ DEFAULT_CONFIG = {
     },
     'tenkai': {
         'settings_file': 'settings.json',
-        'stack_output_file': 'stack_output.yml'
+        'stack_output_file': 'stack_output.yml',
+        'log_group': '/var/log/messages'  # conf from baseami (glomex specific)
     }
 }
 

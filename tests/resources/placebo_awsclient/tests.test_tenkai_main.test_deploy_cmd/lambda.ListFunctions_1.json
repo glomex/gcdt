@@ -24,6 +24,40 @@
                     "Mode": "PassThrough"
                 }, 
                 "Version": "$LATEST", 
+                "CodeSha256": "IdXigmrsmLEbFsYAZI4RMnhPNmunwrQ5f4F0MWDmKD8=", 
+                "FunctionName": "ops-dev-captain-crunch-ooo-ecs-scheduler", 
+                "MemorySize": 128, 
+                "CodeSize": 5913143, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-dev-captain-crunch-ooo-ecs-scheduler", 
+                "Handler": "app.app", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/cc-slack-ooo-LambdaOpsDevCaptainCrunchOooEcsSchedu-6LL32RUF2AIR", 
+                "Timeout": 30, 
+                "LastModified": "2017-05-05T12:40:15.406+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Schedules Captain Crunch OoO Bot"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "Y8P08ozGQYyX2KMMVG2YIG8r0oiZvyfgomADQfJer3c=", 
+                "FunctionName": "blatest_mark", 
+                "MemorySize": 128, 
+                "CodeSize": 214, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:blatest_mark", 
+                "Handler": "lambda_function.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX", 
+                "Timeout": 3, 
+                "LastModified": "2017-07-04T08:30:00.066+0000", 
+                "Runtime": "python3.6", 
+                "Description": "bla"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
                 "CodeSha256": "qYk2NlQWEG6/7+LwFcWXYfbUkjJ8iYL0kdFuhabFepU=", 
                 "FunctionName": "infra-dev-EBSSnapshotter-1MKTPK7XR1Q6R", 
                 "MemorySize": 128, 
@@ -109,23 +143,6 @@
                     "Mode": "PassThrough"
                 }, 
                 "Version": "$LATEST", 
-                "CodeSha256": "FQtxk31OI80OaQ3sReUilqDwiL1EZaQFZOr/uUmfFng=", 
-                "FunctionName": "infra-dev-ticktack", 
-                "MemorySize": 128, 
-                "CodeSize": 4980, 
-                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:infra-dev-ticktack", 
-                "Handler": "app.app", 
-                "Role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX", 
-                "Timeout": 300, 
-                "LastModified": "2017-04-04T16:56:32.925+0000", 
-                "Runtime": "python2.7", 
-                "Description": "Lambda function for ticktack"
-            }, 
-            {
-                "TracingConfig": {
-                    "Mode": "PassThrough"
-                }, 
-                "Version": "$LATEST", 
                 "CodeSha256": "DplLIKwJTc9G8Y2qFWGVEY+v40q6oWqXN07eusIN8ZI=", 
                 "FunctionName": "ops-captaincrunch-alexa", 
                 "VpcConfig": {
@@ -158,16 +175,60 @@
                 "LastModified": "2016-11-04T08:25:06.637+0000", 
                 "Runtime": "python2.7", 
                 "Description": "basic helper function to be used as custom CloudFormation resource"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "XJOLKxuKUElcvELgIuF8oM4CQJk4o4aI3kTQbe/NwTk=", 
+                "FunctionName": "jenkins_test_nbzjqe", 
+                "VpcConfig": {
+                    "SubnetIds": [
+                        "subnet-e9db9f9f", 
+                        "subnet-d5ffb0b1"
+                    ], 
+                    "VpcId": "vpc-b9c1b4dd", 
+                    "SecurityGroupIds": [
+                        "sg-660dd700"
+                    ]
+                }, 
+                "MemorySize": 256, 
+                "CodeSize": 3665817, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_nbzjqe", 
+                "Handler": "handler.handle", 
+                "Role": "arn:aws:iam::420189626185:role/unittest_nbzjqe_lambda", 
+                "Timeout": 300, 
+                "LastModified": "2017-07-04T13:16:56.151+0000", 
+                "Runtime": "python2.7", 
+                "Description": "unittest for ramuda"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "oBhr9WfGuUF5OmDUM2DZp94+fy0NvHubRHZObv6HfuE=", 
+                "FunctionName": "ecs-host-service-scale", 
+                "MemorySize": 128, 
+                "CodeSize": 5791714, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ecs-host-service-scale", 
+                "Handler": "ecs-host-service-scale.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/sre-dev-ecs-LambdaSreDevEcsHostServiceScale-FP9OJIIA7LZU", 
+                "Timeout": 180, 
+                "LastModified": "2017-05-10T07:40:15.244+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Extending ECS Auto-scaling for under $2/month with Lambda"
             }
         ], 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "ed1f2738-2b4c-11e7-bfe5-6d9ad246f387", 
+            "RequestId": "17fbc184-6e0b-11e7-9614-47492addc8b9", 
             "HTTPHeaders": {
-                "date": "Thu, 27 Apr 2017 13:25:04 GMT", 
-                "x-amzn-requestid": "ed1f2738-2b4c-11e7-bfe5-6d9ad246f387", 
-                "content-length": "6048", 
+                "date": "Fri, 21 Jul 2017 11:52:37 GMT", 
+                "x-amzn-requestid": "17fbc184-6e0b-11e7-9614-47492addc8b9", 
+                "content-length": "8049", 
                 "content-type": "application/json", 
                 "connection": "keep-alive"
             }

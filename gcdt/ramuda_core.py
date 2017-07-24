@@ -20,12 +20,12 @@ from botocore.exceptions import ClientError as ClientError
 from clint.textui import colored
 
 from .cloudwatch_logs import put_retention_policy, delete_log_group, \
-    filter_log_events
+    filter_log_events, decode_format_timestamp, datetime_to_timestamp
 from .ramuda_utils import s3_upload, \
     lambda_exists, create_sha256, get_remote_code_hash, unit, \
     aggregate_datapoints, list_of_dict_equals, \
     create_aws_s3_arn, get_bucket_from_s3_arn, get_rule_name_from_event_arn, \
-    build_filter_rules, decode_format_timestamp, datetime_to_timestamp
+    build_filter_rules
 from .utils import GracefulExit, json2table
 
 log = logging.getLogger(__name__)

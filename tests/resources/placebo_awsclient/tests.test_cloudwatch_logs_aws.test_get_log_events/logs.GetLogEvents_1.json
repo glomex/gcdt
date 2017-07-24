@@ -1,0 +1,30 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "a101cbe7-6e09-11e7-8a46-e78b3df8d682", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "a101cbe7-6e09-11e7-8a46-e78b3df8d682", 
+                "date": "Fri, 21 Jul 2017 11:42:09 GMT", 
+                "content-length": "539", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }, 
+        "nextForwardToken": "f/33465330263417665067021445596937370288876106551710449666", 
+        "events": [
+            {
+                "ingestionTime": 1500637319059, 
+                "timestamp": 1500637199000, 
+                "message": "2_meine oma f\u00e4hrt im h\u00fchnerstall motorrad"
+            }, 
+            {
+                "ingestionTime": 1500637319059, 
+                "timestamp": 1500637309000, 
+                "message": "3_meine oma f\u00e4hrt im h\u00fchnerstall motorrad"
+            }
+        ], 
+        "nextBackwardToken": "b/33465327810335693228652900028008360297556340893864689665"
+    }
+}

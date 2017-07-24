@@ -1,0 +1,31 @@
+{
+    "status_code": 200, 
+    "data": {
+        "searchedLogStreams": [
+            {
+                "searchedCompletely": true, 
+                "logStreamName": "unittest_logstream_qjeuoc"
+            }
+        ], 
+        "events": [
+            {
+                "ingestionTime": 1500637307733, 
+                "timestamp": 1500637187000, 
+                "message": "2_meine oma f\u00e4hrt im h\u00fchnerstall motorrad", 
+                "eventId": "33465327542726750846285422315886992444779379001826672641", 
+                "logStreamName": "unittest_logstream_qjeuoc"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "9a401047-6e09-11e7-a275-d51bf12a6e21", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "9a401047-6e09-11e7-a275-d51bf12a6e21", 
+                "date": "Fri, 21 Jul 2017 11:41:57 GMT", 
+                "content-length": "418", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

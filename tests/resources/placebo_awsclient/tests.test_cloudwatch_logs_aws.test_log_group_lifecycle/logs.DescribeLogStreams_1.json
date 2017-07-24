@@ -1,0 +1,24 @@
+{
+    "status_code": 200, 
+    "data": {
+        "logStreams": [
+            {
+                "creationTime": 1500637305527, 
+                "arn": "arn:aws:logs:eu-west-1:420189626185:log-group:/aws/lambda/unittest_loggroup_qbgegs:log-stream:unittest_logstream_cqeapm", 
+                "logStreamName": "unittest_logstream_cqeapm", 
+                "storedBytes": 0
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "92df2cc2-6e09-11e7-b831-fd30799022c8", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "92df2cc2-6e09-11e7-b831-fd30799022c8", 
+                "date": "Fri, 21 Jul 2017 11:41:45 GMT", 
+                "content-length": "235", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}
