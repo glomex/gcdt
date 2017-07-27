@@ -4,6 +4,7 @@ import logging
 
 import pytest
 
+from gcdt import utils
 from gcdt.s3 import bucket_exists, upload_file_to_s3, ls
 
 from gcdt_testtools.helpers_aws import awsclient, temp_bucket  # fixtures!
@@ -18,7 +19,7 @@ def test_bucket_exists(awsclient, temp_bucket):
 
 
 def test_bucket_does_not_exist(awsclient):
-    temp_string = helpers.random_string()
+    temp_string = utils.random_string()
     bucket_name = 'unittest-lambda-s3-event-source-%s' % temp_string
     assert not bucket_exists(awsclient, bucket_name)
 

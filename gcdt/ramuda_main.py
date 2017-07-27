@@ -16,8 +16,9 @@ from . import utils
 from .gcdt_cmd_dispatcher import cmd
 from .gcdt_defaults import DEFAULT_CONFIG
 from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
-    wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
-    cleanup_bundle, invoke, logs
+    bundle_lambda, delete_lambda_deprecated, rollback,\
+    ping, info, cleanup_bundle, invoke, logs, delete_lambda
+from gcdt.ramuda_wire import wire, wire_deprecated, unwire, unwire_deprecated
 from .ramuda_utils import check_and_format_logs_params
 
 # TODO introduce own config for account detection
@@ -133,15 +134,19 @@ def delete_cmd(force, lambda_name, delete_logs, **tooldata):
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name', None)
     if function_name == str(lambda_name):
-        s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-        time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-        exit_code = delete_lambda(awsclient, lambda_name,
-                                  s3_event_sources,
-                                  time_event_sources,
-                                  delete_logs)
+        if 'events' in config['lambda']:
+            events = config['lambda']['events']
+            if isinstance(events, list):
+                exit_code = delete_lambda(awsclient, events, function_name, delete_logs)
+            elif isinstance(events, dict):
+                s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+                time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+                exit_code = delete_lambda_deprecated(awsclient, lambda_name,
+                                                     s3_event_sources,
+                                                     time_event_sources,
+                                                     delete_logs)
     else:
-        exit_code = delete_lambda(
-            awsclient, lambda_name, [], [])
+        exit_code = delete_lambda(awsclient, [], function_name, delete_logs)
     return exit_code
 
 
@@ -163,11 +168,16 @@ def wire_cmd(**tooldata):
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name')
-    s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-    time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-    exit_code = wire(awsclient, function_name, s3_event_sources,
-                     time_event_sources)
-    return exit_code
+    if 'events' in config['lambda']:
+        events = config['lambda']['events']
+        if isinstance(events, list):
+            exit_code = wire(awsclient, events, function_name)
+        elif isinstance(events, dict):
+            s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+            time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+            exit_code = wire_deprecated(awsclient, function_name, s3_event_sources,
+                                        time_event_sources)
+        return exit_code
 
 
 @cmd(spec=['unwire'])
@@ -176,11 +186,16 @@ def unwire_cmd(**tooldata):
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name')
-    s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-    time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-    exit_code = unwire(awsclient, function_name, s3_event_sources,
-                       time_event_sources)
-    return exit_code
+    if 'events' in config['lambda']:
+        events = config['lambda']['events']
+        if isinstance(events, list):
+            exit_code = unwire(awsclient, events, function_name)
+        elif isinstance(events, dict):
+            s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+            time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+            exit_code = unwire_deprecated(awsclient, function_name, s3_event_sources,
+                                          time_event_sources)
+        return exit_code
 
 
 @cmd(spec=['bundle', '--keep'])

@@ -5,6 +5,7 @@ import logging
 from nose.tools import assert_equal, assert_not_in
 import pytest
 
+from gcdt import utils
 from gcdt.yugen_core import deploy_api, delete_api, delete_api_key, \
     create_api_key, _template_variables_to_dict
 from gcdt_testtools import helpers
@@ -37,7 +38,7 @@ def cleanup_api_keys(awsclient):
 def test_create_api(awsclient, cleanup_api_keys, cleanup_apis):
     log.info('running test_create_api')
 
-    temp_string = helpers.random_string()
+    temp_string = utils.random_string()
     api_name = 'unittest-gcdt-sample-api-%s' % temp_string
     api_key_name = 'unittest-gcdt-sample-api-key-%s' % temp_string
     api_description = 'Gcdt sample API based on dp api-mock'

@@ -10,9 +10,9 @@ import time
 
 import maya
 import os
-from gcdt.utils import GracefulExit
 from s3transfer import S3Transfer
 
+from gcdt.utils import GracefulExit
 from . import utils
 
 PY3 = sys.version_info[0] >= 3
@@ -161,6 +161,7 @@ class ProgressPercentage(object):
             self._out.flush()
 
 
+# TODO move this to s3 module
 @utils.retries(3)
 def s3_upload(awsclient, deploy_bucket, zipfile, lambda_name):
     client_s3 = awsclient.get_client('s3')
@@ -224,3 +225,22 @@ def check_and_format_logs_params(start, end, tail):
     else:
         end_dt = None
     return start_dt, end_dt
+
+
+def filter_bucket_notifications_with_arn(lambda_function_configurations,
+                                         lambda_arn, filter_rules=False):
+    matching_notifications = []
+    not_matching_notifications = []
+    for notification in lambda_function_configurations:
+        if notification["LambdaFunctionArn"] == lambda_arn:
+            if filter_rules:
+                existing_filter = notification['Filter']['Key']['FilterRules']
+                if list_of_dict_equals(filter_rules, existing_filter):
+                    matching_notifications.append(notification)
+                else:
+                    not_matching_notifications.append(notification)
+            else:
+                matching_notifications.append(notification)
+        else:
+            not_matching_notifications.append(notification)
+    return matching_notifications, not_matching_notifications

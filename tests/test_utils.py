@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+
+import nose
 import os
 import sys
 import json
 from collections import OrderedDict
 
 import pytest
+from nose.tools import assert_equal
 
+from gcdt import utils
 from gcdt.utils import retries,  \
     get_command, dict_merge, get_env, get_context, flatten, json2table, \
     fix_old_kumo_config, dict_selective_merge
@@ -278,6 +282,20 @@ def test_fix_old_kumo_config_no_parameters():
     fix_old_kumo_config(config)
     assert config == exp_config
 
+
+def test_random_string():
+    ts = utils.random_string()
+    print(ts)
+    assert_equal(len(ts), 6)
+    nose.tools.assert_not_equal(ts, utils.random_string())
+
+
+def test_random_string_length10():
+    ts = utils.random_string(10)
+    print(ts)
+    assert_equal(len(ts), 10)
+    nose.tools.assert_not_equal(ts, utils.random_string())
+
+
 # TODO get_outputs_for_stack
 # TODO test_make_command
-

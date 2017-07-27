@@ -7,6 +7,7 @@ from nose.tools import assert_equal, assert_false, \
     assert_is_not_none, assert_true
 import pytest
 
+from gcdt import utils
 from gcdt.kumo_core import load_cloudformation_template, \
     get_parameter_diff, deploy_stack, \
     delete_stack, create_change_set, _get_stack_name, describe_change_set, \
@@ -334,7 +335,7 @@ def test_create_stack_rolearn(
     # create role to use for cloudformation deployment
     role = create_role_helper(
         awsclient,
-        'unittest_%s_kumo' % helpers.random_string(),
+        'unittest_%s_kumo' % utils.random_string(),
         policies=[
             temp_cloudformation_policy,
             'arn:aws:iam::aws:policy/AmazonS3FullAccess'
@@ -365,7 +366,7 @@ def test_update_stack_rolearn(awsclient, simple_cloudformation_stack,
     # create role to use for cloudformation update
     role = create_role_helper(
         awsclient,
-        'unittest_%s_kumo' % helpers.random_string(),
+        'unittest_%s_kumo' % utils.random_string(),
         policies=[
             temp_cloudformation_policy,
             'arn:aws:iam::aws:policy/AmazonS3FullAccess'

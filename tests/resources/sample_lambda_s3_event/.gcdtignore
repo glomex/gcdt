@@ -1,0 +1,6 @@
+easy_install
+pkg_resources
+pip*
+setuptools*
+wheel*
+*.pyc

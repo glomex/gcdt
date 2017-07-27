@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 import pytest
 from nose.tools import assert_regexp_matches
 
+from gcdt import utils
 from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
     delete_cmd, metrics_cmd, ping_cmd, bundle_cmd, invoke_cmd, logs_cmd
 from gcdt_bundler.bundler import bundle
@@ -71,7 +72,7 @@ def test_list_cmd(awsclient, vendored_folder, temp_lambda, capsys):
 def test_deploy_delete_cmds(awsclient, vendored_folder, cleanup_roles,
                             temp_bucket):
     log.info('running test_create_lambda')
-    temp_string = helpers.random_string()
+    temp_string = utils.random_string()
     lambda_name = 'jenkins_test_' + temp_string
     log.info(lambda_name)
     role = create_role_helper(

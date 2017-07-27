@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
 
-import nose
+import os
 from nose.tools import assert_equal
 
-from gcdt_testtools.helpers import temp_folder, create_tempfile, get_size, random_string
-from gcdt_testtools.helpers_aws import recorder, file_reader
+from gcdt_testtools.helpers import create_tempfile, get_size
+from gcdt_testtools.helpers import temp_folder  # fixtures!
 
 
 def test_create_tempfile():
@@ -30,10 +29,3 @@ def test_get_size(temp_folder):
 
 
 # TODO: write test for check_preconditions!
-
-
-def test_random_string():
-    ts = random_string()
-    print(ts)
-    assert_equal(len(ts), 6)
-    nose.tools.assert_not_equal(ts, random_string())
