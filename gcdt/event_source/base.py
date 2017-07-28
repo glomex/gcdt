@@ -14,6 +14,15 @@
 # limitations under the License.
 
 
+def get_lambda_name(lambda_arn):
+    # in the kappa implementation we always treat function == lambda_arn
+    # in case we need the lambda name, we use this helper function
+    parts = lambda_arn.split(':')
+    return parts[6]
+    #    arn_front = ':'.join(split_arn[:-1])
+    #    arn_back = split_arn[-1]
+
+
 class EventSource(object):
 
     #def __init__(self, context, config):

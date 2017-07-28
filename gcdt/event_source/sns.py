@@ -23,12 +23,11 @@ LOG = logging.getLogger(__name__)
 
 class SNSEventSource(base.EventSource):
 
-    #def __init__(self, context, config):
     def __init__(self, awsclient, config):
-        #super(SNSEventSource, self).__init__(context, config)
         super(SNSEventSource, self).__init__(awsclient, config)
         self._sns = awsclient.get_client('sns')
         self._lambda = awsclient.get_client('lambda')
+        self._arn = config['arn']
 
     def _make_notification_id(self, function_name):
         return 'Kappa-%s-notification' % function_name
@@ -36,32 +35,33 @@ class SNSEventSource(base.EventSource):
     def exists(self, function):
         try:
             response = self._sns.list_subscriptions_by_topic(
-                TopicArn=self.arn
+                TopicArn=self._arn
             )
             LOG.debug(response)
             for subscription in response['Subscriptions']:
-                if subscription['Endpoint'] == function.arn:
+                if subscription['Endpoint'] == function:  #.arn:
                     return subscription
             return None
         except Exception:
-            LOG.exception('Unable to find event source %s', self.arn)
+            LOG.exception('Unable to find event source %s', self._arn)
 
     def add(self, function):
+        function_name = base.get_lambda_name(function)
         try:
             response = self._sns.subscribe(
-                TopicArn=self.arn, Protocol='lambda',
-                Endpoint=function.arn
+                TopicArn=self._arn, Protocol='lambda',
+                Endpoint=function  #.arn
             )
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to add SNS event source')
         try:
             response = self._lambda.add_permission(
-                FunctionName=function.name,
-                StatementId=self.arn.split(":")[-1],
+                FunctionName=function_name,
+                StatementId=self._arn.split(":")[-1],
                 Action='lambda:InvokeFunction',
                 Principal='sns.amazonaws.com',
-                SourceArn=self.arn
+                SourceArn=self._arn
             )
             LOG.debug(response)
         except ClientError as e:
@@ -78,6 +78,7 @@ class SNSEventSource(base.EventSource):
         self.add(function)
 
     def remove(self, function):
+        function_name = base.get_lambda_name(function)
         LOG.debug('removing SNS event source')
         try:
             subscription = self.exists(function)
@@ -87,11 +88,11 @@ class SNSEventSource(base.EventSource):
                 )
                 LOG.debug(response)
         except Exception:
-            LOG.exception('Unable to remove event source %s', self.arn)
+            LOG.exception('Unable to remove event source %s', self._arn)
         try:
             response = self._lambda.remove_permission(
-                FunctionName=function.name,
-                StatementId=self.arn.split(":")[-1]
+                FunctionName=function_name,
+                StatementId=self._arn.split(":")[-1]
             )
             LOG.debug(response)
         except Exception:
@@ -100,7 +101,8 @@ class SNSEventSource(base.EventSource):
     disable = remove
 
     def status(self, function):
-        LOG.debug('status for SNS notification for %s', function.name)
+        function_name = base.get_lambda_name(function)
+        LOG.debug('status for SNS notification for %s', function_name)
         status = self.exists(function)
         if status:
             status['EventSourceArn'] = status['TopicArn']

@@ -12,10 +12,10 @@ import os
 import pytest
 from testfixtures import LogCapture
 
-# http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
 from gcdt import utils
 
 
+# http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
 class Bunch:
     def __init__(self, **kwds):
         self.__dict__.update(kwds)

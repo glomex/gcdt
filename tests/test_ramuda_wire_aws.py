@@ -5,14 +5,14 @@ import time
 
 import pytest
 from gcdt_bundler.bundler import get_zipped_file
-from nose.tools import assert_equal, assert_greater_equal, \
-    assert_in, assert_not_in, assert_regexp_matches
+from nose.tools import assert_equal, assert_greater_equal
 
 from gcdt import utils
 from gcdt.ramuda_core import delete_lambda_deprecated, deploy_lambda, ping
 from gcdt.ramuda_wire import _add_event_source, _remove_event_source, \
-    _get_event_source_status, wire, wire_deprecated, unwire, unwire_deprecated, \
-    _lambda_add_time_schedule_event_source, _lambda_add_invoke_permission
+    wire, wire_deprecated, unwire, unwire_deprecated, \
+    _get_event_source_status, _lambda_add_time_schedule_event_source, _lambda_add_invoke_permission
+from gcdt.sns import create_topic, delete_topic
 from gcdt_testtools import helpers
 from gcdt_testtools.helpers import create_tempfile
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
@@ -60,36 +60,6 @@ def _get_count(awsclient, function_name, alias_name='ACTIVE', version=None):
     return results
 
 
-# based on zappa tests_placebo.py
-@pytest.mark.aws
-@check_preconditions
-def test_event_source(awsclient, temp_lambda, temp_bucket):
-    log.info('running test_event_source')
-
-    lambda_name = temp_lambda[0]
-
-    # lookup lambda arn
-    lambda_client = awsclient.get_client('lambda')
-    alias_name = 'ACTIVE'
-    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
-                                         Name=alias_name)['AliasArn']
-
-    # define event source
-    bucket_arn = 'arn:aws:s3:::' + temp_bucket
-    evt_source = {
-        'arn': bucket_arn, 'events': ['s3:ObjectCreated:*']
-    }
-
-    # event source lifecycle
-    status = _add_event_source(awsclient, evt_source, lambda_arn,
-                              'handler.handle')
-    assert status == 'successful'
-    status = _get_event_source_status(awsclient, evt_source, lambda_arn,
-                                     'handler.handle')
-    assert status['State'] == 'Enabled'
-    _remove_event_source(awsclient, evt_source, lambda_arn, 'handler.handle')
-
-
 @pytest.mark.aws
 @pytest.mark.slow
 @check_preconditions
@@ -182,16 +152,14 @@ def test_wire_unwire_new_events_with_schedule_expression(
     events = [
         {
             "event_source": {
-                "expression": [
-                    "rate(1 minute)"
-                ]
+                "schedule": "rate(1 minute)"
             }
         }
     ]
 
     # wire the function with the bucket
     exit_code = wire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     assert int(_get_count(awsclient, lambda_name)) == 0
 
@@ -200,17 +168,16 @@ def test_wire_unwire_new_events_with_schedule_expression(
 
     # unwire the function
     exit_code = unwire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     time.sleep(70)
     assert int(_get_count(awsclient, lambda_name)) == 1
 
 
-# based on zappa tests_placebo.py
 @pytest.mark.aws
 @check_preconditions
-def test_event_source(awsclient, temp_lambda, temp_bucket):
-    log.info('running test_event_source')
+def test_event_source_lifecycle_s3(awsclient, temp_lambda, temp_bucket):
+    log.info('running test_event_source_lifecycle_s3')
 
     lambda_name = temp_lambda[0]
 
@@ -223,17 +190,83 @@ def test_event_source(awsclient, temp_lambda, temp_bucket):
     # define event source
     bucket_arn = 'arn:aws:s3:::' + temp_bucket
     evt_source = {
-        'arn': bucket_arn, 'events': ['s3:ObjectCreated:*']
+        'arn': bucket_arn, 'events': ['s3:ObjectCreated:*'],
+        "suffix": ".gz"
     }
 
     # event source lifecycle
-    status = _add_event_source(awsclient, evt_source, lambda_arn,
-                              'handler.handle')
-    assert status == 'successful'
-    status = _get_event_source_status(awsclient, evt_source, lambda_arn,
-                                     'handler.handle')
-    assert status['State'] == 'Enabled'
-    _remove_event_source(awsclient, evt_source, lambda_arn, 'handler.handle')
+    status = _add_event_source(awsclient, evt_source, lambda_arn)
+    #assert status == 'successful'
+    #status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    _remove_event_source(awsclient, evt_source, lambda_arn)
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_event_source_lifecycle_cloudwatch(awsclient, temp_lambda):
+    log.info('running test_event_source_lifecycle_cloudwatch')
+
+    lambda_name = temp_lambda[0]
+
+    # lookup lambda arn
+    lambda_client = awsclient.get_client('lambda')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+
+    # define event source
+    evt_source = {
+        "name": "execute_backup",
+        "schedule": "rate(1 minute)"
+    }
+
+    # event source lifecycle
+    status = _add_event_source(awsclient, evt_source, lambda_arn)
+    #assert status == 'successful'
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    assert status['State'] == 'ENABLED'
+    _remove_event_source(awsclient, evt_source, lambda_arn)
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def temp_sns_topic(awsclient):
+    # create a bucket
+    temp_string = utils.random_string()
+    arn = create_topic(awsclient, temp_string)
+    yield temp_string, arn
+    # cleanup
+    delete_topic(awsclient, arn)
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_event_source_lifecycle_sns(awsclient, temp_lambda, temp_sns_topic):
+    log.info('running test_event_source_lifecycle_sns')
+
+    lambda_name = temp_lambda[0]
+
+    # lookup lambda arn
+    lambda_client = awsclient.get_client('lambda')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+
+    # define event source
+    evt_source = {
+        #"arn":  "arn:aws:sns:::your-event-topic-arn",
+        "arn": temp_sns_topic[1],
+        "events": [
+            "sns:Publish"
+        ]
+    }
+
+    # event source lifecycle
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
 @pytest.mark.aws
@@ -253,18 +286,21 @@ def test_wire_unwire_new_events_with_s3(
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda_s3_event/handler_counter.py',
                          lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    #cleanup_lambdas.append(lambda_name)
 
     bucket_name = temp_bucket
+
     events = [
         {
             "event_source": {
                 "arn": "arn:aws:s3:::" + bucket_name,
                 "events": [
-                    {
-                        "type": "s3:ObjectCreated:*",
-                        "suffix": ".gz"
-                    }
+                    's3:ObjectCreated:*',
+                    #{
+                    #    "description": 'rotate_event',
+                    #    "type": "s3:ObjectRemoved:*",
+                    #    "suffix": ".gz"
+                    #}
                 ]
             }
         }
@@ -272,7 +308,7 @@ def test_wire_unwire_new_events_with_s3(
 
     # wire the function with the bucket
     exit_code = wire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     # put a file into the bucket
     awsclient.get_client('s3').put_object(
@@ -284,11 +320,11 @@ def test_wire_unwire_new_events_with_s3(
 
     # validate function call
     time.sleep(20)  # sleep till the event arrived
-    assert_equal(int(_get_count(awsclient, lambda_name)), 1)
+    assert int(_get_count(awsclient, lambda_name)) == 1
 
     # unwire the function
     exit_code = unwire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     # put in another file
     awsclient.get_client('s3').put_object(
@@ -328,9 +364,8 @@ def test_wire_unwire_new_events_with_schedule_expression(
     events = [
         {
             "event_source": {
-                "expression": [
+                "schedule":
                     "rate(1 minute)"
-                ]
             }
         }
     ]

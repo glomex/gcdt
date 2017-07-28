@@ -50,7 +50,7 @@ gcdt-datadog-integration
 You can find more information about plugins in [docs](http://gcdt.readthedocs.io/en/latest/gcdt_plugins/index.html)
 then
 ```bash
-$ pip install -r requirements_gcdt.txt
+$ pip install -U -r requirements_gcdt.txt
 ```
 To check that everything is good and `gcdt` installed just do:
 ```bash

@@ -278,6 +278,8 @@ def awsclient(request):
         # neither record nor playback, just run the tests against AWS services
         pass
     else:
+        if not os.path.exists(record_dir):
+            raise Exception('placebo playback for \'%s\' missing' % prefix)
         def fake_sleep(seconds):
             pass
 
