@@ -12,12 +12,10 @@ from nose.tools import assert_equal, assert_greater_equal, \
     assert_in, assert_not_in, assert_regexp_matches
 
 from gcdt import utils
-from gcdt.ramuda_core import delete_lambda_deprecated, deploy_lambda, ping, \
-    list_functions, \
-    _update_lambda_configuration, get_metrics, rollback, _get_alias_version, \
-    info, invoke
-from gcdt.ramuda_wire import _lambda_add_time_schedule_event_source, \
-    _lambda_add_invoke_permission
+from gcdt.ramuda_core import delete_lambda_deprecated, delete_lambda, \
+    deploy_lambda, ping, list_functions,  _update_lambda_configuration, \
+    get_metrics, rollback, _get_alias_version, info, invoke
+from gcdt.ramuda_wire import _lambda_add_invoke_permission
 from gcdt.ramuda_utils import list_lambda_versions, create_sha256, \
     get_remote_code_hash
 from gcdt_testtools import helpers
@@ -81,12 +79,21 @@ def temp_lambda(awsclient):
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'
-def cleanup_lambdas(awsclient):
+def cleanup_lambdas_deprecated(awsclient):
     items = []
     yield items
     # cleanup
     for i in items:
         delete_lambda_deprecated(awsclient, i, delete_logs=True)
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def cleanup_lambdas(awsclient):
+    items = []
+    yield items
+    # cleanup
+    for i in items:
+        delete_lambda(awsclient, i, delete_logs=True)
 
 
 @pytest.mark.aws

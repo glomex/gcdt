@@ -5,6 +5,8 @@ import logging
 log = logging.getLogger(__name__)
 
 
+# note this has currently restricted use to create test artifacts for ramuda wiring
+
 ### topic
 def create_topic(awsclient, topic):
     client = awsclient.get_client('sns')

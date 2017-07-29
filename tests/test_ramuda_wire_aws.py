@@ -13,6 +13,7 @@ from gcdt.ramuda_wire import _add_event_source, _remove_event_source, \
     wire, wire_deprecated, unwire, unwire_deprecated, \
     _get_event_source_status, _lambda_add_time_schedule_event_source, _lambda_add_invoke_permission
 from gcdt.sns import create_topic, delete_topic
+from gcdt.kinesis import create_stream, describe_stream, delete_stream
 from gcdt_testtools import helpers
 from gcdt_testtools.helpers import create_tempfile
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
@@ -22,8 +23,10 @@ from gcdt_testtools.helpers_aws import temp_bucket, awsclient, \
     cleanup_roles  # fixtures!
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from gcdt_testtools.helpers import create_tempfile
-from .test_ramuda_aws import vendored_folder, cleanup_lambdas, temp_lambda  # fixtures!
+from .test_ramuda_aws import vendored_folder, temp_lambda  # fixtures!
+from .test_ramuda_aws import cleanup_lambdas, cleanup_lambdas_deprecated  # fixtures!
 from . import here
+
 
 log = logging.getLogger(__name__)
 
@@ -77,18 +80,16 @@ def test_wire_unwire_new_events_with_s3(
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda_s3_event/handler_counter.py',
                          lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    #cleanup_lambdas.append(lambda_name)
 
     bucket_name = temp_bucket
+
     events = [
         {
             "event_source": {
                 "arn": "arn:aws:s3:::" + bucket_name,
                 "events": [
-                    {
-                        "type": "s3:ObjectCreated:*",
-                        "suffix": ".gz"
-                    }
+                    's3:ObjectCreated:*',
                 ]
             }
         }
@@ -96,7 +97,7 @@ def test_wire_unwire_new_events_with_s3(
 
     # wire the function with the bucket
     exit_code = wire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     # put a file into the bucket
     awsclient.get_client('s3').put_object(
@@ -108,11 +109,11 @@ def test_wire_unwire_new_events_with_s3(
 
     # validate function call
     time.sleep(20)  # sleep till the event arrived
-    assert_equal(int(_get_count(awsclient, lambda_name)), 1)
+    assert int(_get_count(awsclient, lambda_name)) == 1
 
     # unwire the function
     exit_code = unwire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
 
     # put in another file
     awsclient.get_client('s3').put_object(
@@ -195,9 +196,8 @@ def test_event_source_lifecycle_s3(awsclient, temp_lambda, temp_bucket):
     }
 
     # event source lifecycle
-    status = _add_event_source(awsclient, evt_source, lambda_arn)
-    #assert status == 'successful'
-    #status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
     assert status['EventSourceArn']
     _remove_event_source(awsclient, evt_source, lambda_arn)
 
@@ -222,8 +222,7 @@ def test_event_source_lifecycle_cloudwatch(awsclient, temp_lambda):
     }
 
     # event source lifecycle
-    status = _add_event_source(awsclient, evt_source, lambda_arn)
-    #assert status == 'successful'
+    _add_event_source(awsclient, evt_source, lambda_arn)
     status = _get_event_source_status(awsclient, evt_source, lambda_arn)
     assert status['EventSourceArn']
     assert status['State'] == 'ENABLED'
@@ -269,127 +268,47 @@ def test_event_source_lifecycle_sns(awsclient, temp_lambda, temp_sns_topic):
     _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
-@pytest.mark.aws
-@pytest.mark.slow
-@check_preconditions
-def test_wire_unwire_new_events_with_s3(
-        awsclient, vendored_folder, cleanup_lambdas, cleanup_roles,
-        temp_bucket):
-    log.info('running test_wire_unwire_new_events_with_s3')
-
-    # create a lambda function
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def temp_kinesis(awsclient):
+    # create a bucket
     temp_string = utils.random_string()
-    lambda_name = 'jenkins_test_%s' % temp_string
-    role_name = 'unittest_%s_lambda' % temp_string
-    role_arn = create_lambda_role_helper(awsclient, role_name)
-    cleanup_roles.append(role_name)
-    create_lambda_helper(awsclient, lambda_name, role_arn,
-                         './resources/sample_lambda_s3_event/handler_counter.py',
-                         lambda_handler='handler_counter.handle')
-    #cleanup_lambdas.append(lambda_name)
-
-    bucket_name = temp_bucket
-
-    events = [
-        {
-            "event_source": {
-                "arn": "arn:aws:s3:::" + bucket_name,
-                "events": [
-                    's3:ObjectCreated:*',
-                    #{
-                    #    "description": 'rotate_event',
-                    #    "type": "s3:ObjectRemoved:*",
-                    #    "suffix": ".gz"
-                    #}
-                ]
-            }
-        }
-    ]
-
-    # wire the function with the bucket
-    exit_code = wire(awsclient, events, lambda_name)
-    assert exit_code == 0
-
-    # put a file into the bucket
-    awsclient.get_client('s3').put_object(
-        ACL='public-read',
-        Body=b'this is some content',
-        Bucket=bucket_name,
-        Key='test_file.gz',
-    )
-
-    # validate function call
-    time.sleep(20)  # sleep till the event arrived
-    assert int(_get_count(awsclient, lambda_name)) == 1
-
-    # unwire the function
-    exit_code = unwire(awsclient, events, lambda_name)
-    assert exit_code == 0
-
-    # put in another file
-    awsclient.get_client('s3').put_object(
-        ACL='public-read',
-        Body=b'this is some content',
-        Bucket=bucket_name,
-        Key='test_file_2.gz',
-    )
-
-    # validate function not called
-    time.sleep(10)
-    assert int(_get_count(awsclient, lambda_name)) == 1
+    create_stream(awsclient, temp_string)
+    arn = describe_stream(awsclient, temp_string)['StreamARN']
+    yield temp_string, arn
+    # cleanup
+    delete_stream(awsclient, temp_string)
 
 
 @pytest.mark.aws
-@pytest.mark.slow
 @check_preconditions
-def test_wire_unwire_new_events_with_schedule_expression(
-        awsclient, vendored_folder, cleanup_lambdas, cleanup_roles,
-        temp_bucket):
-    log.info('running test_wire_unwire_new_events_with_schedule_expression')
+def test_event_source_lifecycle_kinesis(awsclient, temp_lambda, temp_kinesis):
+    log.info('running test_event_source_lifecycle_sns')
 
-    # create a lambda function
-    temp_string = utils.random_string()
-    lambda_name = 'jenkins_test_%s' % temp_string
-    role_name = 'unittest_%s_lambda' % temp_string
-    role_arn = create_lambda_role_helper(awsclient, role_name)
-    cleanup_roles.append(role_name)
-    create_lambda_helper(awsclient, lambda_name, role_arn,
-                         './resources/sample_lambda_s3_event/handler_counter.py',
-                         lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    lambda_name = temp_lambda[0]
 
-    # schedule expressions:
-    # http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
-    bucket_name = temp_bucket
-    events = [
-        {
-            "event_source": {
-                "schedule":
-                    "rate(1 minute)"
-            }
-        }
-    ]
+    # lookup lambda arn
+    lambda_client = awsclient.get_client('lambda')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
 
-    # wire the function with the bucket
-    exit_code = wire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
+    # define event source
+    evt_source = {
+        #"arn":  "arn:aws:dynamodb:us-east-1:1234554:table/YourTable/stream/2016-05-11T00:00:00.000",
+        "arn": temp_kinesis[1],
+        "starting_position": "TRIM_HORIZON",  # Supported values: TRIM_HORIZON, LATEST
+        "batch_size": 50,  # Max: 1000
+        "enabled": True  # Default is false
+    }
 
-    assert int(_get_count(awsclient, lambda_name)) == 0
-
-    time.sleep(70)  # sleep till scheduled event
-    assert int(_get_count(awsclient, lambda_name)) == 1
-
-    # unwire the function
-    exit_code = unwire(awsclient, events, lambda_name)
-    assert_equal(exit_code, 0)
-
-    time.sleep(70)
-    assert int(_get_count(awsclient, lambda_name)) == 1
+    # event source lifecycle
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
-# TODO test_info with s3 and timed event sources
 # TODO
-# _ensure_cloudwatch_event
 # wire
 # _get_lambda_policies
 # use create_lambda_helper to simplify above testcases
@@ -402,8 +321,8 @@ def test_wire_unwire_new_events_with_schedule_expression(
 # DEPRECATED!!
 @pytest.mark.aws
 @check_preconditions
-def test_schedule_event_source(awsclient, vendored_folder, cleanup_lambdas,
-                               cleanup_roles):
+def test_deprecated_schedule_event_source(
+        awsclient, vendored_folder, cleanup_lambdas_deprecated, cleanup_roles):
     log.info('running test_schedule_event_source')
     # include reading config from settings file
     config = {
@@ -435,7 +354,7 @@ def test_schedule_event_source(awsclient, vendored_folder, cleanup_lambdas,
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda/handler_counter.py',
                          lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
     # lookup lambda arn
     lambda_client = awsclient.get_client('lambda')
@@ -460,9 +379,9 @@ def test_schedule_event_source(awsclient, vendored_folder, cleanup_lambdas,
 @pytest.mark.aws
 @pytest.mark.slow
 @check_preconditions
-def test_wire_unwire_lambda_with_s3(awsclient, vendored_folder,
-                                    cleanup_lambdas, cleanup_roles,
-                                    temp_bucket):
+def test_deprecated_wire_unwire_lambda_with_s3(
+        awsclient, vendored_folder, cleanup_lambdas_deprecated, cleanup_roles,
+        temp_bucket):
     log.info('running test_wire_unwire_lambda_with_s3')
 
     # create a lambda function
@@ -474,7 +393,7 @@ def test_wire_unwire_lambda_with_s3(awsclient, vendored_folder,
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda/handler_counter.py',
                          lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
     bucket_name = temp_bucket
     config = {

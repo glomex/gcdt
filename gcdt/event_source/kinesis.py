@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import unicode_literals, print_function
 
 import botocore.exceptions
 from . import base
@@ -22,16 +23,18 @@ LOG = logging.getLogger(__name__)
 
 class KinesisEventSource(base.EventSource):
 
-    #def __init__(self, context, config):
     def __init__(self, awsclient, config):
-        #super(KinesisEventSource, self).__init__(context, config)
         super(KinesisEventSource, self).__init__(awsclient, config)
         self._lambda = awsclient.get_client('lambda')
 
-    def _get_uuid(self, function):
+    def exists(self, lambda_arn):
+        return self._get_uuid(lambda_arn)
+
+    def _get_uuid(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         uuid = None
         response = self._lambda.list_event_source_mappings(
-            FunctionName=function.name,
+            FunctionName=function_name,
             EventSourceArn=self.arn
         )
         LOG.debug(response)
@@ -39,10 +42,11 @@ class KinesisEventSource(base.EventSource):
             uuid = response['EventSourceMappings'][0]['UUID']
         return uuid
 
-    def add(self, function):
+    def add(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         try:
             response = self._lambda.create_event_source_mapping(
-                FunctionName=function.name,
+                FunctionName=function_name,
                 EventSourceArn=self.arn,
                 BatchSize=self.batch_size,
                 StartingPosition=self.starting_position,
@@ -52,57 +56,58 @@ class KinesisEventSource(base.EventSource):
         except Exception:
             LOG.exception('Unable to add event source')
 
-    def enable(self, function):
+    def enable(self, lambda_arn):
         self._config['enabled'] = True
         try:
             response = self._lambda.update_event_source_mapping(
-                UUID=self._get_uuid(function),
+                UUID=self._get_uuid(lambda_arn),
                 Enabled=self.enabled
             )
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to enable event source')
 
-    def disable(self, function):
+    def disable(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         self._config['enabled'] = False
         try:
             response = self._lambda.update_event_source_mapping(
-                FunctionName=function.name,
+                FunctionName=function_name,
                 Enabled=self.enabled
             )
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to disable event source')
 
-    def update(self, function):
+    def update(self, lambda_arn):
         response = None
-        uuid = self._get_uuid(function)
+        uuid = self._get_uuid(lambda_arn)
         if uuid:
             try:
                 response = self._lambda.update_event_source_mapping(
                     BatchSize=self.batch_size,
                     Enabled=self.enabled,
-                    FunctionName=function.arn)
+                    FunctionName=lambda_arn)
                 LOG.debug(response)
             except Exception:
                 LOG.exception('Unable to update event source')
 
-    def remove(self, function):
+    def remove(self, lambda_arn):
         response = None
-        uuid = self._get_uuid(function)
+        uuid = self._get_uuid(lambda_arn)
         if uuid:
             response = self._lambda.delete_event_source_mapping(UUID=uuid)
             LOG.debug(response)
         return response
 
-    def status(self, function):
+    def status(self, lambda_arn):
         response = None
         LOG.debug('getting status for event source %s', self.arn)
-        uuid = self._get_uuid(function)
+        uuid = self._get_uuid(lambda_arn)
         if uuid:
             try:
                 response = self._lambda.get_event_source_mapping(
-                    UUID=self._get_uuid(function)
+                    UUID=self._get_uuid(lambda_arn)
                 )
                 LOG.debug(response)
             except botocore.exceptions.ClientError:

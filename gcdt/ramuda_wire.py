@@ -3,7 +3,6 @@ from __future__ import unicode_literals, print_function
 import json
 import logging
 import sys
-import hashlib
 import uuid
 
 from botocore.exceptions import ClientError as ClientError
@@ -15,7 +14,6 @@ from .ramuda_utils import lambda_exists, get_bucket_from_s3_arn, \
     get_rule_name_from_event_arn, create_aws_s3_arn, build_filter_rules, \
     list_of_dict_equals
 from .s3 import bucket_exists
-from . import utils
 from . import event_source
 
 PY3 = sys.version_info[0] >= 3
@@ -43,10 +41,6 @@ def _get_event_type(evt_source):
 
 # zappa.utilities based implementation:
 # https://github.com/Miserlou/Zappa/blob/master/zappa/utilities.py
-# event_source from
-# https://github.com/garnaat/kappa/tree/develop/kappa/event_source
-# Note: we use a botocore compatible version of the kappa event_source functionality
-# version from 2017-03-07, 46709b6
 # note: target function is not implemented here!!!
 #def _get_event_source(awsclient, evt_source, lambda_arn, target_function):
 '''
@@ -315,34 +309,52 @@ def _delete_rule(awsclient, rule_name):
 
     # Delete our rule.
     client_events.delete_rule(Name=rule_name)
-'''
 
 
-def wire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
-    """Wiring a lambda function to events.
-
-    :param awsclient:
-    :param events: list of events
-    :param lambda_name:
-    :param alias_name:
-    :return: exit_code
+def _unschedule_events(awsclient, events, lambda_arn=None, lambda_name=None,
+                       excluded_source_services=None):
+    excluded_source_services = excluded_source_services or []
     """
-    if not lambda_exists(awsclient, lambda_name):
-        print(colored.red('The function you try to wire up doesn\'t ' +
-                          'exist... Bailing out...'))
-        return 1
-    client_lambda = awsclient.get_client('lambda')
-    lambda_function = client_lambda.get_function(FunctionName=lambda_name)
-    lambda_arn = client_lambda.get_alias(FunctionName=lambda_name,
-                                         Name=alias_name)['AliasArn']
-    print('wiring lambda_arn %s ...' % lambda_arn)
+    Given a list of events, unschedule these CloudWatch Events.
 
-    if lambda_function is not None:
-        _schedule_events(awsclient, events, lambda_arn)  #, lambda_name)
-    return 0
+    'events' is a list of dictionaries, where the dict must contains the string
+    of a 'function' and the string of the event 'expression', and an optional 'name' and 'description'.
+    """
+    _clear_policy(awsclient, lambda_name)
+
+    rule_names = _get_event_rule_names_for_lambda(awsclient, lambda_arn=lambda_arn)
+    for rule_name in rule_names:
+        _delete_rule(awsclient, rule_name)
+        print('Unscheduled ' + rule_name + '.')
+
+    non_cwe = [e for e in events if 'event_source' in e]
+    for event in non_cwe:
+        # TODO: This WILL miss non CW events that have been deployed but changed names. Figure out a way to remove
+        # them no matter what.
+        # These are non CWE event sources.
+        # !!! this means handler
+        #evt_function = event['function']
+        evt_source = event['event_source']
+        description = _get_event_description(evt_source)
+        name = event.get('name', description)
+        #event_source = event.get('event_source', evt_function)
+        #service = _service_from_arn(evt_source['arn'])
+        evt_type = _get_event_type(evt_source)
+        # DynamoDB and Kinesis streams take quite a while to setup after they are created and do not need to be
+        # re-scheduled when a new Lambda function is deployed. Therefore, they should not be removed during zappa
+        # update or zappa schedule.
+        if evt_type not in excluded_source_services:
+            _remove_event_source(
+                awsclient,
+                evt_source,
+                lambda_arn
+                #evt_function
+            )
+            #print("Removed event " + name + " (" + str(
+            #    evt_source['events']) + ").")
+            print("Removed event " + name)
 
 
-'''
 def _schedule_events(awsclient, events, lambda_arn, lambda_name):
     """
     Given a Lambda ARN, name and a list of events, schedule this as CloudWatch Events.
@@ -465,39 +477,63 @@ def _schedule_events(awsclient, events, lambda_arn, lambda_name):
             elif rule_response == 'exists':
                 #print("{} event schedule for {} already exists - Nothing to do here.".format(svc, description))
                 print("event schedule for {} already exists - Nothing to do here.".format(description))
-            #elif rule_response == 'dryrun':
-            #    print(
-            #        "Dryrun for creating {} event schedule for {}!!".format(svc,
-            #                                                                evt_function))
+                #elif rule_response == 'dryrun':
+                #    print(
+                #        "Dryrun for creating {} event schedule for {}!!".format(svc,
+                #                                                                evt_function))
         else:
             print(
                 "Could not create event {} - Please define either an expression or an event source".format(
                     name))
+
+
 '''
 
 
-# http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
-class Bunch:
-    def __init__(self, **kwds):
-        self.__dict__.update(kwds)
+# event_source from
+# https://github.com/garnaat/kappa/tree/develop/kappa/event_source
+# Note: we use a botocore compatible version of the kappa event_source functionality
+# version from 2017-03-07, 46709b6
+def wire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
+    """Wiring a AWS Lambda function to events.
+    Given a Lambda ARN, name and a list of events, schedule this as CloudWatch Events.
 
+    'events' is a list of dictionaries, where the dict contains the string
+    of the event 'schedule', and an optional 'name' and 'description'.
 
-# implementation based on kappa
-#def _create_event_sources(awsclient, events, lambda_arn):
-def _get_event_source(awsclient, evt_source, lambda_arn):
+    'schedule' can be in rate or cron format:
+        http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
+
+    :param awsclient:
+    :param events: list of events
+    :param lambda_name:
+    :param alias_name:
+    :return: exit_code
     """
-    Given awsclient, event_source dictionary item, and a lambda_arn,
+    if not lambda_exists(awsclient, lambda_name):
+        print(colored.red('The function you try to wire up doesn\'t ' +
+                          'exist... Bailing out...'))
+        return 1
+    client_lambda = awsclient.get_client('lambda')
+    lambda_function = client_lambda.get_function(FunctionName=lambda_name)
+    lambda_arn = client_lambda.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+    print('wiring lambda_arn %s ...' % lambda_arn)
+
+    if lambda_function is not None:
+        #_schedule_events(awsclient, events, lambda_arn)
+        for event in events:
+            evt_source = event['event_source']
+            _add_event_source(awsclient, evt_source, lambda_arn)
+    return 0
+
+
+def _get_event_source_obj(awsclient, evt_source):
+    """
+    Given awsclient, event_source dictionary item
     create an event_source object of the appropriate event type
     to schedule this event, and return the object.
     """
-    #env_cfg = self.config['environments'][self.environment]
-    #if 'event_sources' not in env_cfg:
-    #    return
-
-    #event_sources = env_cfg.get('event_sources', {})
-    #if not event_sources:
-    #    return
-
     event_source_map = {
         'dynamodb': event_source.dynamodb_stream.DynamoDBStreamEventSource,
         'kinesis': event_source.kinesis.KinesisEventSource,
@@ -506,26 +542,21 @@ def _get_event_source(awsclient, evt_source, lambda_arn):
         'events': event_source.cloudwatch.CloudWatchEventSource
     }
 
-    #for event_source_cfg in event_sources:
-    #_, _, svc, _ = evt_source['arn'].split(':', 3)
     evt_type = _get_event_type(evt_source)
     event_source_func = event_source_map.get(evt_type, None)
     if not event_source:
         raise ValueError('Unknown event source: {0}'.format(
             evt_source['arn']))
-    #self.event_sources.append(
 
-    # convert lambda_arn into a kappa compliant datastructure
-    #lambda_func = Bunch(name=lambda_arn, arn=lambda_arn)
-
-    return event_source_func(awsclient, evt_source)#, lambda_func
+    return event_source_func(awsclient, evt_source)
 
 
 def _add_event_source(awsclient, evt_source, lambda_arn):
     """
     Given an event_source dictionary, create the object and add the event source.
     """
-    event_source_obj = _get_event_source(awsclient, evt_source, lambda_arn)
+    event_source_obj = _get_event_source_obj(awsclient, evt_source)
+
     # (where zappa goes like remove, add)
     # we go with update and add like this:
     if event_source_obj.exists(lambda_arn):
@@ -538,8 +569,7 @@ def _remove_event_source(awsclient, evt_source, lambda_arn):
     """
     Given an event_source dictionary, create the object and remove the event source.
     """
-    event_source_obj = _get_event_source(awsclient, evt_source, lambda_arn)
-    #for event_source in self.event_sources:
+    event_source_obj = _get_event_source_obj(awsclient, evt_source)
     event_source_obj.remove(lambda_arn)
 
 
@@ -547,64 +577,18 @@ def _get_event_source_status(awsclient, evt_source, lambda_arn):
     """
     Given an event_source dictionary, create the object and get the event source status.
     """
-    event_source_obj = _get_event_source(
-        awsclient, evt_source, lambda_arn)
+    event_source_obj = _get_event_source_obj(awsclient, evt_source)
     return event_source_obj.status(lambda_arn)
 
 
-def _schedule_events(awsclient, events, lambda_arn):
-    """
-    Given a Lambda ARN, name and a list of events, schedule this as CloudWatch Events.
-
-    'events' is a list of dictionaries, where the dict must contains the string
-    of a 'function' and the string of the event 'expression', and an optional 'name' and 'description'.
-
-    Expressions can be in rate or cron format:
-        http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
-    """
-
-    # hack
-    #_unschedule_events(awsclient, lambda_name=lambda_name, lambda_arn=lambda_arn,
-    #                   events=events, excluded_source_services=pull_services)
-    for event in events:
-        evt_source = event['event_source']
-        _add_event_source(awsclient, evt_source, lambda_arn)
-
-
-#def _update_event_sources():
-#    for event_source in self.event_sources:
-#        event_source.update(self.function)
-
-
-'''
-def _list_event_sources():
-    event_sources = []
-    for event_source in self.event_sources:
-        event_sources.append({
-            'arn': event_source.arn,
-            'starting_position': event_source.starting_position,
-            'batch_size': event_source.batch_size,
-            'enabled': event_source.enabled
-        })
-    return event_sources
-'''
-
-
-#def _enable_event_sources():
-#    for event_source in self.event_sources:
-#        event_source.enable(self.function)
-
-
-#def _disable_event_sources():
-#    for event_source in self.event_sources:
-#        event_source.disable(self.function)
-
-
 def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
-    """Unwire an event from a lambda function.
+    """Unwire a list of event from an AWS Lambda function.
+
+    'events' is a list of dictionaries, where the dict must contains the
+    'schedule' of the event as string, and an optional 'name' and 'description'.
 
     :param awsclient:
-    :param events: list
+    :param events: list of events
     :param lambda_name:
     :param alias_name:
     :return: exit_code
@@ -631,66 +615,11 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
             raise e
 
     if lambda_function is not None:
-        _unschedule_events(awsclient, events, lambda_arn)  #, lambda_name)
+        #_unschedule_events(awsclient, events, lambda_arn)
+        for event in events:
+            evt_source = event['event_source']
+            _remove_event_source(awsclient, evt_source, lambda_arn)
     return 0
-
-
-def _unschedule_events(awsclient, events, lambda_arn=None):
-    """
-    Given a list of events, unschedule these CloudWatch Events.
-
-    'events' is a list of dictionaries, where the dict must contains the string
-    of a 'function' and the string of the event 'expression', and an optional 'name' and 'description'.
-    """
-    for event in events:
-        evt_source = event['event_source']
-        _remove_event_source(awsclient, evt_source, lambda_arn)
-
-
-'''
-def _unschedule_events(awsclient, events, lambda_arn=None, lambda_name=None,
-                       excluded_source_services=None):
-    excluded_source_services = excluded_source_services or []
-    """
-    Given a list of events, unschedule these CloudWatch Events.
-
-    'events' is a list of dictionaries, where the dict must contains the string
-    of a 'function' and the string of the event 'expression', and an optional 'name' and 'description'.
-    """
-    _clear_policy(awsclient, lambda_name)
-
-    rule_names = _get_event_rule_names_for_lambda(awsclient, lambda_arn=lambda_arn)
-    for rule_name in rule_names:
-        _delete_rule(awsclient, rule_name)
-        print('Unscheduled ' + rule_name + '.')
-
-    non_cwe = [e for e in events if 'event_source' in e]
-    for event in non_cwe:
-        # TODO: This WILL miss non CW events that have been deployed but changed names. Figure out a way to remove
-        # them no matter what.
-        # These are non CWE event sources.
-        # !!! this means handler
-        #evt_function = event['function']
-        evt_source = event['event_source']
-        description = _get_event_description(evt_source)
-        name = event.get('name', description)
-        #event_source = event.get('event_source', evt_function)
-        #service = _service_from_arn(evt_source['arn'])
-        evt_type = _get_event_type(evt_source)
-        # DynamoDB and Kinesis streams take quite a while to setup after they are created and do not need to be
-        # re-scheduled when a new Lambda function is deployed. Therefore, they should not be removed during zappa
-        # update or zappa schedule.
-        if evt_type not in excluded_source_services:
-            _remove_event_source(
-                awsclient,
-                evt_source,
-                lambda_arn
-                #evt_function
-            )
-            #print("Removed event " + name + " (" + str(
-            #    evt_source['events']) + ").")
-            print("Removed event " + name)
-'''
 
 
 ################################################################################

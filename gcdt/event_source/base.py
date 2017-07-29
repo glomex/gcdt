@@ -12,30 +12,42 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import unicode_literals, print_function
+from copy import deepcopy
 
 
 def get_lambda_name(lambda_arn):
-    # in the kappa implementation we always treat function == lambda_arn
+    # (in the kappa implementation we always treat function == lambda_arn)
     # in case we need the lambda name, we use this helper function
     parts = lambda_arn.split(':')
     return parts[6]
-    #    arn_front = ':'.join(split_arn[:-1])
-    #    arn_back = split_arn[-1]
+
+
+def get_lambda_basearn(lambda_arn):
+    # the lambda_arn without ALIAS
+    parts = lambda_arn.split(':')
+    return ':'.join(parts[:7])
 
 
 class EventSource(object):
 
-    #def __init__(self, context, config):
-    #    self._context = context
-    #    self._config = config
     def __init__(self, awsclient, config):
-        #self._context = context
-        self._config = config
+        self._config = deepcopy(config)
         self._awsclient = awsclient
+        # currently we do not use the existing enable / disable mechanism
+        # but we want to keep the mechanism intact for now
+        # for this to work we need to auto-enable all EventSources here
+        if 'enabled' not in self._config:
+            self._config['enabled'] = True
+
+    @property
+    def enabled(self):
+        return self._config.get('enabled', False)
 
     @property
     def arn(self):
-        return self._config['arn']
+        if 'arn' in self._config:
+            return self._config['arn']
 
     @property
     def starting_position(self):
@@ -44,7 +56,3 @@ class EventSource(object):
     @property
     def batch_size(self):
         return self._config.get('batch_size', 100)
-
-    @property
-    def enabled(self):
-        return self._config.get('enabled', False)

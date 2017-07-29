@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import unicode_literals, print_function
 
 from . import base
 import logging
@@ -27,30 +28,29 @@ class SNSEventSource(base.EventSource):
         super(SNSEventSource, self).__init__(awsclient, config)
         self._sns = awsclient.get_client('sns')
         self._lambda = awsclient.get_client('lambda')
-        self._arn = config['arn']
 
     def _make_notification_id(self, function_name):
-        return 'Kappa-%s-notification' % function_name
+        return 'gcdt-%s-notification' % function_name
 
-    def exists(self, function):
+    def exists(self, lambda_arn):
         try:
             response = self._sns.list_subscriptions_by_topic(
-                TopicArn=self._arn
+                TopicArn=self.arn
             )
             LOG.debug(response)
             for subscription in response['Subscriptions']:
-                if subscription['Endpoint'] == function:  #.arn:
+                if subscription['Endpoint'] == lambda_arn:  #.arn:
                     return subscription
-            return None
         except Exception:
-            LOG.exception('Unable to find event source %s', self._arn)
+            LOG.exception('Unable to find event source %s', self.arn)
+        return None
 
-    def add(self, function):
-        function_name = base.get_lambda_name(function)
+    def add(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         try:
             response = self._sns.subscribe(
-                TopicArn=self._arn, Protocol='lambda',
-                Endpoint=function  #.arn
+                TopicArn=self.arn, Protocol='lambda',
+                Endpoint=lambda_arn  #.arn
             )
             LOG.debug(response)
         except Exception:
@@ -58,10 +58,10 @@ class SNSEventSource(base.EventSource):
         try:
             response = self._lambda.add_permission(
                 FunctionName=function_name,
-                StatementId=self._arn.split(":")[-1],
+                StatementId=self.arn.split(":")[-1],
                 Action='lambda:InvokeFunction',
                 Principal='sns.amazonaws.com',
-                SourceArn=self._arn
+                SourceArn=self.arn
             )
             LOG.debug(response)
         except ClientError as e:
@@ -74,25 +74,25 @@ class SNSEventSource(base.EventSource):
 
     enable = add
 
-    def update(self, function):
-        self.add(function)
+    def update(self, lambda_arn):
+        self.add(lambda_arn)
 
-    def remove(self, function):
-        function_name = base.get_lambda_name(function)
+    def remove(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         LOG.debug('removing SNS event source')
         try:
-            subscription = self.exists(function)
+            subscription = self.exists(lambda_arn)
             if subscription:
                 response = self._sns.unsubscribe(
                     SubscriptionArn=subscription['SubscriptionArn']
                 )
                 LOG.debug(response)
         except Exception:
-            LOG.exception('Unable to remove event source %s', self._arn)
+            LOG.exception('Unable to remove event source %s', self.arn)
         try:
             response = self._lambda.remove_permission(
                 FunctionName=function_name,
-                StatementId=self._arn.split(":")[-1]
+                StatementId=self.arn.split(":")[-1]
             )
             LOG.debug(response)
         except Exception:
@@ -100,10 +100,10 @@ class SNSEventSource(base.EventSource):
 
     disable = remove
 
-    def status(self, function):
-        function_name = base.get_lambda_name(function)
+    def status(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         LOG.debug('status for SNS notification for %s', function_name)
-        status = self.exists(function)
+        status = self.exists(lambda_arn)
         if status:
             status['EventSourceArn'] = status['TopicArn']
         return status

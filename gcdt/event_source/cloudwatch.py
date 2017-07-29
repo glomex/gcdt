@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import unicode_literals, print_function
 
 from . import base
 import logging
@@ -22,20 +23,14 @@ LOG = logging.getLogger(__name__)
 
 class CloudWatchEventSource(base.EventSource):
 
-    #def __init__(self, context, config):
     def __init__(self, awsclient, config):
-        #super(CloudWatchEventSource, self).__init__(context, config)
         super(CloudWatchEventSource, self).__init__(awsclient, config)
         self._events = awsclient.get_client('events')
         self._lambda = awsclient.get_client('lambda')
-        if 'arn' in config:
-            self._name = config['arn'].split('/')[-1]
-        elif 'name' in config:
+        if 'name' in config:
             self._name = config['name']
-        #self._context = context
-        self._config = config
 
-    def exists(self, function):
+    def exists(self, lambda_arn):
         return self.get_rule()
 
     def get_rule(self):
@@ -47,11 +42,13 @@ class CloudWatchEventSource(base.EventSource):
                     return r
         return None
 
-    def add(self, function):
-        function_name = base.get_lambda_name(function)
+    def add(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
+        print('_config: %s' % self._config)
+        print('enabled: %s' % self.enabled)
         kwargs = {
             'Name': self._name,
-            'State': 'ENABLED'  #if self.enabled else 'DISABLED'
+            'State': 'ENABLED' if self.enabled else 'DISABLED'
         }
         if 'schedule' in self._config:
             kwargs['ScheduleExpression'] = self._config['schedule']
@@ -87,18 +84,18 @@ class CloudWatchEventSource(base.EventSource):
                  Rule=self._name,
                  Targets=[{
                      'Id': function_name,
-                     'Arn': function
+                     'Arn': lambda_arn
                  }]
             )
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to put CloudWatch event source')
 
-    def update(self, function):
-        self.add(function)
+    def update(self, lambda_arn):
+        self.add(lambda_arn)
 
-    def remove(self, function):
-        function_name = base.get_lambda_name(function)
+    def remove(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         LOG.debug('removing CloudWatch event source')
         try:
             rule = self.get_rule()
@@ -113,16 +110,16 @@ class CloudWatchEventSource(base.EventSource):
         except Exception:
             LOG.exception('Unable to remove CloudWatch event source %s', self._name)
 
-    def status(self, function):
-        function_name = base.get_lambda_name(function)
+    def status(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         LOG.debug('status for CloudWatch event for %s', function_name)
         return self._to_status(self.get_rule())
 
-    def enable(self, function):
+    def enable(self, lambda_arn):
         if self.get_rule():
             self._events.enable_rule(Name=self._name)
 
-    def disable(self, function):
+    def disable(self, lambda_arn):
         if self.get_rule():
             self._events.disable_rule(Name=self._name)
 

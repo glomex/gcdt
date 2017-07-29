@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import unicode_literals, print_function
 
 from . import base
 import logging
@@ -27,7 +28,7 @@ class S3EventSource(base.EventSource):
         self._s3 = awsclient.get_client('s3')
         self._lambda = awsclient.get_client('lambda')
 
-    def exists(self, function):
+    def exists(self, lambda_arn):
         response = self._s3.get_bucket_notification_configuration(
             Bucket=self._get_bucket_name()
         )
@@ -35,25 +36,27 @@ class S3EventSource(base.EventSource):
         return 'LambdaFunctionConfigurations' in response
 
     def _make_notification_id(self, function_name):
-        return 'Kappa-%s-notification' % function_name
+        return 'gcdt-%s-notification' % function_name
 
     def _get_bucket_name(self):
         return self.arn.split(':')[-1]
 
-    def _get_notification_spec(self, function):
-        function_name = base.get_lambda_name(function)
+    def _get_notification_spec(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         notification_spec = {
             'Id': self._make_notification_id(function_name),
             'Events': [e for e in self._config['events']],
-            'LambdaFunctionArn': function,
+            #'LambdaFunctionArn': lambda_arn
+            # s3 obviously can not handle the full lambda_arn
+            'LambdaFunctionArn': base.get_lambda_basearn(lambda_arn)
         }
 
         # Add S3 key filters
         filter_rules = []
         # look for filter rules
-        for filter_type in ['SUFFIX', 'PREFIX']:
-            if filter_type.lower() in self._config:
-                rule = {'Name': filter_type, 'Value': self._config[filter_type] }
+        for filter_type in ['prefix', 'suffix']:
+            if filter_type in self._config:
+                rule = {'Name': filter_type.capitalize(), 'Value': self._config[filter_type] }
                 filter_rules.append(rule)
 
         if filter_rules:
@@ -71,11 +74,11 @@ class S3EventSource(base.EventSource):
         '''
         return notification_spec
 
-    def add(self, function):
-        function_name = base.get_lambda_name(function)
+    def add(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         existingPermission = {}
         try:
-            response = self._lambda.get_policy(FunctionName=function)
+            response = self._lambda.get_policy(FunctionName=lambda_arn)
             existingPermission = self.arn in str(response['Policy'])
         except Exception:
             LOG.debug('S3 event source permission not available')
@@ -92,7 +95,7 @@ class S3EventSource(base.EventSource):
         else:
             LOG.debug('S3 event source permission already exists')
 
-        new_notification_spec = self._get_notification_spec(function)
+        new_notification_spec = self._get_notification_spec(lambda_arn)
 
         notification_spec_list = []
         try:
@@ -115,6 +118,7 @@ class S3EventSource(base.EventSource):
             notification_configuration = {
                 'LambdaFunctionConfigurations': notification_spec_list
             }
+            print(notification_configuration)
 
             try:
                 response = self._s3.put_bucket_notification_configuration(
@@ -129,12 +133,12 @@ class S3EventSource(base.EventSource):
 
     enable = add
 
-    def update(self, function):
-        self.add(function)
+    def update(self, lambda_arn):
+        self.add(lambda_arn)
 
-    def remove(self, function):
+    def remove(self, lambda_arn):
 
-        notification_spec = self._get_notification_spec(function)
+        notification_spec = self._get_notification_spec(lambda_arn)
 
         LOG.debug('removing s3 notification')
 
@@ -159,11 +163,11 @@ class S3EventSource(base.EventSource):
 
     disable = remove
 
-    def status(self, function):
-        function_name = base.get_lambda_name(function)
+    def status(self, lambda_arn):
+        function_name = base.get_lambda_name(lambda_arn)
         LOG.debug('status for s3 notification for %s', function_name)
 
-        notification_spec = self._get_notification_spec(function)
+        notification_spec = self._get_notification_spec(lambda_arn)
 
         response = self._s3.get_bucket_notification_configuration(
             Bucket=self._get_bucket_name()

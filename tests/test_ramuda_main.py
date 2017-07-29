@@ -17,7 +17,7 @@ from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata, \
     cleanup_roles
 from gcdt_testtools.helpers_aws import create_role_helper
 from gcdt_testtools.helpers_aws import awsclient, temp_bucket  # fixtures!
-from .test_ramuda_aws import vendored_folder, temp_lambda, cleanup_lambdas  # fixtures!
+from .test_ramuda_aws import vendored_folder, temp_lambda, cleanup_lambdas_deprecated  # fixtures!
 from gcdt_testtools.helpers import temp_folder, logcapture  # fixtures !
 from gcdt_testtools import helpers
 
