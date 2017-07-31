@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_vvokzs-6bb83967-c210-4a4c-b0e1-43068b785fa7?X-Amz-Security-Token=FQoDYXdzEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDPsyRL7di%2BxixDHJhSK3A5rrXg%2BnFL93Qxp2YlAJOjyy2h3moaIuRlnYPX9o5QBPkIl7S4EtIGx0nC7%2BzpUe6amGIu2XNlp0eFTyBnzIIAtMxf8JDDE%2Bf2geOaKr1cMBEHeDjVeeAJ5DF9qA449LxvIFAty1Rk%2BXXQ4cBOQIUOSdPh%2FJexcltyraPVKbjnHmI6o9RBOIIdA9dZxGbFqYuC6Oc6GeDXiXeT2wNd0vsPd5MBcPwoJasLPMjeBQtHVSXa9Yy8dJFFZK8E89MFF8JP87jQXmIBglndrOcQPLQolhO%2FS5dU1VHG4yJTjmoh642%2BgDrRyte3Yo3GtXYC8gS6k%2Fh2ghABoL%2F39f%2B1PxBTEyiOL2Y90Aq3D8AyPpFm8bCaguV6L1%2FCUnzjmAyLRL8y79zgF3TBa0ey%2FPhL0L21h%2FiJy0cVPWFWXXyXMOt9k7PwuSSAqrfYNwWsw4aQ6ysw4kbt0KWuft1I4UKAn3bKrwpLUBA%2BLaL%2BbxeEiguWfxwY0CcFtMluUZhL6XYLoNZDrn1ZJlIgg%2B5RsikWTj%2F8lpZGSixmfzIkb2Dm2KP4HkM%2Fd%2BrF0Vd%2FeTzIKKnPKrH8mKVDabEUwom9H8ywU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170731T134806Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJ3OT2G7WYDS3WNYQ%2F20170731%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=ca7034e601d6d354cf4fd65581daffe2e17e0c74d5b00bbc273616c5bc0708ee"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "zDbsEAKAoYfIUlGUpaJcejwj0ccM1hxPa21Vtk8mEcU=", 
+            "FunctionName": "jenkins_test_vvokzs", 
+            "MemorySize": 128, 
+            "CodeSize": 3494068, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_vvokzs", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_vvokzs_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-07-31T13:47:52.527+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "e1da6383-75f6-11e7-9d0e-776bc2da585a", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 13:48:06 GMT", 
+                "x-amzn-requestid": "e1da6383-75f6-11e7-9d0e-776bc2da585a", 
+                "content-length": "1834", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

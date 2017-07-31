@@ -1,0 +1,20 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Location": "http://unittest-lambda-s3-event-source-oiobpp.s3.amazonaws.com/", 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "n27HtjMJ179L+yCIYHpHtjsrpAmWIzRetDXIaTvcj2cqLt742mM8XDwq6ZyYPVcroKhE9y1lrqY=", 
+            "RequestId": "8B843AF0918DBB32", 
+            "HTTPHeaders": {
+                "content-length": "0", 
+                "x-amz-id-2": "n27HtjMJ179L+yCIYHpHtjsrpAmWIzRetDXIaTvcj2cqLt742mM8XDwq6ZyYPVcroKhE9y1lrqY=", 
+                "server": "AmazonS3", 
+                "x-amz-request-id": "8B843AF0918DBB32", 
+                "location": "http://unittest-lambda-s3-event-source-oiobpp.s3.amazonaws.com/", 
+                "date": "Mon, 31 Jul 2017 15:57:18 GMT"
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "status_code": 404, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 404, 
+            "RequestId": "c6c27e35-7450-11e7-ae04-655c99c50f6d", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c6c27e35-7450-11e7-ae04-655c99c50f6d", 
+                "content-length": "124", 
+                "connection": "keep-alive", 
+                "date": "Sat, 29 Jul 2017 11:26:32 GMT", 
+                "content-type": "application/json", 
+                "x-amzn-errortype": "ResourceNotFoundException"
+            }
+        }, 
+        "Error": {
+            "Message": "Cannot find alias arn: arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_aznzkg:ACTIVE", 
+            "Code": "ResourceNotFoundException"
+        }
+    }
+}

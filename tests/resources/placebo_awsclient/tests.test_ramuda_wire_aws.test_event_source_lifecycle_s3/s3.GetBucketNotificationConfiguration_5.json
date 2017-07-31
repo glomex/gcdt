@@ -1,0 +1,37 @@
+{
+    "status_code": 200, 
+    "data": {
+        "LambdaFunctionConfigurations": [
+            {
+                "Filter": {
+                    "Key": {
+                        "FilterRules": [
+                            {
+                                "Name": "Suffix", 
+                                "Value": ".gz"
+                            }
+                        ]
+                    }
+                }, 
+                "LambdaFunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_vvokzs:ACTIVE", 
+                "Id": "gcdt-jenkins_test_vvokzs-notification", 
+                "Events": [
+                    "s3:ObjectCreated:*"
+                ]
+            }
+        ], 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "lGfG4cBsB/f0nOqAuxEbMusP/VHyZMlkCFlfBOETbwOFKn3O+wCB37voXjF1Afqc2UlGBtyIScU=", 
+            "RequestId": "2E9694D0AD204B73", 
+            "HTTPHeaders": {
+                "x-amz-id-2": "lGfG4cBsB/f0nOqAuxEbMusP/VHyZMlkCFlfBOETbwOFKn3O+wCB37voXjF1Afqc2UlGBtyIScU=", 
+                "date": "Mon, 31 Jul 2017 13:48:07 GMT", 
+                "transfer-encoding": "chunked", 
+                "x-amz-request-id": "2E9694D0AD204B73", 
+                "server": "AmazonS3"
+            }
+        }
+    }
+}

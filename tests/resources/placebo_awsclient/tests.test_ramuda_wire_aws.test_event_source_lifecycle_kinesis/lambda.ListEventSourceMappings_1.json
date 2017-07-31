@@ -1,0 +1,18 @@
+{
+    "status_code": 200, 
+    "data": {
+        "EventSourceMappings": [], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "5c607b44-75b0-11e7-a141-85737bef6984", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 05:23:17 GMT", 
+                "x-amzn-requestid": "5c607b44-75b0-11e7-a141-85737bef6984", 
+                "content-length": "44", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

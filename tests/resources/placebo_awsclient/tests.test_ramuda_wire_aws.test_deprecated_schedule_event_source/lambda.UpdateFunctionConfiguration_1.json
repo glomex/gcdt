@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "iAD/tdAPHLjXZkIkNNGt6tHKEHmBluo5MYcvv9IhnO4=", 
+        "FunctionName": "jenkins_test_fpwxgl", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "16a7fbf6-7451-11e7-827b-bfc7ae37d068", 
+            "HTTPHeaders": {
+                "date": "Sat, 29 Jul 2017 11:28:47 GMT", 
+                "x-amzn-requestid": "16a7fbf6-7451-11e7-827b-bfc7ae37d068", 
+                "content-length": "636", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3493410, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_fpwxgl", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_fpwxgl_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-29T11:28:47.941+0000", 
+        "Handler": "handler_counter.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

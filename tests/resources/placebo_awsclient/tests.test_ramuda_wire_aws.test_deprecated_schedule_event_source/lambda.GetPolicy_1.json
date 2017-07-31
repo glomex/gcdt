@@ -1,0 +1,18 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"default\",\"Statement\":[{\"Sid\":\"1df0560f-7451-11e7-b692-9801a7a1861b\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"events.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_fpwxgl:ACTIVE\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:events:eu-west-1:420189626185:rule/unittest-dev-lambda-schedule\"}}}]}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "8ae42540-7451-11e7-8db4-438a331d1160", 
+            "HTTPHeaders": {
+                "date": "Sat, 29 Jul 2017 11:32:02 GMT", 
+                "x-amzn-requestid": "8ae42540-7451-11e7-8db4-438a331d1160", 
+                "content-length": "453", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Deleted": [
+            {
+                "Key": "test_file_2.gz"
+            }, 
+            {
+                "Key": "test_file.gz"
+            }
+        ], 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "UDxAVMZoovAAa6/AdAsHwsWVVPlxkhk5T4TqUSCoAUbIUYBL8APZZxY5vSEcbRAALdrjfnCuIV4=", 
+            "RequestId": "2D060B51B25FB135", 
+            "HTTPHeaders": {
+                "x-amz-id-2": "UDxAVMZoovAAa6/AdAsHwsWVVPlxkhk5T4TqUSCoAUbIUYBL8APZZxY5vSEcbRAALdrjfnCuIV4=", 
+                "server": "AmazonS3", 
+                "transfer-encoding": "chunked", 
+                "connection": "close", 
+                "x-amz-request-id": "2D060B51B25FB135", 
+                "date": "Sat, 29 Jul 2017 11:27:19 GMT", 
+                "content-type": "application/xml"
+            }
+        }
+    }
+}
