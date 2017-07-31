@@ -29,8 +29,8 @@ class SNSEventSource(base.EventSource):
         self._sns = awsclient.get_client('sns')
         self._lambda = awsclient.get_client('lambda')
 
-    def _make_notification_id(self, function_name):
-        return 'gcdt-%s-notification' % function_name
+    def _make_notification_id(self, lambda_name):
+        return 'gcdt-%s-notification' % lambda_name
 
     def exists(self, lambda_arn):
         try:
@@ -46,7 +46,7 @@ class SNSEventSource(base.EventSource):
         return None
 
     def add(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         try:
             response = self._sns.subscribe(
                 TopicArn=self.arn, Protocol='lambda',
@@ -57,7 +57,7 @@ class SNSEventSource(base.EventSource):
             LOG.exception('Unable to add SNS event source')
         try:
             response = self._lambda.add_permission(
-                FunctionName=function_name,
+                FunctionName=lambda_name,
                 StatementId=self.arn.split(":")[-1],
                 Action='lambda:InvokeFunction',
                 Principal='sns.amazonaws.com',
@@ -78,7 +78,7 @@ class SNSEventSource(base.EventSource):
         self.add(lambda_arn)
 
     def remove(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         LOG.debug('removing SNS event source')
         try:
             subscription = self.exists(lambda_arn)
@@ -91,7 +91,7 @@ class SNSEventSource(base.EventSource):
             LOG.exception('Unable to remove event source %s', self.arn)
         try:
             response = self._lambda.remove_permission(
-                FunctionName=function_name,
+                FunctionName=lambda_name,
                 StatementId=self.arn.split(":")[-1]
             )
             LOG.debug(response)
@@ -101,8 +101,8 @@ class SNSEventSource(base.EventSource):
     disable = remove
 
     def status(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
-        LOG.debug('status for SNS notification for %s', function_name)
+        lambda_name = base.get_lambda_name(lambda_arn)
+        LOG.debug('status for SNS notification for %s', lambda_name)
         status = self.exists(lambda_arn)
         if status:
             status['EventSourceArn'] = status['TopicArn']

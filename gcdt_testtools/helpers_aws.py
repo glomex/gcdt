@@ -51,7 +51,9 @@ def create_lambda_role_helper(awsclient, role_name):
         awsclient, role_name,
         policies=[
             'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole',
-            'arn:aws:iam::aws:policy/AWSLambdaExecute']
+            'arn:aws:iam::aws:policy/AWSLambdaExecute',
+            'arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole'
+        ]
     )
     return role['Arn']
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """ramuda.
-Script to deploy Lambda functions to AWS
+Deploy Lambda functions to AWS
 """
 
 from __future__ import unicode_literals, print_function
@@ -130,15 +130,15 @@ def list_functions(awsclient):
     client_lambda = awsclient.get_client('lambda')
     response = client_lambda.list_functions()
     for function in response['Functions']:
-        print(function['FunctionName'])
-        print('\t' 'Memory: ' + str(function['MemorySize']))
-        print('\t' 'Timeout: ' + str(function['Timeout']))
-        print('\t' 'Role: ' + str(function['Role']))
-        print('\t' 'Current Version: ' + str(function['Version']))
-        print('\t' 'Last Modified: ' + str(function['LastModified']))
-        print('\t' 'CodeSha256: ' + str(function['CodeSha256']))
+        log.info(function['FunctionName'])
+        log.info('\t' 'Memory: ' + str(function['MemorySize']))
+        log.info('\t' 'Timeout: ' + str(function['Timeout']))
+        log.info('\t' 'Role: ' + str(function['Role']))
+        log.info('\t' 'Current Version: ' + str(function['Version']))
+        log.info('\t' 'Last Modified: ' + str(function['LastModified']))
+        log.info('\t' 'CodeSha256: ' + str(function['CodeSha256']))
 
-        print('\n')
+        log.info('\n')
     return 0
 
 
@@ -200,14 +200,14 @@ def deploy_lambda(awsclient, function_name, role, handler_filename,
 
     pong = ping(awsclient, function_name, version=function_version)
     if 'alive' in str(pong):
-        print(colored.green('Great you\'re already accepting a ping ' +
+        log.info(colored.green('Great you\'re already accepting a ping ' +
                             'in your Lambda function'))
     elif fail_deployment_on_unsuccessful_ping and not 'alive' in pong:
-        print(colored.red('Pinging your lambda function failed'))
+        log.info(colored.red('Pinging your lambda function failed'))
         # we do not deploy alias and fail command
         return 1
     else:
-        print(colored.red('Please consider adding a reaction to a ' +
+        log.info(colored.red('Please consider adding a reaction to a ' +
                           'ping event to your lambda function'))
     _deploy_alias(awsclient, function_name, function_version)
     return 0
@@ -280,7 +280,7 @@ def _create_lambda(awsclient, function_name, role, handler_filename,
     log.debug('lambda create completed...')
 
     function_version = response['Version']
-    print(json2table(response))
+    log.info(json2table(response))
     # FIXME: 23.08.2016 WHY update configuration after create?
     # timing issue:
     # http://jenkins.dev.dp.glomex.cloud/job/packages/job/gcdt_pull_request/32/console
@@ -327,7 +327,7 @@ def bundle_lambda(zipfile):
         return 1
     with open('bundle.zip', 'wb') as zfile:
         zfile.write(zipfile)
-    print('Finished - a bundle.zip is waiting for you...')
+    log.info('Finished - a bundle.zip is waiting for you...')
     return 0
 
 
@@ -346,10 +346,10 @@ def _update_lambda_function_code(
     remote_hash = get_remote_code_hash(awsclient, function_name)
     log.debug('remote_hash: %s', remote_hash)
     if local_hash == remote_hash:
-        log.info('AWS Lambda code hasn\'t changed - won\'t upload code bundle')
+        log.warn('AWS Lambda code hasn\'t changed - won\'t upload code bundle')
     else:
         if not artifact_bucket:
-            log.info('no stack bucket found')
+            log.warn('no stack bucket found')
             response = client_lambda.update_function_code(
                 FunctionName=function_name,
                 ZipFile=zipfile,
@@ -367,7 +367,7 @@ def _update_lambda_function_code(
                 S3ObjectVersion=version_id,
                 Publish=True
             )
-        print(json2table(response))
+        log.info(json2table(response))
     return 0
 
 
@@ -398,7 +398,7 @@ def _update_lambda_configuration(awsclient, function_name, role,
                 'Variables': environment
             }
         )
-        print(json2table(response))
+        log.info(json2table(response))
     else:
         response = client_lambda.update_function_configuration(
             FunctionName=function_name,
@@ -411,7 +411,7 @@ def _update_lambda_configuration(awsclient, function_name, role,
                 'Variables': environment
             })
 
-        print(json2table(response))
+        log.info(json2table(response))
     function_version = response['Version']
     return function_version
 
@@ -445,7 +445,7 @@ def get_metrics(awsclient, name):
             ],
             Unit=unit(metric)
         )
-        print('\t%s %s' % (metric,
+        log.info('\t%s %s' % (metric,
                            repr(aggregate_datapoints(response['Datapoints']))))
     return 0
 
@@ -460,30 +460,31 @@ def rollback(awsclient, function_name, alias_name=ALIAS_NAME, version=None):
     :return: exit_code
     """
     if version:
-        print('rolling back to version {}'.format(version))
+        log.info('rolling back to version {}'.format(version))
     else:
-        print('rolling back to previous version')
+        log.info('rolling back to previous version')
         version = _get_previous_version(awsclient, function_name, alias_name)
         if version == '0':
-            print('unable to find previous version of lambda function')
+            log.error('unable to find previous version of lambda function')
             return 1
 
-        print('new version is %s' % str(version))
+        log.info('new version is %s' % str(version))
 
     _update_alias(awsclient, function_name, version, alias_name)
     return 0
 
 
-def delete_lambda(awsclient, events, function_name, delete_logs=False):
+def delete_lambda(awsclient, function_name, events=None, delete_logs=False):
     """Delete a lambda function.
 
     :param awsclient:
-    :param events: list of events
     :param function_name:
+    :param events: list of events
     :param delete_logs:
     :return: exit_code
     """
-    unwire(awsclient, events, function_name, alias_name=ALIAS_NAME)
+    if events is not None:
+        unwire(awsclient, events, function_name, alias_name=ALIAS_NAME)
     client_lambda = awsclient.get_client('lambda')
     response = client_lambda.delete_function(FunctionName=function_name)
     if delete_logs:
@@ -491,7 +492,7 @@ def delete_lambda(awsclient, events, function_name, delete_logs=False):
         delete_log_group(awsclient, log_group_name)
 
     # TODO remove event source first and maybe also needed for permissions
-    print(json2table(response))
+    log.info(json2table(response))
     return 0
 
 
@@ -517,7 +518,7 @@ def delete_lambda_deprecated(awsclient, function_name, s3_event_sources=[],
         delete_log_group(awsclient, log_group_name)
 
     # TODO remove event source first and maybe also needed for permissions
-    print(json2table(response))
+    log.info(json2table(response))
     return 0
 
 
@@ -528,7 +529,7 @@ def info(awsclient, function_name, s3_event_sources=None,
     if time_event_sources is None:
         time_event_sources = []
     if not lambda_exists(awsclient, function_name):
-        print(colored.red('The function you try to display doesn\'t ' +
+        log.error(colored.red('The function you try to display doesn\'t ' +
                           'exist... Bailing out...'))
         return 1
 
@@ -539,9 +540,9 @@ def info(awsclient, function_name, s3_event_sources=None,
     lambda_arn = lambda_alias['AliasArn']
 
     if lambda_function is not None:
-        print(json2table(lambda_function['Configuration']).encode('utf-8'))
-        print(json2table(lambda_alias).encode('utf-8'))
-        print("\n### PERMISSIONS ###\n")
+        log.info(json2table(lambda_function['Configuration']).encode('utf-8'))
+        log.info(json2table(lambda_alias).encode('utf-8'))
+        log.info("\n### PERMISSIONS ###\n")
 
         try:
             result = client_lambda.get_policy(FunctionName=function_name,
@@ -549,24 +550,24 @@ def info(awsclient, function_name, s3_event_sources=None,
 
             policy = json.loads(result['Policy'])
             for statement in policy['Statement']:
-                print('{} ({}) -> {}'.format(
+                log.info('{} ({}) -> {}'.format(
                     statement['Condition']['ArnLike']['AWS:SourceArn'],
                     statement['Principal']['Service'],
                     statement['Resource']
                 ))
         except ClientError as e:
             if e.response['Error']['Code'] == 'ResourceNotFoundException':
-                print("No permissions found!")
+                log.info("No permissions found!")
             else:
                 raise e
 
-        print("\n### EVENT SOURCES ###\n")
+        log.info("\n### EVENT SOURCES ###\n")
 
         # S3 Events
         client_s3 = awsclient.get_client('s3')
         for s3_event_source in s3_event_sources:
             bucket_name = s3_event_source.get('bucket')
-            print('- \tS3: %s' % bucket_name)
+            log.info('- \tS3: %s' % bucket_name)
             bucket_notification = client_s3.get_bucket_notification(
                 Bucket=bucket_name)
             filter_rules = build_filter_rules(
@@ -582,39 +583,39 @@ def info(awsclient, function_name, s3_event_sources=None,
                     )
                 if len(relevant_configs) > 0:
                     for config in relevant_configs:
-                        print('\t\t{}:'.format(config['Events'][0]))
+                        log.info('\t\t{}:'.format(config['Events'][0]))
                         for rule in config['Filter']['Key']['FilterRules']:
-                            print('\t\t{}: {}'.format(rule['Name'],
+                            log.info('\t\t{}: {}'.format(rule['Name'],
                                                       rule['Value']))
                 else:
-                    print('\tNot attached')
+                    log.info('\tNot attached')
 
                     # TODO Beautify
                     # wrapper = TextWrapper(initial_indent='\t', subsequent_indent='\t')
                     # output = "\n".join(wrapper.wrap(json.dumps(config, indent=True)))
                     # print(json.dumps(config, indent=True))
             else:
-                print('\tNot attached')
+                log.info('\tNot attached')
 
         # CloudWatch Event
         client_events = awsclient.get_client('events')
         for time_event in time_event_sources:
             rule_name = time_event.get('ruleName')
-            print('- \tCloudWatch: %s' % rule_name)
+            log.info('- \tCloudWatch: %s' % rule_name)
             try:
                 rule_response = client_events.describe_rule(Name=rule_name)
                 target_list = client_events.list_targets_by_rule(
                     Rule=rule_name,
                 )["Targets"]
                 if target_list:
-                    print("\t\tSchedule expression: {}".format(
+                    log.info("\t\tSchedule expression: {}".format(
                         rule_response['ScheduleExpression']))
                 for target in target_list:
-                    print(
+                    log.info(
                         '\t\tId: {} -> {}'.format(target['Id'], target['Arn']))
             except ClientError as e:
                 if e.response['Error']['Code'] == 'ResourceNotFoundException':
-                    print('\tNot attached!')
+                    log.info('\tNot attached!')
                 else:
                     raise e
 
@@ -732,11 +733,11 @@ def logs(awsclient, function_name, start_dt, end_dt=None, tail=False):
                 if current_date != actual_date:
                     # print the date only when it changed
                     current_date = actual_date
-                    print(current_date)
-                print('%s  %s' % (actual_time, e['message'].strip()))
+                    log.info(current_date)
+                log.info('%s  %s' % (actual_time, e['message'].strip()))
         if tail:
             if logentries:
                 start_ts = logentries[-1]['timestamp'] + 1
-            time.sleep(5)
+            time.sleep(2)
             continue
         break

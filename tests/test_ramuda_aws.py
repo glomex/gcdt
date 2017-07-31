@@ -8,8 +8,7 @@ import time
 import os
 import pytest
 from gcdt_bundler.bundler import get_zipped_file
-from nose.tools import assert_equal, assert_greater_equal, \
-    assert_in, assert_not_in, assert_regexp_matches
+from nose.tools import assert_equal, assert_in, assert_not_in
 
 from gcdt import utils
 from gcdt.ramuda_core import delete_lambda_deprecated, delete_lambda, \
@@ -18,15 +17,13 @@ from gcdt.ramuda_core import delete_lambda_deprecated, delete_lambda, \
 from gcdt.ramuda_wire import _lambda_add_invoke_permission
 from gcdt.ramuda_utils import list_lambda_versions, create_sha256, \
     get_remote_code_hash
-from gcdt_testtools import helpers
-from gcdt_testtools.helpers import create_tempfile
 from gcdt_testtools.helpers_aws import create_role_helper, delete_role_helper, \
     create_lambda_helper, create_lambda_role_helper, check_preconditions, \
     settings_requirements, check_normal_mode
 from gcdt_testtools.helpers_aws import temp_bucket, awsclient, \
     cleanup_roles  # fixtures!
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
-from gcdt_testtools.helpers import create_tempfile
+from gcdt_testtools.helpers import create_tempfile, logcapture  # fixtures!
 from . import here
 
 log = logging.getLogger(__name__)
@@ -92,13 +89,13 @@ def cleanup_lambdas(awsclient):
     items = []
     yield items
     # cleanup
-    for i in items:
-        delete_lambda(awsclient, i, delete_logs=True)
+    for i, events in items:
+        delete_lambda(awsclient, i, events, delete_logs=True)
 
 
 @pytest.mark.aws
 @check_preconditions
-def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
+def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas_deprecated,
                        cleanup_roles):
     log.info('running test_create_lambda')
     temp_string = utils.random_string()
@@ -173,7 +170,6 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
         }
     }
     lambda_description = config['lambda'].get('description')
-    # print (role)
     role_arn = role['Arn']
     lambda_handler = config['lambda'].get('handlerFunction')
     handler_filename = config['lambda'].get('handlerFile')
@@ -205,13 +201,13 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas,
         artifact_bucket=artifact_bucket,
         zipfile=zipfile
     )
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
 
 @pytest.mark.aws
 @check_preconditions
 @pytest.mark.parametrize('runtime', ['nodejs4.3', 'nodejs6.10'])
-def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas,
+def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas_deprecated,
                               cleanup_roles):
     log.info('running test_create_lambda_nodejs')
     # copy package.json and settings_dev.conf from sample
@@ -292,7 +288,6 @@ def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas,
     }
     runtime = config['lambda'].get('runtime')
     lambda_description = config['lambda'].get('description')
-    # print (role)
     role_arn = role['Arn']
     lambda_handler = config['lambda'].get('handlerFunction')
     handler_filename = config['lambda'].get('handlerFile')
@@ -327,12 +322,12 @@ def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas,
         runtime=runtime
     )
     # TODO improve this (by using a waiter??)
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
 
 @pytest.mark.aws
 @check_preconditions
-def test_create_lambda_with_s3(awsclient, vendored_folder, cleanup_lambdas,
+def test_create_lambda_with_s3(awsclient, vendored_folder, cleanup_lambdas_deprecated,
                                cleanup_roles):
     log.info('running test_create_lambda_with_s3')
     account = os.getenv('ACCOUNT')
@@ -408,7 +403,6 @@ def test_create_lambda_with_s3(awsclient, vendored_folder, cleanup_lambdas,
         }
     }
     lambda_description = config['lambda'].get('description')
-    # print (role)
     role_arn = role['Arn']
     lambda_handler = config['lambda'].get('handlerFunction')
     handler_filename = config['lambda'].get('handlerFile')
@@ -440,12 +434,12 @@ def test_create_lambda_with_s3(awsclient, vendored_folder, cleanup_lambdas,
         artifact_bucket=artifact_bucket,
         zipfile=zipfile
     )
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
 
 @pytest.mark.aws
 @check_preconditions
-def test_update_lambda(awsclient, vendored_folder, cleanup_lambdas,
+def test_update_lambda(awsclient, vendored_folder, cleanup_lambdas_deprecated,
                        cleanup_roles):
     log.info('running test_update_lambda')
     temp_string = utils.random_string()
@@ -459,18 +453,17 @@ def test_update_lambda(awsclient, vendored_folder, cleanup_lambdas,
     # update the function
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda/handler_v2.py')
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
 
 
 @pytest.mark.aws
 @check_preconditions
 def test_lambda_add_invoke_permission(awsclient, vendored_folder,
-                                      temp_bucket, cleanup_lambdas,
+                                      temp_bucket, cleanup_lambdas_deprecated,
                                       cleanup_roles):
     log.info('running test_lambda_add_invoke_permission')
     temp_string = utils.random_string()
-    # print(temp_string)
     lambda_name = 'jenkins_test_%s' % temp_string
     role_name = 'unittest_%s_lambda' % temp_string
     role_arn = create_lambda_role_helper(awsclient, role_name)
@@ -478,7 +471,7 @@ def test_lambda_add_invoke_permission(awsclient, vendored_folder,
     create_lambda_helper(awsclient, lambda_name, role_arn,
                          './resources/sample_lambda/handler_counter.py',
                          lambda_handler='handler_counter.handle')
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
     bucket_name = temp_bucket
 
     s3_arn = 'arn:aws:s3:::' + bucket_name
@@ -494,19 +487,22 @@ def test_lambda_add_invoke_permission(awsclient, vendored_folder,
 
 @pytest.mark.aws
 @check_preconditions
-def test_list_functions(awsclient, vendored_folder, temp_lambda, capsys):
+def test_list_functions(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_list_functions')
-
-    lambda_name = temp_lambda[0]
-    role_name = temp_lambda[1]
-
     list_functions(awsclient)
-    out, err = capsys.readouterr()
 
-    expected_regex = ".*%s\\n\\tMemory: 128\\n\\tTimeout: 300\\n\\tRole: arn:aws:iam::\d{12}:role\/%s\\n\\tCurrent Version: \$LATEST.*" \
-                     % (lambda_name, role_name)
+    records = list(logcapture.actual())
+    assert records[0][1] == 'INFO'
+    assert records[0][2] == 'running test_list_functions'
 
-    assert_regexp_matches(out.strip(), expected_regex)
+    assert records[2][1] == 'INFO'
+    assert records[2][2].startswith('\tMemory')
+    assert records[3][1] == 'INFO'
+    assert records[3][2].startswith('\tTimeout')
+
+    assert records[5][1] == 'INFO'
+    assert records[5][2] == '\tCurrent Version: $LATEST'
 
 
 @pytest.mark.aws
@@ -530,13 +526,18 @@ def test_update_lambda_configuration(awsclient, vendored_folder, temp_lambda):
 
 @pytest.mark.aws
 @check_preconditions
-def test_get_metrics(awsclient, vendored_folder, temp_lambda, capsys):
+def test_get_metrics(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_get_metrics')
 
     get_metrics(awsclient, temp_lambda[0])
-    out, err = capsys.readouterr()
-    assert_regexp_matches(out.strip(),
-                          'Duration 0\\n\\tErrors 0\\n\\tInvocations [0,1]{1}\\n\\tThrottles 0')
+    logcapture.check(
+        ('tests.test_ramuda_aws', 'INFO', u'running test_get_metrics'),
+        ('gcdt.ramuda_core', 'INFO', u'\tDuration 0'),
+        ('gcdt.ramuda_core', 'INFO', u'\tErrors 0'),
+        ('gcdt.ramuda_core', 'INFO', u'\tInvocations 1'),
+        ('gcdt.ramuda_core', 'INFO', u'\tThrottles 0')
+    )
 
 
 @pytest.mark.aws
@@ -681,18 +682,25 @@ def test_invoke_payload_from_file(awsclient, vendored_folder, temp_lambda):
 
 @pytest.mark.aws
 @check_preconditions
-def test_info(awsclient, vendored_folder, temp_lambda, capsys):
+def test_info(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     function_name = temp_lambda[0]
     info(awsclient, function_name)
-    out, err = capsys.readouterr()
-    assert '### PERMISSIONS ###' in out
-    assert '### EVENT SOURCES ###' in out
+    #out, err = capsys.readouterr()
+    #assert '### PERMISSIONS ###' in out
+    #assert '### EVENT SOURCES ###' in out
+
+    # TODO
+    #logcapture.check(
+    #    ('gcdt.ramuda_core', 'INFO', '\n### PERMISSIONS ###\n'),
+    #    ('gcdt.ramuda_core', 'INFO', '\n### EVENT SOURCES ###\n')
+    #)
 
 
 @pytest.mark.aws
 @check_preconditions
 def test_sample_lambda_nodejs_with_env(awsclient, vendored_folder,
-                                       cleanup_lambdas, cleanup_roles):
+                                       cleanup_lambdas_deprecated, cleanup_roles):
     log.info('running test_sample_lambda_nodejs_with_env')
     lambda_folder = './resources/sample_lambda_nodejs_with_env/'
 
@@ -711,7 +719,7 @@ def test_sample_lambda_nodejs_with_env(awsclient, vendored_folder,
                          )
 
     cleanup_roles.append(role_name)
-    cleanup_lambdas.append(lambda_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
 
     payload = '{"ramuda_action": "getenv"}'  # provided by our test sample
     result = invoke(awsclient, lambda_name, payload)

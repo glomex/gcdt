@@ -31,10 +31,10 @@ class KinesisEventSource(base.EventSource):
         return self._get_uuid(lambda_arn)
 
     def _get_uuid(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         uuid = None
         response = self._lambda.list_event_source_mappings(
-            FunctionName=function_name,
+            FunctionName=lambda_name,
             EventSourceArn=self.arn
         )
         LOG.debug(response)
@@ -43,10 +43,10 @@ class KinesisEventSource(base.EventSource):
         return uuid
 
     def add(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         try:
             response = self._lambda.create_event_source_mapping(
-                FunctionName=function_name,
+                FunctionName=lambda_name,
                 EventSourceArn=self.arn,
                 BatchSize=self.batch_size,
                 StartingPosition=self.starting_position,
@@ -68,11 +68,11 @@ class KinesisEventSource(base.EventSource):
             LOG.exception('Unable to enable event source')
 
     def disable(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         self._config['enabled'] = False
         try:
             response = self._lambda.update_event_source_mapping(
-                FunctionName=function_name,
+                FunctionName=lambda_name,
                 Enabled=self.enabled
             )
             LOG.debug(response)

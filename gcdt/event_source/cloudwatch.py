@@ -43,9 +43,8 @@ class CloudWatchEventSource(base.EventSource):
         return None
 
     def add(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
-        print('_config: %s' % self._config)
-        print('enabled: %s' % self.enabled)
+        lambda_name = base.get_lambda_name(lambda_arn)
+        alias_name = base.get_lambda_alias(lambda_arn)
         kwargs = {
             'Name': self._name,
             'State': 'ENABLED' if self.enabled else 'DISABLED'
@@ -64,26 +63,33 @@ class CloudWatchEventSource(base.EventSource):
             self._config['arn'] = response['RuleArn']
             existingPermission={}
             try:
-                response = self._lambda.get_policy(FunctionName=function_name)
+                request = {'FunctionName': lambda_arn}
+                if alias_name:
+                    request['Qualifer'] = alias_name
+                response = self._lambda.get_policy(**request)
                 existingPermission = self._config['arn'] in str(response['Policy'])
             except Exception:
                 LOG.debug('CloudWatch event source permission not available')
 
             if not existingPermission:
-                response = self._lambda.add_permission(
-                     FunctionName=function_name,
-                     StatementId=str(uuid.uuid4()),
-                     Action='lambda:InvokeFunction',
-                     Principal='events.amazonaws.com',
-                     SourceArn=self._config['arn']
-                )
+                request = {
+                    'FunctionName': lambda_arn,
+                    'StatementId': str(uuid.uuid4()),
+                    'Action': 'lambda:InvokeFunction',
+                    'Principal': 'events.amazonaws.com',
+                    'SourceArn': self.arn
+                }
+                if alias_name:
+                    request['Qualifer'] = alias_name
+                response = self._lambda.add_permission(**request)
                 LOG.debug(response)
             else:
                 LOG.debug('CloudWatch event source permission already exists')
+
             response = self._events.put_targets(
                  Rule=self._name,
                  Targets=[{
-                     'Id': function_name,
+                     'Id': lambda_name,
                      'Arn': lambda_arn
                  }]
             )
@@ -95,14 +101,14 @@ class CloudWatchEventSource(base.EventSource):
         self.add(lambda_arn)
 
     def remove(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         LOG.debug('removing CloudWatch event source')
         try:
             rule = self.get_rule()
             if rule:
                 response = self._events.remove_targets(
                     Rule=self._name,
-                    Ids=[function_name]
+                    Ids=[lambda_name]
                 )
                 LOG.debug(response)
                 response = self._events.delete_rule(Name=self._name)
@@ -111,8 +117,8 @@ class CloudWatchEventSource(base.EventSource):
             LOG.exception('Unable to remove CloudWatch event source %s', self._name)
 
     def status(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
-        LOG.debug('status for CloudWatch event for %s', function_name)
+        lambda_name = base.get_lambda_name(lambda_arn)
+        LOG.debug('status for CloudWatch event for %s', lambda_name)
         return self._to_status(self.get_rule())
 
     def enable(self, lambda_arn):

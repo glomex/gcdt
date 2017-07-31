@@ -13,10 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import unicode_literals, print_function
-
 from . import base
 import logging
 import uuid
+
+from botocore.client import ClientError
 
 LOG = logging.getLogger(__name__)
 
@@ -29,26 +30,30 @@ class S3EventSource(base.EventSource):
         self._lambda = awsclient.get_client('lambda')
 
     def exists(self, lambda_arn):
+        # from s3.bucket_exists:
+        try:
+            self._s3.head_bucket(Bucket=self._get_bucket_name())
+        except ClientError:
+            return False
+
         response = self._s3.get_bucket_notification_configuration(
             Bucket=self._get_bucket_name()
         )
 
         return 'LambdaFunctionConfigurations' in response
 
-    def _make_notification_id(self, function_name):
-        return 'gcdt-%s-notification' % function_name
+    def _make_notification_id(self, lambda_name):
+        return 'gcdt-%s-notification' % lambda_name
 
     def _get_bucket_name(self):
         return self.arn.split(':')[-1]
 
     def _get_notification_spec(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
         notification_spec = {
-            'Id': self._make_notification_id(function_name),
+            'Id': self._make_notification_id(lambda_name),
             'Events': [e for e in self._config['events']],
-            #'LambdaFunctionArn': lambda_arn
-            # s3 obviously can not handle the full lambda_arn
-            'LambdaFunctionArn': base.get_lambda_basearn(lambda_arn)
+            'LambdaFunctionArn': lambda_arn
         }
 
         # Add S3 key filters
@@ -75,22 +80,29 @@ class S3EventSource(base.EventSource):
         return notification_spec
 
     def add(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
+        lambda_name = base.get_lambda_name(lambda_arn)
+        alias_name = base.get_lambda_alias(lambda_arn)
         existingPermission = {}
         try:
-            response = self._lambda.get_policy(FunctionName=lambda_arn)
+            request = {'FunctionName': lambda_arn}
+            if alias_name:
+                request['Qualifer'] = alias_name
+            response = self._lambda.get_policy(**request)
             existingPermission = self.arn in str(response['Policy'])
         except Exception:
             LOG.debug('S3 event source permission not available')
 
         if not existingPermission:
-            response = self._lambda.add_permission(
-                 FunctionName=function_name,
-                 StatementId=str(uuid.uuid4()),
-                 Action='lambda:InvokeFunction',
-                 Principal='s3.amazonaws.com',
-                 SourceArn=self.arn
-            )
+            request = {
+                'FunctionName': lambda_arn,
+                'StatementId': str(uuid.uuid4()),
+                'Action': 'lambda:InvokeFunction',
+                'Principal': 's3.amazonaws.com',
+                'SourceArn': self.arn
+            }
+            if alias_name:
+                request['Qualifer'] = alias_name
+            response = self._lambda.add_permission(**request)
             LOG.debug(response)
         else:
             LOG.debug('S3 event source permission already exists')
@@ -164,8 +176,8 @@ class S3EventSource(base.EventSource):
     disable = remove
 
     def status(self, lambda_arn):
-        function_name = base.get_lambda_name(lambda_arn)
-        LOG.debug('status for s3 notification for %s', function_name)
+        lambda_name = base.get_lambda_name(lambda_arn)
+        LOG.debug('status for s3 notification for %s', lambda_name)
 
         notification_spec = self._get_notification_spec(lambda_arn)
 

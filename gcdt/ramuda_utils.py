@@ -148,7 +148,7 @@ class ProgressPercentage(object):
             time_left = self._time_max - elapsed_time
             bytes_per_second = self._seen_so_far / elapsed_time
             if (self._size / bytes_per_second > time_left) and time_left < 330:
-                print('bad connection')
+                log.warn('bad connection')
                 raise Exception
             self._out.write(' elapsed time %ds, time left %ds, bps %d' %
                             (int(elapsed_time), int(time_left),
@@ -193,7 +193,7 @@ def s3_upload(awsclient, deploy_bucket, zipfile, lambda_name):
     # print response['ETag']
     # print response['VersionId']
     # print(dest_key)
-    print()
+    # print()
     return dest_key, response['ETag'], response['VersionId']
 
 

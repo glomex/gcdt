@@ -511,14 +511,14 @@ def wire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
     :return: exit_code
     """
     if not lambda_exists(awsclient, lambda_name):
-        print(colored.red('The function you try to wire up doesn\'t ' +
+        log.error(colored.red('The function you try to wire up doesn\'t ' +
                           'exist... Bailing out...'))
         return 1
     client_lambda = awsclient.get_client('lambda')
     lambda_function = client_lambda.get_function(FunctionName=lambda_name)
     lambda_arn = client_lambda.get_alias(FunctionName=lambda_name,
                                          Name=alias_name)['AliasArn']
-    print('wiring lambda_arn %s ...' % lambda_arn)
+    log.info('wiring lambda_arn %s ...' % lambda_arn)
 
     if lambda_function is not None:
         #_schedule_events(awsclient, events, lambda_arn)
@@ -570,7 +570,8 @@ def _remove_event_source(awsclient, evt_source, lambda_arn):
     Given an event_source dictionary, create the object and remove the event source.
     """
     event_source_obj = _get_event_source_obj(awsclient, evt_source)
-    event_source_obj.remove(lambda_arn)
+    if event_source_obj.exists(lambda_arn):
+        event_source_obj.remove(lambda_arn)
 
 
 def _get_event_source_status(awsclient, evt_source, lambda_arn):
@@ -594,7 +595,7 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
     :return: exit_code
     """
     if not lambda_exists(awsclient, lambda_name):
-        print(colored.red('The function you try to wire up doesn\'t ' +
+        log.error(colored.red('The function you try to wire up doesn\'t ' +
                           'exist... Bailing out...'))
         return 1
 
@@ -602,7 +603,7 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
     lambda_function = client_lambda.get_function(FunctionName=lambda_name)
     lambda_arn = client_lambda.get_alias(FunctionName=lambda_name,
                                          Name=alias_name)['AliasArn']
-    print('UN-wiring lambda_arn %s ' % lambda_arn)
+    log.info('UN-wiring lambda_arn %s ' % lambda_arn)
     policies = None
     try:
         result = client_lambda.get_policy(FunctionName=lambda_name,
@@ -610,7 +611,7 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
         policies = json.loads(result['Policy'])
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            print("Permission policies not found")
+            log.warn("Permission policies not found")
         else:
             raise e
 
@@ -643,14 +644,14 @@ def wire_deprecated(awsclient, function_name, s3_event_sources=None,
     :return: exit_code
     """
     if not lambda_exists(awsclient, function_name):
-        print(colored.red('The function you try to wire up doesn\'t ' +
+        log.error(colored.red('The function you try to wire up doesn\'t ' +
                           'exist... Bailing out...'))
         return 1
     client_lambda = awsclient.get_client('lambda')
     lambda_function = client_lambda.get_function(FunctionName=function_name)
     lambda_arn = client_lambda.get_alias(FunctionName=function_name,
                                          Name=alias_name)['AliasArn']
-    print('wiring lambda_arn %s ...' % lambda_arn)
+    log.info('wiring lambda_arn %s ...' % lambda_arn)
 
     if lambda_function is not None:
         s3_events_ensure_exists, s3_events_ensure_absent = filter_events_ensure(
@@ -688,7 +689,7 @@ def unwire_deprecated(awsclient, function_name, s3_event_sources=None,
     :return: exit_code
     """
     if not lambda_exists(awsclient, function_name):
-        print(colored.red('The function you try to wire up doesn\'t ' +
+        log.error(colored.red('The function you try to wire up doesn\'t ' +
                           'exist... Bailing out...'))
         return 1
 
@@ -696,7 +697,7 @@ def unwire_deprecated(awsclient, function_name, s3_event_sources=None,
     lambda_function = client_lambda.get_function(FunctionName=function_name)
     lambda_arn = client_lambda.get_alias(FunctionName=function_name,
                                          Name=alias_name)['AliasArn']
-    print('UN-wiring lambda_arn %s ' % lambda_arn)
+    log.info('UN-wiring lambda_arn %s ' % lambda_arn)
     policies = None
     try:
         result = client_lambda.get_policy(FunctionName=function_name,
@@ -704,7 +705,7 @@ def unwire_deprecated(awsclient, function_name, s3_event_sources=None,
         policies = json.loads(result['Policy'])
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            print("Permission policies not found")
+            log.warn("Permission policies not found")
         else:
             raise e
 
@@ -716,11 +717,11 @@ def unwire_deprecated(awsclient, function_name, s3_event_sources=None,
                 if statement['Principal']['Service'] == 's3.amazonaws.com':
                     source_bucket = get_bucket_from_s3_arn(
                         statement['Condition']['ArnLike']['AWS:SourceArn'])
-                    print('\tRemoving S3 permission {} invoking {}'.format(
+                    log.info('\tRemoving S3 permission {} invoking {}'.format(
                         source_bucket, lambda_arn))
                     _remove_permission(awsclient, function_name,
                                        statement['Sid'], alias_name)
-                    print('\tRemoving All S3 events {} invoking {}'.format(
+                    log.info('\tRemoving All S3 events {} invoking {}'.format(
                         source_bucket, lambda_arn))
                     _remove_events_from_s3_bucket(awsclient, source_bucket,
                                                   lambda_arn)
@@ -737,12 +738,12 @@ def unwire_deprecated(awsclient, function_name, s3_event_sources=None,
                 if statement['Principal']['Service'] == 'events.amazonaws.com':
                     rule_name = get_rule_name_from_event_arn(
                         statement['Condition']['ArnLike']['AWS:SourceArn'])
-                    print(
+                    log.info(
                         '\tRemoving Cloudwatch permission {} invoking {}'.format(
                             rule_name, lambda_arn))
                     _remove_permission(awsclient, function_name,
                                        statement['Sid'], alias_name)
-                    print('\tRemoving Cloudwatch rule {} invoking {}'.format(
+                    log.info('\tRemoving Cloudwatch rule {} invoking {}'.format(
                         rule_name, lambda_arn))
                     _remove_cloudwatch_rule_event(awsclient, rule_name,
                                                   lambda_arn)
@@ -812,7 +813,7 @@ def _remove_cloudwatch_rule_event(awsclient, rule_name, target_lambda_arn):
 def _ensure_cloudwatch_event(awsclient, time_event, function_name,
                              alias_name, lambda_arn, ensure='exists'):
     if not ensure in ENSURE_OPTIONS:
-        print("{} is invalid ensure option, should be {}".format(ensure,
+        log.error("{} is invalid ensure option, should be {}".format(ensure,
                                                                  ENSURE_OPTIONS))
         # TODO unbelievable: another sys.exit in library code!!!
         sys.exit(1)
@@ -852,7 +853,7 @@ def _ensure_cloudwatch_event(awsclient, time_event, function_name,
 
     if not rule_exists and not permission_exists:
         if ensure == 'exists':
-            print(colored.magenta(
+            log.info(colored.magenta(
                 "\tWiring Cloudwatch event {}\n\t\t{}".format(rule_name,
                                                               schedule_expression)))
             rule_arn = _lambda_add_time_schedule_event_source(
@@ -867,7 +868,7 @@ def _ensure_cloudwatch_event(awsclient, time_event, function_name,
             if schedule_expression_match:
                 return 0
             else:
-                print(colored.magenta(
+                log.info(colored.magenta(
                     "\t Updating Cloudwatch event {}\n\t\tOld: {}\n\t\tTo: {}".format(
                         rule_name,
                         not_matching_schedule_expression,
@@ -876,7 +877,7 @@ def _ensure_cloudwatch_event(awsclient, time_event, function_name,
                     awsclient, rule_name, rule_description,
                     schedule_expression, lambda_arn)
         if ensure == 'absent':
-            print(colored.magenta("\tRemoving rule {}\n\t\t{}".format(rule_name,
+            log.info(colored.magenta("\tRemoving rule {}\n\t\t{}".format(rule_name,
                                                                       schedule_expression)))
             _remove_permission(awsclient, function_name, statement['Sid'],
                                alias_name)
@@ -907,7 +908,7 @@ def filter_events_ensure(evt_sources):
             elif event['ensure'] == 'absent':
                 events_ensure_absent.append(event)
             else:
-                print(colored.red(
+                log.error(colored.red(
                     'Ensure must be one of {}, currently set to {}'.format(
                         ENSURE_OPTIONS, event['ensure'])))
                 # FIXME exit in lib code!
@@ -923,7 +924,7 @@ def filter_events_ensure(evt_sources):
 def _ensure_s3_event(awsclient, s3_event_source, function_name, alias_name,
                      target_lambda_arn, ensure="exists"):
     if ensure not in ENSURE_OPTIONS:
-        print("{} is invalid ensure option, should be {}".format(ensure,
+        log.info("{} is invalid ensure option, should be {}".format(ensure,
                                                                  ENSURE_OPTIONS))
 
     client_s3 = awsclient.get_client('s3')
@@ -966,10 +967,10 @@ def _ensure_s3_event(awsclient, s3_event_source, function_name, alias_name,
 
     if not rule_exists and not permission_exists:
         if ensure == "exists":
-            print(colored.magenta(
+            log.info(colored.magenta(
                 "\tWiring rule {}: {}".format(bucket_name, event_type)))
             for rule in filter_rules:
-                print(colored.magenta(
+                log.info(colored.magenta(
                     '\t\t{}: {}'.format(rule['Name'], rule['Value'])))
             _wire_s3_to_lambda(awsclient, s3_event_source, function_name,
                                target_lambda_arn)
@@ -977,10 +978,10 @@ def _ensure_s3_event(awsclient, s3_event_source, function_name, alias_name,
             return 0
     if rule_exists and permission_exists:
         if ensure == "absent":
-            print(colored.magenta(
+            log.info(colored.magenta(
                 "\tRemoving rule {}: {}".format(bucket_name, event_type)))
             for rule in filter_rules:
-                print(colored.magenta(
+                log.info(colored.magenta(
                     '\t\t{}: {}'.format(rule['Name'], rule['Value'])))
             _remove_permission(awsclient, function_name, permission_exists,
                                alias_name)
@@ -1022,7 +1023,7 @@ def _get_lambda_policies(awsclient, function_name, alias_name):
         policies = json.loads(result['Policy'])
     except ClientError as e:
         if e.response['Error']['Code'] == 'ResourceNotFoundException':
-            print(colored.red("Permission policies not found"))
+            log.info(colored.red("Permission policies not found"))
         else:
             raise e
     return policies

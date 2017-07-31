@@ -17,10 +17,18 @@ from copy import deepcopy
 
 
 def get_lambda_name(lambda_arn):
-    # (in the kappa implementation we always treat function == lambda_arn)
     # in case we need the lambda name, we use this helper function
     parts = lambda_arn.split(':')
     return parts[6]
+
+
+def get_lambda_alias(lambda_arn):
+    # in case we need the lambda name, we use this helper function
+    parts = lambda_arn.split(':')
+    if len(parts) == 7:
+        return parts[7]
+    else:
+        return None
 
 
 def get_lambda_basearn(lambda_arn):

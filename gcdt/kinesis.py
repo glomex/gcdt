@@ -16,6 +16,14 @@ def create_stream(awsclient, stream_name, shard_count=1):
     )
 
 
+def wait_for_stream_exists(awsclient, stream_name):
+    # helper to wait for stream to become operational
+    client = awsclient.get_client('kinesis')
+    waiter = client.get_waiter('stream_exists')
+
+    waiter.wait(StreamName=stream_name)
+
+
 def describe_stream(awsclient, stream_name):
     client = awsclient.get_client('kinesis')
     response = client.describe_stream(

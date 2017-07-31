@@ -25,10 +25,11 @@ from gcdt.ramuda_utils import unit, \
 from gcdt.utils import json2table
 from gcdt_testtools.helpers import create_tempfile, get_size, temp_folder, \
     cleanup_tempfiles
+from gcdt_testtools.helpers import logcapture  # fixtures!
 from . import here
 
 
-#PY3 = sys.version_info[0] >= 3
+PY3 = sys.version_info[0] >= 3
 log = logging.getLogger(__name__)
 
 
@@ -160,13 +161,15 @@ def test_progress_percentage(cleanup_tempfiles):
                           '.*\.tgz  11 / 20\.0  \(55\.00%\)')
 
 
-def test_bundle_lambda(temp_folder, capsys):
+def test_bundle_lambda(temp_folder, logcapture):
     zipfile = b'that was easy__'
     exit_code = bundle_lambda(zipfile)
     assert exit_code == 0
     assert os.path.isfile('bundle.zip')
-    out, err = capsys.readouterr()
-    assert out == 'Finished - a bundle.zip is waiting for you...\n'
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2] == 'Finished - a bundle.zip is waiting for you...'
 
 
 LOGS_PARAM_CASES = [

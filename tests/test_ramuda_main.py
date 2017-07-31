@@ -6,7 +6,6 @@ import logging
 from tempfile import NamedTemporaryFile
 
 import pytest
-from nose.tools import assert_regexp_matches
 
 from gcdt import utils
 from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
@@ -14,8 +13,8 @@ from gcdt.ramuda_main import version_cmd, clean_cmd, list_cmd, deploy_cmd, \
 from gcdt_bundler.bundler import bundle
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata, \
-    cleanup_roles
-from gcdt_testtools.helpers_aws import create_role_helper
+    create_role_helper
+from gcdt_testtools.helpers_aws import cleanup_roles  # fixtures!
 from gcdt_testtools.helpers_aws import awsclient, temp_bucket  # fixtures!
 from .test_ramuda_aws import vendored_folder, temp_lambda, cleanup_lambdas_deprecated  # fixtures!
 from gcdt_testtools.helpers import temp_folder, logcapture  # fixtures !
@@ -51,20 +50,21 @@ def test_clean_cmd(temp_folder):
 
 @pytest.mark.aws
 @check_preconditions
-def test_list_cmd(awsclient, vendored_folder, temp_lambda, capsys):
+def test_list_cmd(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_list_cmd')
     tooldata = get_tooldata(awsclient, 'ramuda', 'list', config={})
 
-    lambda_name = temp_lambda[0]
-    role_name = temp_lambda[1]
-
     list_cmd(**tooldata)
-    out, err = capsys.readouterr()
 
-    expected_regex = ".*%s\\n\\tMemory: 128\\n\\tTimeout: 300\\n\\tRole: arn:aws:iam::\d{12}:role\/%s\\n\\tCurrent Version: \$LATEST.*" \
-                     % (lambda_name, role_name)
+    records = list(logcapture.actual())
+    assert records[0][1] == 'INFO'
+    assert records[0][2] == 'running test_list_cmd'
 
-    assert_regexp_matches(out.strip(), expected_regex)
+    assert records[2][1] == 'INFO'
+    assert records[2][2].startswith('\tMemory')
+    assert records[3][1] == 'INFO'
+    assert records[3][2].startswith('\tTimeout')
 
 
 @pytest.mark.aws
@@ -157,27 +157,36 @@ def test_deploy_delete_cmds(awsclient, vendored_folder, cleanup_roles,
 
 @pytest.mark.aws
 @check_preconditions
-def test_metrics_cmd(awsclient, vendored_folder, temp_lambda, capsys):
+def test_metrics_cmd(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_metrics_cmd')
     tooldata = get_tooldata(awsclient, 'ramuda', 'metrics', config={})
 
     lambda_name = temp_lambda[0]
     metrics_cmd(lambda_name, **tooldata)
-    out, err = capsys.readouterr()
-    assert_regexp_matches(out.strip(),
-                          'Duration 0\\n\\tErrors 0\\n\\tInvocations [0,1]{1}\\n\\tThrottles 0')
+
+    logcapture.check(
+        ('tests.test_ramuda_main', 'INFO', u'running test_metrics_cmd'),
+        ('gcdt.ramuda_core', 'INFO', u'\tDuration 0'),
+        ('gcdt.ramuda_core', 'INFO', u'\tErrors 0'),
+        ('gcdt.ramuda_core', 'INFO', u'\tInvocations 0'),
+        ('gcdt.ramuda_core', 'INFO', u'\tThrottles 0')
+    )
 
 
 @pytest.mark.aws
 @check_preconditions
-def test_ping_cmd(awsclient, vendored_folder, temp_lambda, capsys):
+def test_ping_cmd(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_ping_cmd')
     tooldata = get_tooldata(awsclient, 'ramuda', 'ping', config={})
 
     lambda_name = temp_lambda[0]
     ping_cmd(lambda_name, **tooldata)
-    out, err = capsys.readouterr()
-    assert '"alive"' in out
+    logcapture.check(
+        ('tests.test_ramuda_main', 'INFO', u'running test_ping_cmd'),
+        ('gcdt.ramuda_main', 'INFO', u'Cool, your lambda function did respond to ping with "alive".')
+    )
 
 
 @pytest.mark.aws
@@ -198,19 +207,21 @@ def test_invoke_cmd(awsclient, vendored_folder, temp_lambda):
     os.unlink(outfile)
 
 
-def test_bundle_cmd(capsys, temp_folder):
+def test_bundle_cmd(temp_folder, logcapture):
     tooldata = {
         'context': {'_zipfile': b'some_file'}
     }
     tooldata['context']['_arguments'] = {'--keep': False}
     bundle_cmd(False, **tooldata)
-    out, err = capsys.readouterr()
-    assert out == 'Finished - a bundle.zip is waiting for you...\n'
+    logcapture.check(
+        ('gcdt.ramuda_core', 'INFO', 'Finished - a bundle.zip is waiting for you...')
+    )
 
 
 @pytest.mark.aws
 @check_preconditions
-def test_logs_cmd(awsclient, vendored_folder, temp_lambda, capsys):
+def test_logs_cmd(awsclient, vendored_folder, temp_lambda, logcapture):
+    logcapture.level = logging.INFO
     log.info('running test_logs_cmd')
     tooldata = get_tooldata(awsclient, 'ramuda', 'logs', config={})
     lambda_name = temp_lambda[0]
@@ -220,6 +231,7 @@ def test_logs_cmd(awsclient, vendored_folder, temp_lambda, capsys):
     time.sleep(10)  # automatically removed in playback mode!
 
     logs_cmd(lambda_name, '2m', None, False, **tooldata)
-    out, err = capsys.readouterr()
-    # our lambda can handle ping so we should see the related entry in the log
-    assert '{u\'ramuda_action\': u\'ping\'}' in out
+    records = list(logcapture.actual())
+
+    assert records[3][1] == 'INFO'
+    assert "{u'ramuda_action': u'ping'}" in records[3][2]
