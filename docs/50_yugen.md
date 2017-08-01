@@ -46,31 +46,38 @@ will print the version of gcdt you are using
 
 `swagger.yaml` -> API definition in swagger with API Gateway extensions
 
-`api.conf` -> settings for the API which is needed for wiring
-
-```json
-"api": {
-    "name": "dp-dev-serve-api-2",
-    "description": "description",
-    "targetStage": "dev",
-    "apiKey": "xxx"
-}
-
-"lambda": {
-
-    "entries": [
-      {
-        "name": "dp-dev-serve-api-query",
-        "alias": "ACTIVE"
-      },
-      {
-        "name": "dp-dev-serve-api-query-elasticsearch",
-        "alias": "ACTIVE"
-      }
-    ]
-
+``` json
+{
+    "yugen": {
+        "api": {
+            "name": "dp-dev-serve-api-2",
+            "description": "description",
+            "targetStage": "dev",
+            "apiKey": "xxx",
+            "cacheClusterEnabled": true
+        }
+    },
+    "ramuda": {
+        "lambda": {
+        
+            "entries": [
+              {
+                "name": "dp-dev-serve-api-query",
+                "alias": "ACTIVE"
+              },
+              {
+                "name": "dp-dev-serve-api-query-elasticsearch",
+                "alias": "ACTIVE"
+              }
+            ]
+        ...
+        }
+    }
 }
 ```
+
+Set the config attribute `cacheClusterEnabled` to `true` in your gcdt_<env>.json config file to enable a cache cluster for the specified stage resource.
+
 
 #### Setting the ENV variable
 

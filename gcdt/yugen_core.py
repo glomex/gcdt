@@ -64,7 +64,7 @@ def list_apis(awsclient):
 
 
 def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
-               lambdas):
+               lambdas, cache_cluster_enabled):
     """Deploy API Gateway to AWS cloud.
     
     :param awsclient:
@@ -73,6 +73,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
     :param stage_name: 
     :param api_key: 
     :param lambdas: 
+    :param cache_cluster_enabled:
     """
     if not _api_exists(awsclient, api_name):
         if os.path.isfile(SWAGGER_FILE):
@@ -88,7 +89,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
             _wire_api_key(awsclient, api_name, api_key, stage_name)
         else:
             print('API name unknown')
@@ -102,7 +103,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
         else:
             print('API name unknown')
 
@@ -361,7 +362,8 @@ def _update_api():
     print('updating api. not supported now')
 
 
-def _create_deployment(awsclient, api_name, stage_name):
+def _create_deployment(awsclient, api_name, stage_name,
+                       cache_cluster_enabled=False):
     client_api = awsclient.get_client('apigateway')
     print('create deployment')
 
@@ -372,7 +374,8 @@ def _create_deployment(awsclient, api_name, stage_name):
         response = client_api.create_deployment(
             restApiId=api['id'],
             stageName=stage_name,
-            description='TO BE FILLED'
+            description='TO BE FILLED',
+            cacheClusterEnabled=cache_cluster_enabled,
         )
 
         print(json2table(response))
