@@ -147,6 +147,13 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
                    mocked_are_credentials_still_valid,
                    mocked_cmd_dispatch):
     # preparation
+    def error_handler(params):
+        # make sure lifecycle feeds back 'error' into context (https://github.com/glomex/gcdt/issues/348)
+        context, config = params
+        assert 'error' in context
+        assert context['error'] == '\'deploy\' command failed with exit code 1'
+        assert exp_signals.pop(0) == 'error'
+
     signal_handlers = []  # GC cleans them up if there is no ref
     exp_signals = [
         'initialized',
@@ -159,7 +166,10 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
     ]
     for s in exp_signals:
         sig = gcdt_signals.__dict__[s]
-        handler = _dummy_signal_factory(s, exp_signals)
+        if s == 'error':
+            handler = error_handler
+        else:
+            handler = _dummy_signal_factory(s, exp_signals)
         sig.connect(handler)
         signal_handlers.append(handler)
 

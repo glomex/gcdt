@@ -144,6 +144,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
         log.error(context['error'])
         exit_code = 1
     if exit_code:
+        context['error'] = '\'%s\' command failed with exit code 1' % command
         gcdt_signals.error.send((context, config))
         return 1
 
