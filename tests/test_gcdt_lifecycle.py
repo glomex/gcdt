@@ -117,7 +117,7 @@ def test_lifecycle(mocked_load_plugins, mocked_check_gcdt_update,
         sig.connect(handler)
         signal_handlers.append(handler)
 
-    # livecycle execution
+    # lifecycle execution
     arguments = {
         u'--override-stack-policy': True,
         u'-f': False,
@@ -173,7 +173,7 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
         sig.connect(handler)
         signal_handlers.append(handler)
 
-    # livecycle execution
+    # lifecycle execution
     arguments = {
         u'--override-stack-policy': True,
         u'-f': False,
