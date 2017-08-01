@@ -10,6 +10,7 @@ glomex-cloud-deployment-tools
    07_installation
    10_gcdt
    20_kumo
+   22_kumo_particles
    30_tenkai
    40_ramuda
    50_yugen
