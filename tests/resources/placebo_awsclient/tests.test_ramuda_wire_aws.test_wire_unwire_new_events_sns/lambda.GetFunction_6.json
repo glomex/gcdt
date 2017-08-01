@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_ttmtxe-90a255e1-d86f-4988-9191-ab290d0fac53?X-Amz-Security-Token=FQoDYXdzELf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDE55tZcUlde5K4WNACK3AwsIRK5eiV7ecucOv%2F1BQHoslZS03b4etVKMqD%2BdXkwHLjUoIThetkP77nd%2FMTzifPgnVBQUslUwra9TZOhji3si0Fgqbp1CYEdjYDaeus%2Fkra6wzuIA7POKBcDiV3yZ89FJpUclvzxrKMBBMhMijDG3d9K0vJxRqR%2BGtjErbCmKKWxViz%2FuaoW%2FhhIE7Drt3vvKW2rGztt9zu0cXkQ%2F5iM12lGSsY3SnP7IVcissx3M7OxRaS8dQcoQEnO%2Fo6yET9%2Fk7aca4kntsWZ565o6Sx3QUI9xYh5%2FrTWlqSMy6HTrz4Bqox6H0l%2Fsxn%2BEadKQU76Mdh7SkJ3Nh0akg0%2BLu%2Bv92wTzZ%2BGl2vyYob2%2FcIKLlfEjNGjNHi42oKzOpNiytPJ5iEodtk2Qocnj71AJ%2BQImAQGLDs7e9fsvG3ppnIN5oFguq517kjS0kgSc18nDYZulBCkJbtq1C7YtYuMswptxsC68Ag6AExWS96ihbrxXNq%2By5d9TCzcP%2FaBXOy3ZyrCwJ8Fpr6TdsR6O7C5K0BJWzcWULCrbyQiSaox0wj9IlG2By%2F31YH3AIZ%2BtTRWCqkCprMy5gisot6eAzAU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170801T062532Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJ5GUEYQ2CWYVKAEQ%2F20170801%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=6d4440d5e10c493cb7732dc3734ec02f2a1a593f12870be20ec05ca1c1896d12"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "mmHcKhYsFVca3KQq6GPUSgNaSzVpjwr3O4Nen9svMxg=", 
+            "FunctionName": "jenkins_test_ttmtxe", 
+            "MemorySize": 128, 
+            "CodeSize": 3494823, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_ttmtxe", 
+            "Handler": "handler_counter.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_ttmtxe_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-08-01T06:25:05.499+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "3845bd9b-7682-11e7-b2d9-b9291a5bf8a6", 
+            "HTTPHeaders": {
+                "date": "Tue, 01 Aug 2017 06:25:31 GMT", 
+                "x-amzn-requestid": "3845bd9b-7682-11e7-b2d9-b9291a5bf8a6", 
+                "content-length": "1844", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

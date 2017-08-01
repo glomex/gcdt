@@ -1,0 +1,47 @@
+{
+  "ramuda": {
+    "bundling": {
+      "folders": [
+        {
+          "source": "./impl", 
+          "target": "impl"
+        }
+      ], 
+      "zip": "bundle.zip"
+    }, 
+    "deployment": {
+      "artifactBucket": "7finity-infra-dev-deployment", 
+      "region": "eu-west-1"
+    }, 
+    "lambda": {
+      "description": "lambda test for ramuda", 
+      "events": [
+        {
+          "event_source": {
+            "arn": "arn:aws:s3:::my-bucket",
+            "events": [
+              "s3:ObjectCreated:*"
+            ]
+          }
+        }
+      ],
+      "handlerFile": "handler_counter.py", 
+      "handlerFunction": "handler.handle", 
+      "memorySize": 256, 
+      "name": "infra-dev-sample-lambda-unittest", 
+      "role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX", 
+      "timeout": 300, 
+      "vpc": {
+        "securityGroups": [
+          "sg-660dd700"
+        ], 
+        "subnetIds": [
+          "subnet-d5ffb0b1", 
+          "subnet-d5ffb0b1", 
+          "subnet-d5ffb0b1", 
+          "subnet-e9db9f9f"
+        ]
+      }
+    }
+  }
+}

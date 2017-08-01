@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "2sGa0HS5pDJKUN/KpIxJu1Yt9YCshW/TtF+Tyew8WPQ=", 
+        "FunctionName": "jenkins_test_lcmtzj", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "03f2db21-7609-11e7-8d1d-8d11f1f1059b", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 15:57:55 GMT", 
+                "x-amzn-requestid": "03f2db21-7609-11e7-8d1d-8d11f1f1059b", 
+                "content-length": "636", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3493688, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_lcmtzj", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_lcmtzj_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-31T15:57:55.119+0000", 
+        "Handler": "handler_counter.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

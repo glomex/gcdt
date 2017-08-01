@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
-import tarfile
-import subprocess
-import time
-import random
-import shutil
-import string
-from tempfile import NamedTemporaryFile, mkdtemp
+
 import io
+import shutil
+import subprocess
+import tarfile
+from tempfile import NamedTemporaryFile, mkdtemp
 from zipfile import ZipFile
 
+import os
 import pytest
 from testfixtures import LogCapture
+
+from gcdt import utils
 
 
 # http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
@@ -53,29 +53,7 @@ def get_size(start_path='.'):
     return total_size
 
 
-def random_string():
-    """Create a random 6 character string.
-
-    note: in case you use this function in a test during test together with
-    an awsclient then this function is altered so you get reproducible results
-    that will work with your recorded placebo json files (see helpers_aws.py).
-    """
-    return ''.join([random.choice(string.ascii_lowercase) for i in range(6)])
-
-
-def time_now():
-    """Like int(time.time() * 1000) but supports record and playback for testing.
-
-    note: in case you use this function in a test during test together with
-    an awsclient then this function is altered so you get reproducible results
-    that will work with your recorded placebo json files (see helpers_aws.py).
-    """
-    return int(time.time()) * 1000
-
-
 # TODO find out how to automatically load the gcdt_testtools fixtures
-
-
 @pytest.fixture(scope='module')  # 'function' or 'module'
 def cleanup_tempfiles():
     items = []
@@ -102,7 +80,7 @@ def temp_folder():
 def random_file():
     # provide a named file with some random content
     # we use random_string so it is reproducible
-    filename = create_tempfile(random_string())
+    filename = create_tempfile(utils.random_string())
     yield filename
     # cleanup
     os.unlink(filename)

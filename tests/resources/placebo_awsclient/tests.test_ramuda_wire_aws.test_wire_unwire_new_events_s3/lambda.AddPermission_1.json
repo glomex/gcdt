@@ -1,0 +1,18 @@
+{
+    "status_code": 201, 
+    "data": {
+        "Statement": "{\"Sid\":\"3904142d-b168-48b1-88f6-b9fcdee3720b\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_lcmtzj:ACTIVE\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"lambda:InvokeFunction\"],\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:s3:::unittest-lambda-s3-event-source-oiobpp\"}}}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "0a93a1cc-7609-11e7-bf4c-25dbc064d0fb", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 15:58:05 GMT", 
+                "x-amzn-requestid": "0a93a1cc-7609-11e7-bf4c-25dbc064d0fb", 
+                "content-length": "370", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

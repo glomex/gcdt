@@ -1,0 +1,41 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c59c70b2-bc49-a07d-9464-b055a2a6477c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c59c70b2-bc49-a07d-9464-b055a2a6477c", 
+                "content-length": "310", 
+                "x-amz-id-2": "vkAq2Opi4oFkqa792fKmukIljlhbyL1H34eQb4rTjiFwIhvZOmZ08fCEz+V/SzRlnScfjtmcf5t3HPgANngNqC4v2BgnwK2k", 
+                "server": "Apache-Coyote/1.1", 
+                "date": "Mon, 31 Jul 2017 05:22:46 GMT", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }, 
+        "StreamDescription": {
+            "HasMoreShards": false, 
+            "RetentionPeriodHours": 24, 
+            "StreamName": "ogifqq", 
+            "Shards": [], 
+            "StreamARN": "arn:aws:kinesis:eu-west-1:420189626185:stream/ogifqq", 
+            "EnhancedMonitoring": [
+                {
+                    "ShardLevelMetrics": []
+                }
+            ], 
+            "StreamCreationTimestamp": {
+                "hour": 7, 
+                "__class__": "datetime", 
+                "month": 7, 
+                "second": 46, 
+                "microsecond": 0, 
+                "year": 2017, 
+                "day": 31, 
+                "minute": 22
+            }, 
+            "StreamStatus": "CREATING"
+        }
+    }
+}

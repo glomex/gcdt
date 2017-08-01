@@ -1,0 +1,59 @@
+{
+    "status_code": 200, 
+    "data": {
+        "MaxKeys": 1000, 
+        "Prefix": "", 
+        "Name": "unittest-lambda-s3-event-source-gjdzok", 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "HHvanjU63PFuYbQmmRSZ5WSJdvZHAuQosJzGqPEIoGc6Aicds1WgLqO+slYDOklx0gdnHvVaDY8=", 
+            "RequestId": "D453D3EA6E0A68FC", 
+            "HTTPHeaders": {
+                "x-amz-bucket-region": "eu-west-1", 
+                "x-amz-id-2": "HHvanjU63PFuYbQmmRSZ5WSJdvZHAuQosJzGqPEIoGc6Aicds1WgLqO+slYDOklx0gdnHvVaDY8=", 
+                "server": "AmazonS3", 
+                "transfer-encoding": "chunked", 
+                "x-amz-request-id": "D453D3EA6E0A68FC", 
+                "date": "Sat, 29 Jul 2017 11:27:18 GMT", 
+                "content-type": "application/xml"
+            }
+        }, 
+        "KeyCount": 2, 
+        "IsTruncated": false, 
+        "Contents": [
+            {
+                "LastModified": {
+                    "hour": 11, 
+                    "__class__": "datetime", 
+                    "month": 7, 
+                    "second": 46, 
+                    "microsecond": 0, 
+                    "year": 2017, 
+                    "day": 29, 
+                    "minute": 26
+                }, 
+                "ETag": "\"736db904ad222bf88ee6b8d103fceb8e\"", 
+                "StorageClass": "STANDARD", 
+                "Key": "test_file.gz", 
+                "Size": 20
+            }, 
+            {
+                "LastModified": {
+                    "hour": 11, 
+                    "__class__": "datetime", 
+                    "month": 7, 
+                    "second": 8, 
+                    "microsecond": 0, 
+                    "year": 2017, 
+                    "day": 29, 
+                    "minute": 27
+                }, 
+                "ETag": "\"736db904ad222bf88ee6b8d103fceb8e\"", 
+                "StorageClass": "STANDARD", 
+                "Key": "test_file_2.gz", 
+                "Size": 20
+            }
+        ]
+    }
+}

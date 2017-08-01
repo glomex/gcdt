@@ -3,19 +3,19 @@
     "data": {
         "MaxKeys": 1000, 
         "Prefix": "", 
-        "Name": "unittest-lambda-s3-event-source-fzrnxl", 
+        "Name": "unittest-lambda-s3-event-source-jupbqe", 
         "ResponseMetadata": {
             "HTTPStatusCode": 200, 
             "RetryAttempts": 0, 
-            "HostId": "aHlGPZintNMXFpuSAu7APhBXw1Jsbn0xEniDTUSoWxEBuJ1FgSEYELxTN+LFdRPbGh/o2Rh+TV4=", 
-            "RequestId": "F0FEAF4DEDF73FBE", 
+            "HostId": "DCxS6jbkj/YTsdRDIRDOgKhjoyB1B7NFqbiwW4wpAYaSEaVnRZI2YeZiGsku+otrt90UHYGtLEU=", 
+            "RequestId": "6FEAD897CF381AED", 
             "HTTPHeaders": {
                 "x-amz-bucket-region": "eu-west-1", 
-                "x-amz-id-2": "aHlGPZintNMXFpuSAu7APhBXw1Jsbn0xEniDTUSoWxEBuJ1FgSEYELxTN+LFdRPbGh/o2Rh+TV4=", 
+                "x-amz-id-2": "DCxS6jbkj/YTsdRDIRDOgKhjoyB1B7NFqbiwW4wpAYaSEaVnRZI2YeZiGsku+otrt90UHYGtLEU=", 
                 "server": "AmazonS3", 
                 "transfer-encoding": "chunked", 
-                "x-amz-request-id": "F0FEAF4DEDF73FBE", 
-                "date": "Tue, 04 Jul 2017 12:57:34 GMT", 
+                "x-amz-request-id": "6FEAD897CF381AED", 
+                "date": "Wed, 26 Jul 2017 16:32:50 GMT", 
                 "content-type": "application/xml"
             }
         }, 

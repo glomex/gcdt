@@ -90,7 +90,7 @@ dp-dev-ingest-lambda-cdnnorm
 
 
 #### wire
-"wires" the lambda function to its event configuration. This actually activates the lambda function.
+"wires" the AWS Lambda function to an event source.
 
 
 #### unwire
@@ -105,7 +105,6 @@ If you use the `--delete-logs` the cloudwatch log group associated to the AWS La
 
 #### rollback
 sets the active version to ACTIVE -1 or to a given version
-
 
 
 #### invoke
@@ -193,30 +192,20 @@ sample gcdt_dev.json file:
       "handlerFile": "handler.py",
       "timeout": "180",
       "memorySize": "128",
-      "events": {
-        "s3Sources": [
-          {
-            "bucket": "dp-dev-store-cdn-redshift-manifests",
-            "type": "s3:ObjectCreated:*",
-            "suffix": ".json"
-          },
-          {
-            "bucket": "dp-dev-store-cdn-redshift-manifests",
-            "type": "s3:ObjectCreated:*",
-            "prefix": "folder",
-            "suffix": ".gz",
-            "ensure": "exists"
+      "events": [
+        {
+          "event_source": {
+            "arn":  "arn:aws:s3:::my-bucket",
+            "events": ["s3:ObjectCreated:*"]
           }
-        ],
-        "timeSchedules": [
-          {
-            "ensure": "exists",
-            "ruleName": "time-event-test-T1",
-            "ruleDescription": "run every 5 min from 0-5 UTC",
-            "scheduleExpression": "cron(0/5 0-5 ? * * *)"
+        },
+        {
+          "event_source": {
+            "name": "send_reminder_to_slack",
+            "schedule": "rate(1 minute)"
           }
-        ]
-      },
+        }
+      ],
       "vpc": {
         "subnetIds": [
           "subnet-87685dde",
@@ -285,15 +274,7 @@ To enable this feature add this to the "ramuda" section of your `gcdt_<env>.json
 You can get the name of the bucket from Ops and it should be part of the stack outputs of the base stack in your account (s3DeploymentBucket).
 
 
-### Setting the ENV variable
-
-You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
-``` bash
-export ENV=DEV
-```
-
-
-### runtime support
+#### runtime support
 
 gcdt supports the `nodejs4.3`, `nodejs6.10`, `python2.7`, `python3.6` runtimes.
 
@@ -350,11 +331,86 @@ You can use lookups like for the rest of the configuration. Note that the values
 ```
 
 
-#### Defining dependencies for your NodeJs lambda function
+#### Adding event configuration
+
+gcdt can be used to easily schedule functions to occur on regular intervals. These functions will be packaged and deployed along with your app_function. Just list your functions and the expression to schedule them using cron or rate syntax in your gcdt_<env>.json config file:
+
+``` json
+...
+"events": [{
+    "event_source": {
+        "name": "send_reminder_to_slack",
+        "schedule": "rate(1 minute)"
+    }
+}]
+```
+
+The schedule expression defines when to execute your lambda function in [cron or rate format](http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html).
+
+
+[Supported event types](http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#supported-notification-event-types).
+
+
+Similarly, you can have your functions execute in response to events that happen in the AWS ecosystem, such as S3 uploads, Kinesis streams, and SNS messages, etc..
+
+In your gcdt_<env>.json config file, define your event sources and the function you wish to execute. For instance, this will execute your AWS Lambda function in response to new objects in your my-bucket S3 bucket. Note that your function must accept event and context parameters.
+
+``` json
+...
+"events": [{
+    "event_source": {
+        "arn":  "arn:aws:s3:::my-bucket",
+        "events": ["s3:ObjectCreated:*"],
+        "suffix": ".jpg"
+    }
+}],
+```
+
+Similarly, for a Simple Notification Service (SNS) event:
+
+``` json
+...
+"events": [{
+    "event_source": {
+        "arn":  "arn:aws:sns:::your-event-topic-arn",
+        "events": ["sns:Publish"]
+    }
+}]
+```
+
+Kinesis is slightly different as it is not event-based but pulling from a stream:
+
+``` json
+...
+"events": [{
+    "event_source": {
+        "arn": arn:aws:kinesis:eu-west-1:1234554:stream/your_stream"
+        "starting_position": "TRIM_HORIZON",
+        "batch_size": 50,
+        "enabled": true
+    }
+}]
+```
+
+
+### Setting the ENV variable
+
+You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
+``` bash
+export ENV=DEV
+```
+
+
+### Environment specific configuration for your lambda functions
+
+Please put the environment specific configuration for your lambda function into a `gcdt_<env>.json` file. For most teams a useful convention would be to maintain at least 'dev', 'qa', and 'prod' envs.
+
+
+### Defining dependencies for your NodeJs lambda function
 
 A sample `package.json` file to that defines a dependency to the `1337` npm module:
 
-```json
+``` json
 {
   "name": "my-sample-lambda",
   "version": "0.0.1",
@@ -367,7 +423,7 @@ A sample `package.json` file to that defines a dependency to the `1337` npm modu
 ```
 
 
-#### Sample NodeJs lambda function
+### Sample NodeJs lambda function
 
 From using lambda extensively we find it a good practise to implement the `ping` feature. With the ping `ramdua` automatically checks if your code is running fine on AWS.
 
@@ -389,8 +445,3 @@ exports.handler = function(event, context, callback) {
     }
 };
 ```
-
-
-### Environment specific configuration for your lambda functions
-
-Please put the environment specific configuration for your lambda function into a `gcdt_<env>.json` file. For most teams a good convention would be to maintain at least 'dev', 'qa', and 'prod' envs.

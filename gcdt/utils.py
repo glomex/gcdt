@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+
+import random
+import string
 import sys
 import getpass
 import subprocess
+import time
 from time import sleep
 import collections
 import json
@@ -302,3 +306,23 @@ def fix_old_kumo_config(config, silent=False):
             log.warn('Your kumo config should look like this:')
             log.warn(json.dumps(config['kumo']))
     return config
+
+
+def random_string(length=6):
+    """Create a random 6 character string.
+
+    note: in case you use this function in a test during test together with
+    an awsclient then this function is altered so you get reproducible results
+    that will work with your recorded placebo json files (see helpers_aws.py).
+    """
+    return ''.join([random.choice(string.ascii_lowercase) for i in range(length)])
+
+
+def time_now():
+    """Like int(time.time() * 1000) but supports record and playback for testing.
+
+    note: in case you use this function in a test during test together with
+    an awsclient then this function is altered so you get reproducible results
+    that will work with your recorded placebo json files (see helpers_aws.py).
+    """
+    return int(time.time()) * 1000

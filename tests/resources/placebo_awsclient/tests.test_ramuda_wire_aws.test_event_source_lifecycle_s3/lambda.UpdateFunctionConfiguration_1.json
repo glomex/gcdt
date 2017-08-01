@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "zDbsEAKAoYfIUlGUpaJcejwj0ccM1hxPa21Vtk8mEcU=", 
+        "FunctionName": "jenkins_test_vvokzs", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "d93e1af1-75f6-11e7-903a-8b14c12a1ca7", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 13:47:52 GMT", 
+                "x-amzn-requestid": "d93e1af1-75f6-11e7-903a-8b14c12a1ca7", 
+                "content-length": "628", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3494068, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_vvokzs", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_vvokzs_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-31T13:47:52.527+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

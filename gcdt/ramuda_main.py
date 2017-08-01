@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ramuda.
-Script to deploy Lambda functions to AWS
+Commands to deploy Lambda functions to AWS
 """
 
 from __future__ import unicode_literals, print_function
@@ -16,9 +16,14 @@ from . import utils
 from .gcdt_cmd_dispatcher import cmd
 from .gcdt_defaults import DEFAULT_CONFIG
 from .ramuda_core import list_functions, get_metrics, deploy_lambda, \
-    wire, bundle_lambda, unwire, delete_lambda, rollback, ping, info, \
-    cleanup_bundle, invoke, logs
+    bundle_lambda, delete_lambda_deprecated, rollback,\
+    ping, info, cleanup_bundle, invoke, logs, delete_lambda
+from gcdt.ramuda_wire import wire, wire_deprecated, unwire, unwire_deprecated
 from .ramuda_utils import check_and_format_logs_params
+from .gcdt_logging import getLogger
+
+
+log = getLogger(__name__)
 
 # TODO introduce own config for account detection
 # TODO re-upload on requirements.txt changes
@@ -133,15 +138,19 @@ def delete_cmd(force, lambda_name, delete_logs, **tooldata):
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name', None)
     if function_name == str(lambda_name):
-        s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-        time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-        exit_code = delete_lambda(awsclient, lambda_name,
-                                  s3_event_sources,
-                                  time_event_sources,
-                                  delete_logs)
+        if 'events' in config['lambda']:
+            events = config['lambda']['events']
+            if isinstance(events, list):
+                exit_code = delete_lambda(awsclient, function_name, events, delete_logs)
+            elif isinstance(events, dict):
+                s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+                time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+                exit_code = delete_lambda_deprecated(awsclient, lambda_name,
+                                                     s3_event_sources,
+                                                     time_event_sources,
+                                                     delete_logs)
     else:
-        exit_code = delete_lambda(
-            awsclient, lambda_name, [], [])
+        exit_code = delete_lambda(awsclient, function_name, [], delete_logs)
     return exit_code
 
 
@@ -163,11 +172,16 @@ def wire_cmd(**tooldata):
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name')
-    s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-    time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-    exit_code = wire(awsclient, function_name, s3_event_sources,
-                     time_event_sources)
-    return exit_code
+    if 'events' in config['lambda']:
+        events = config['lambda']['events']
+        if isinstance(events, list):
+            exit_code = wire(awsclient, events, function_name)
+        elif isinstance(events, dict):
+            s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+            time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+            exit_code = wire_deprecated(awsclient, function_name, s3_event_sources,
+                                        time_event_sources)
+        return exit_code
 
 
 @cmd(spec=['unwire'])
@@ -176,11 +190,16 @@ def unwire_cmd(**tooldata):
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
     function_name = config['lambda'].get('name')
-    s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
-    time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
-    exit_code = unwire(awsclient, function_name, s3_event_sources,
-                       time_event_sources)
-    return exit_code
+    if 'events' in config['lambda']:
+        events = config['lambda']['events']
+        if isinstance(events, list):
+            exit_code = unwire(awsclient, events, function_name)
+        elif isinstance(events, dict):
+            s3_event_sources = config['lambda'].get('events', []).get('s3Sources', [])
+            time_event_sources = config['lambda'].get('events', []).get('timeSchedules', [])
+            exit_code = unwire_deprecated(awsclient, function_name, s3_event_sources,
+                                          time_event_sources)
+        return exit_code
 
 
 @cmd(spec=['bundle', '--keep'])
@@ -211,10 +230,10 @@ def ping_cmd(lambda_name, version=None, **tooldata):
     else:
         response = ping(awsclient, lambda_name)
     if 'alive' in str(response):
-        print('Cool, your lambda function did respond to ping with %s.' %
+        log.info('Cool, your lambda function did respond to ping with %s.' %
               str(response))
     else:
-        print(colored.red('Your lambda function did not respond to ping.'))
+        log.info(colored.red('Your lambda function did not respond to ping.'))
         return 1
 
 
@@ -226,8 +245,8 @@ def invoke_cmd(lambda_name, version, itype, payload, outfile, **tooldata):
     awsclient = context.get('_awsclient')
     results = invoke(awsclient, lambda_name, payload, invocation_type=itype,
                      version=version, outfile=outfile)
-    print('invoke result:')
-    print(results)
+    log.info('invoke result:')
+    log.info(results)
 
 
 @cmd(spec=['logs', '<lambda>', '--start', '--end', '--tail'])
@@ -236,17 +255,17 @@ def logs_cmd(lambda_name, start, end, tail, **tooldata):
     context = tooldata.get('context')
     awsclient = context.get('_awsclient')
     if tail and end:
-        print(colored.red('You can not use \'--end\' and \'--tail\' options together.'))
-        return
+        log.error(colored.red('You can not use \'--end\' and \'--tail\' options together.'))
+        return 1
 
     start_dt, end_dt = check_and_format_logs_params(start, end, tail)
 
     if end and end_dt <= start_dt:
-        print(colored.red('\'--end\' value before \'--start\' value.'))
-        return
+        log.error(colored.red('\'--end\' value before \'--start\' value.'))
+        return 1
 
     if tail:
-        print(colored.yellow('Use \'Ctrl-C\' to exit tail mode'))
+        log.info(colored.yellow('Use \'Ctrl-C\' to exit tail mode'))
     logs(awsclient, lambda_name, start_dt=start_dt, end_dt=end_dt, tail=tail)
 
 

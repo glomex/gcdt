@@ -1,0 +1,24 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Rules": [
+            {
+                "State": "ENABLED", 
+                "ScheduleExpression": "rate(1 minute)", 
+                "Name": "execute_backup", 
+                "Arn": "arn:aws:events:eu-west-1:420189626185:rule/execute_backup"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "263c3747-75f4-11e7-a193-adee0217ce4c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "263c3747-75f4-11e7-a193-adee0217ce4c", 
+                "date": "Mon, 31 Jul 2017 13:28:32 GMT", 
+                "content-length": "159", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

@@ -87,7 +87,7 @@ $ source ./venv/bin/activate
 Install the dependencies into venv:
 
 ``` bash
-$ pip install -r requirements_gcdt.txt
+$ pip install -U -r requirements_gcdt.txt
 ```
 
 Now you can start using gcdt:
@@ -97,6 +97,17 @@ $ gcdt version
 ```
 
 BTW, `gcdt version` shows you all the versions of gcdt and installed plugins. So you can use this to quickly check which plugins are installed.
+
+
+### Updating gcdt
+
+You should frequently update your gcdt installation to get access to new features and bugfixes.
+ When updating your gcdt installation, please update gcdt and all the plugins. Just updating gcdt or a single plugin could easily break your gcdt installation.
+
+``` bash
+$ pip install -U -r requirements_gcdt.txt
+```
+
 
 #### Deactivate a virtualenv
 

@@ -1,0 +1,21 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ScheduleExpression": "rate(1 minute)", 
+        "Name": "unittest-dev-lambda-schedule", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1de06ebd-7451-11e7-a35d-c7cc317241a8", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "1de06ebd-7451-11e7-a35d-c7cc317241a8", 
+                "date": "Sat, 29 Jul 2017 11:28:59 GMT", 
+                "content-length": "210", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }, 
+        "State": "ENABLED", 
+        "Arn": "arn:aws:events:eu-west-1:420189626185:rule/unittest-dev-lambda-schedule", 
+        "Description": "run every 1 minute"
+    }
+}

@@ -4,6 +4,8 @@ import time
 
 import pytest
 import maya
+
+import gcdt.utils
 from gcdt.cloudwatch_logs import delete_log_group, put_retention_policy, \
     describe_log_group, create_log_stream, put_log_events, create_log_group, \
     filter_log_events, describe_log_stream, get_log_events, check_log_stream_exists
@@ -21,8 +23,8 @@ def test_log_group_lifecycle(awsclient):
     # Note: with this we do not want to test AWS cloudwatch
     # we only want to make sure our wrappers for AWS calls work
     # easiest to achieve this is to test a whole log group lifecycle
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
 
     create_log_group(awsclient, fake_log_group_name)
     create_log_stream(awsclient, fake_log_group_name, fake_log_stream_name)
@@ -55,7 +57,7 @@ def test_log_group_lifecycle(awsclient):
 @pytest.mark.aws
 @check_preconditions
 def test_set_retention_on_not_yet_existing_log_group(awsclient):
-    fake_log_group_name = '/aws/lambda/%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/%s' % gcdt.utils.random_string()
 
     put_retention_policy(awsclient, fake_log_group_name, 545)
     info = describe_log_group(awsclient, fake_log_group_name)
@@ -71,8 +73,8 @@ def test_set_retention_on_not_yet_existing_log_group(awsclient):
 @pytest.mark.aws
 @check_preconditions
 def test_filter_log_events(awsclient):
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
 
     create_log_group(awsclient, fake_log_group_name)
     create_log_stream(awsclient, fake_log_group_name, fake_log_stream_name)
@@ -83,7 +85,7 @@ def test_filter_log_events(awsclient):
     assert info['retentionInDays'] == 545
     assert info['storedBytes'] == 0
 
-    now = helpers.time_now()
+    now = gcdt.utils.time_now()
     log_event1 = {
         'timestamp': now - 300000,  # 5min
         'message': '1_meine oma fährt im hühnerstall motorrad'
@@ -130,8 +132,8 @@ def test_datetime_to_timestamp():
 @pytest.mark.aws
 @check_preconditions
 def test_get_log_events(awsclient):
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
 
     create_log_group(awsclient, fake_log_group_name)
     create_log_stream(awsclient, fake_log_group_name, fake_log_stream_name)
@@ -142,7 +144,7 @@ def test_get_log_events(awsclient):
     assert info['retentionInDays'] == 545
     assert info['storedBytes'] == 0
 
-    now = helpers.time_now()
+    now = gcdt.utils.time_now()
     log_event1 = {
         'timestamp': now - 300000,  # 5min
         'message': '1_meine oma fährt im hühnerstall motorrad'
@@ -176,8 +178,8 @@ def test_get_log_events(awsclient):
 @pytest.mark.aws
 @check_preconditions
 def test_check_log_stream_exists_no_stream(awsclient):
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
 
     create_log_group(awsclient, fake_log_group_name)
     assert not check_log_stream_exists(awsclient, fake_log_group_name, fake_log_stream_name)
@@ -189,8 +191,8 @@ def test_check_log_stream_exists_no_stream(awsclient):
 @pytest.mark.aws
 @check_preconditions
 def test_check_log_stream_exists_no_log_group(awsclient):
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
     assert not check_log_stream_exists(awsclient, fake_log_group_name, fake_log_stream_name)
     # clean up
 
@@ -198,8 +200,8 @@ def test_check_log_stream_exists_no_log_group(awsclient):
 @pytest.mark.aws
 @check_preconditions
 def test_check_log_stream_exists(awsclient):
-    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % helpers.random_string()
-    fake_log_stream_name = 'unittest_logstream_%s' % helpers.random_string()
+    fake_log_group_name = '/aws/lambda/unittest_loggroup_%s' % gcdt.utils.random_string()
+    fake_log_stream_name = 'unittest_logstream_%s' % gcdt.utils.random_string()
 
     create_log_group(awsclient, fake_log_group_name)
     create_log_stream(awsclient, fake_log_group_name, fake_log_stream_name)

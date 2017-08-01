@@ -1,0 +1,35 @@
+{
+    "status_code": 201, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "qG37C+J8ClrO9EAqcTEeJXdB7JmF40+phyFfTzsw6To=", 
+        "FunctionName": "jenkins_test_imccys", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "c0882525-75f3-11e7-bdd9-b33e884cbced", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 13:25:43 GMT", 
+                "x-amzn-requestid": "c0882525-75f3-11e7-bdd9-b33e884cbced", 
+                "content-length": "654", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3494573, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_imccys", 
+        "Environment": {
+            "Variables": {}
+        }, 
+        "Version": "1", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_imccys_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-31T13:25:43.608+0000", 
+        "Handler": "handler_counter.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

@@ -4,15 +4,15 @@
         "TracingConfig": {
             "Mode": "PassThrough"
         }, 
-        "CodeSha256": "y7jI0yey94iHIWIXk4I98TZZ0yNqidUOLbrofQC7P9Q=", 
-        "FunctionName": "jenkins_test_qeaomm", 
+        "CodeSha256": "O9x7tv+SHY2RMDaUGBxDwHViXVLlQBtHqVY61XoKlOE=", 
+        "FunctionName": "jenkins_test_qhqojx", 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "be1dbc82-60bb-11e7-9083-b92f294465fd", 
+            "RequestId": "5f5a8fea-7220-11e7-8cda-d9577922ea62", 
             "HTTPHeaders": {
-                "date": "Tue, 04 Jul 2017 13:21:52 GMT", 
-                "x-amzn-requestid": "be1dbc82-60bb-11e7-9083-b92f294465fd", 
+                "date": "Wed, 26 Jul 2017 16:35:02 GMT", 
+                "x-amzn-requestid": "5f5a8fea-7220-11e7-8cda-d9577922ea62", 
                 "content-length": "683", 
                 "content-type": "application/json", 
                 "connection": "keep-alive"
@@ -29,14 +29,14 @@
             ]
         }, 
         "MemorySize": 256, 
-        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qeaomm", 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_qhqojx", 
         "Version": "$LATEST", 
-        "Role": "arn:aws:iam::420189626185:role/unittest_qeaomm_lambda", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_qhqojx_lambda", 
         "Timeout": 300, 
-        "LastModified": "2017-07-04T13:21:52.289+0000", 
+        "LastModified": "2017-07-26T16:35:02.265+0000", 
         "Handler": "handler.handle", 
         "Runtime": "python2.7", 
-        "CodeSize": 3665946, 
+        "CodeSize": 3668760, 
         "Description": "unittest for ramuda"
     }
 }

@@ -17,6 +17,13 @@ The gcdt_config_reader plugin allows us to have configurations in json format.
 The configuration files are environment specific. This means the config file looks like gcdt_<env>.json` where <env> stands for the environment you use (some thing like dev, stage, prod, etc.).
 
 
+### yaml configuration files
+
+The gcdt_config_reader plugin allows us to have configurations in `yaml` format.
+
+The configuration files are environment specific. This means the config file looks like gcdt_<env>.yaml` where <env> stands for the environment you use (some thing like dev, stage, prod, etc.).
+
+
 ### python configuration files
 
 The gcdt_config_reader plugin allows us to have configurations in python format (with a .py extension).
@@ -55,3 +62,18 @@ Alternatively you can provide the ignore pattern with your `gcdt_<env>.json` con
 ```
 
 On a more technical note: all ignore patterns you provide are consolidated by the config reader and provided to plugins and tools as `config['gcdtignore']`.
+
+
+### reference to base config file
+
+The gcdt_config_reader plugin supports a `baseconfig` property which gives a basepath. This works with all supported config file formats like json, yaml and .py config files.
+
+With that you can for example implement the following config structure with your config files:
+ 
+``` text
+baseconfig.json
+-> gcdt_dev.json
+-> gcdt_stage.json
+```
+
+In this sample `baseconfig.json` contains all common config values for all environments. `gcdt_dev.json` contains only values specific for the development environment (same with `gcdt_stage.json`). Config values can be overridden by the dependent `gcdt_<env>.json` file, too.

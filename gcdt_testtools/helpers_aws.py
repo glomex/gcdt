@@ -12,6 +12,7 @@ from awacs.aws import Action, Allow, Policy, Principal, Statement
 from gcdt_bundler.bundler import get_zipped_file
 from gcdt_lookups.lookups import _resolve_lookups
 
+from gcdt import utils
 from gcdt.ramuda_core import deploy_lambda
 from gcdt.s3 import create_bucket, delete_bucket
 from gcdt_testtools import helpers
@@ -26,7 +27,7 @@ log = logging.getLogger(__name__)
 @pytest.fixture(scope='function')  # 'function' or 'module'
 def temp_bucket(awsclient):
     # create a bucket
-    temp_string = helpers.random_string()
+    temp_string = utils.random_string()
     bucket_name = 'unittest-lambda-s3-event-source-%s' % temp_string
     create_bucket(awsclient, bucket_name)
     yield bucket_name
@@ -50,7 +51,9 @@ def create_lambda_role_helper(awsclient, role_name):
         awsclient, role_name,
         policies=[
             'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole',
-            'arn:aws:iam::aws:policy/AWSLambdaExecute']
+            'arn:aws:iam::aws:policy/AWSLambdaExecute',
+            'arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole'
+        ]
     )
     return role['Arn']
 
@@ -256,8 +259,8 @@ def awsclient(request):
         return os.path.abspath(os.path.join(
             os.path.dirname(request.module.__file__), p))
 
-    random_string_orig = helpers.random_string
-    time_now_orig = helpers.time_now
+    random_string_orig = utils.random_string
+    time_now_orig = utils.time_now
     sleep_orig = time.sleep
     random_string_filename = 'random_string.txt'
     time_now_filename = 'time_now.txt'
@@ -269,21 +272,30 @@ def awsclient(request):
         if not os.path.exists(record_dir):
             os.makedirs(record_dir)
         client.record()
-        helpers.random_string = recorder(record_dir, random_string_orig,
-                                         filename=random_string_filename)
-        helpers.time_now = recorder(record_dir, time_now_orig,
-                                    filename=time_now_filename)
+        utils.random_string = recorder(record_dir, random_string_orig,
+                                            filename=random_string_filename)
+        utils.time_now = recorder(record_dir, time_now_orig,
+                                       filename=time_now_filename)
     elif os.getenv('PLACEBO_MODE', '').lower() == 'normal':
         # neither record nor playback, just run the tests against AWS services
         pass
     else:
+        if not os.path.exists(record_dir):
+            raise Exception('placebo playback for \'%s\' missing' % prefix)
         def fake_sleep(seconds):
             pass
 
-        helpers.random_string = file_reader(record_dir,
-                                            random_string_filename)
-        helpers.time_now = file_reader(record_dir,
-                                       time_now_filename, 'int')
+        #utils.random_string = file_reader(record_dir,
+        #                                  random_string_filename)
+        # implementing a wrapper for length validation
+        _file_reader = file_reader(record_dir, random_string_filename)
+        def _random_string(length=6):
+            s = _file_reader()
+            assert len(s) == length
+            print(s)
+            return s
+        utils.random_string = _random_string
+        utils.time_now = file_reader(record_dir, time_now_filename, 'int')
         time.sleep = fake_sleep
         client.playback()
 
@@ -292,7 +304,7 @@ def awsclient(request):
     # cleanup
     client.stop()
     # restore original functionality
-    helpers.random_string = random_string_orig
+    utils.random_string = random_string_orig
     helpers.recordable_now = time_now_orig
     time.sleep = sleep_orig
 
@@ -418,7 +430,7 @@ def temp_cloudformation_policy(awsclient):
     }
     '''
     client_iam = awsclient.get_client('iam')
-    name = 'unittest_%s_cloudformation_policy' % helpers.random_string()
+    name = 'unittest_%s_cloudformation_policy' % utils.random_string()
     pd = Policy(
         Version="2012-10-17",
         Id=name,
