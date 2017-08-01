@@ -6,6 +6,8 @@ So this is basically conceptual paper-ware (structure and a few helpers). You st
 
 Please be aware not to let kumo particles stop you from anything. In case you do not have particles or you do not want to write any you can still build beautiful infrastructure from the raw services provided by AWS.
 
+kumo particles are perfectly optional. There is no tight coupling! You can totally bring your own building-block-mechanism and still use kumo for deployment. You do not even have to use troposphere - as long as your mechanism can export a valid json cloudformation template we are fine. Actually we encourage you to do so. Please share with us what you come up with. 
+
 
 ### Related documents
 
