@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [0.1.426] - 2017-08-01
-### Fixed
+### Added
 - kumo: kumo_particle_helper plus docs (#244)
 
 ## [0.1.425] - 2017-08-01

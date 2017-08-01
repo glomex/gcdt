@@ -333,7 +333,7 @@ You can use lookups like for the rest of the configuration. Note that the values
 
 #### Adding event configuration
 
-gcdt can be used to easily schedule functions to occur on regular intervals. These functions will be packaged and deployed along with your app_function. Just list your functions and the expression to schedule them using cron or rate syntax in your gcdt_<env>.json config file:
+gcdt can be used to easily schedule functions to occur on regular intervals. Just list your expressions to schedule them using cron or rate syntax in your gcdt_<env>.json config file like this:
 
 ``` json
 ...
@@ -353,7 +353,7 @@ The schedule expression defines when to execute your lambda function in [cron or
 
 Similarly, you can have your functions execute in response to events that happen in the AWS ecosystem, such as S3 uploads, Kinesis streams, and SNS messages, etc..
 
-In your gcdt_<env>.json config file, define your event sources and the function you wish to execute. For instance, this will execute your AWS Lambda function in response to new objects in your my-bucket S3 bucket. Note that your function must accept event and context parameters.
+In your gcdt_<env>.json config file, define your event sources. The following sample config will execute your AWS Lambda function in response to new objects in your my-bucket S3 bucket. Note that your function must accept event and context parameters.
 
 ``` json
 ...
