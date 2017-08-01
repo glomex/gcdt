@@ -23,14 +23,18 @@ Features include:
 * Codify infrastructure best practices
 * Multi-Env support (dev, stage, prod, ...)
 
-
-## Why gcdt?
-
 At glomex we love `continuous-integration-as-code` and `infrastructure-as-code`. This enables us to move fast while providing services of high quality and resilience to our partners.
 
 We added a plugin mechanism to gcdt so we can specialize gcdt to highly optimized and opinionated environments that resonate with our usecases.
 
 We hope gcdt will be helpful to you, too. At glomex we believe that only open source software can become truly great software.
+
+
+## Why gcdt?
+
+You can do everything gcdt does by using the AWS Management Console so why use gcdt? Basically, because using GUI interfaces to drive your production environment is a really bad idea. You can't really automate GUI interfaces, you can't debug GUI interfaces, and you can't easily share techniques and best practices with a GUI.
+
+The goal of gcdt is to put everything about your AWS infrastructure into files on a filesystem which can be easily versioned and shared. Once your files are in git, people on your team can create pull requests to merge new changes in and those pull requests can be reviewed, commented on, and eventually approved. This is a tried and proven approach that has worked for more traditional deployment methodologies and will also work for your infrastructure on AWS.
 
 
 ## Useful gcdt information

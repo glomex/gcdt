@@ -9,7 +9,7 @@ from gcdt import utils
 from gcdt.ramuda_wire import _add_event_source, _remove_event_source, \
     wire, wire_deprecated, unwire, unwire_deprecated, \
     _get_event_source_status, _lambda_add_time_schedule_event_source, _lambda_add_invoke_permission
-from gcdt.sns import create_topic, delete_topic
+from gcdt.sns import create_topic, delete_topic, send_message
 from gcdt.kinesis import create_stream, describe_stream, delete_stream, \
     wait_for_stream_exists
 from gcdt_testtools.helpers_aws import create_lambda_helper, \
@@ -160,6 +160,55 @@ def test_wire_unwire_new_events_cloudwatch(
 
     time.sleep(70)
     assert int(_get_count(awsclient, lambda_name)) == 1
+
+
+@pytest.mark.aws
+@pytest.mark.slow
+@check_preconditions
+def test_wire_unwire_new_events_sns(
+        awsclient, vendored_folder, cleanup_lambdas, cleanup_roles, temp_sns_topic):
+    log.info('running test_wire_unwire_new_events_sns')
+
+    # create a lambda function
+    temp_string = utils.random_string()
+    lambda_name = 'jenkins_test_%s' % temp_string
+    role_name = 'unittest_%s_lambda' % temp_string
+    role_arn = create_lambda_role_helper(awsclient, role_name)
+    cleanup_roles.append(role_name)
+    create_lambda_helper(awsclient, lambda_name, role_arn,
+                         './resources/sample_lambda/handler_counter.py',
+                         lambda_handler='handler_counter.handle')
+
+    # schedule expressions:
+    # http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
+    events = [
+        {
+            "event_source": {
+                "arn": temp_sns_topic[1],
+                "events": [
+                    "sns:Publish"
+                ]
+            }
+        }
+    ]
+
+    cleanup_lambdas.append((lambda_name, events))
+
+    # wire the function with the bucket
+    exit_code = wire(awsclient, events, lambda_name)
+    assert exit_code == 0
+
+    assert int(_get_count(awsclient, lambda_name)) == 0
+
+    # send message via sns
+    send_message(awsclient, temp_sns_topic[1], {"foo": "bar"})
+
+    time.sleep(10)  # give a little time for the message to arrive
+    assert int(_get_count(awsclient, lambda_name)) == 1
+
+    # unwire the function
+    exit_code = unwire(awsclient, events, lambda_name)
+    assert exit_code == 0
 
 
 @pytest.mark.aws

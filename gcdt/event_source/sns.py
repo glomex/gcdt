@@ -39,30 +39,33 @@ class SNSEventSource(base.EventSource):
             )
             LOG.debug(response)
             for subscription in response['Subscriptions']:
-                if subscription['Endpoint'] == lambda_arn:  #.arn:
+                if subscription['Endpoint'] == lambda_arn:
                     return subscription
         except Exception:
             LOG.exception('Unable to find event source %s', self.arn)
         return None
 
     def add(self, lambda_arn):
-        lambda_name = base.get_lambda_name(lambda_arn)
+        alias_name = base.get_lambda_alias(lambda_arn)
         try:
             response = self._sns.subscribe(
                 TopicArn=self.arn, Protocol='lambda',
-                Endpoint=lambda_arn  #.arn
+                Endpoint=lambda_arn
             )
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to add SNS event source')
         try:
-            response = self._lambda.add_permission(
-                FunctionName=lambda_name,
-                StatementId=self.arn.split(":")[-1],
-                Action='lambda:InvokeFunction',
-                Principal='sns.amazonaws.com',
-                SourceArn=self.arn
-            )
+            request = {
+                'FunctionName': lambda_arn,
+                'StatementId': self.arn.split(":")[-1],
+                'Action': 'lambda:InvokeFunction',
+                'Principal': 'sns.amazonaws.com',
+                'SourceArn': self.arn
+            }
+            if alias_name:
+                request['Qualifer'] = alias_name
+            response = self._lambda.add_permission(**request)
             LOG.debug(response)
         except ClientError as e:
             if e.response['Error']['Code'] == 'ResourceConflictException':
@@ -79,6 +82,7 @@ class SNSEventSource(base.EventSource):
 
     def remove(self, lambda_arn):
         lambda_name = base.get_lambda_name(lambda_arn)
+        alias_name = base.get_lambda_alias(lambda_arn)
         LOG.debug('removing SNS event source')
         try:
             subscription = self.exists(lambda_arn)
@@ -90,10 +94,13 @@ class SNSEventSource(base.EventSource):
         except Exception:
             LOG.exception('Unable to remove event source %s', self.arn)
         try:
-            response = self._lambda.remove_permission(
-                FunctionName=lambda_name,
-                StatementId=self.arn.split(":")[-1]
-            )
+            request = {
+                'FunctionName': lambda_name,
+                'StatementId': self.arn.split(":")[-1]
+            }
+            if alias_name:
+                request['Qualifer'] = alias_name
+            response = self._lambda.remove_permission(**request)
             LOG.debug(response)
         except Exception:
             LOG.exception('Unable to remove lambda execute permission to SNS event source')

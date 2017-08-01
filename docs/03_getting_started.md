@@ -9,11 +9,13 @@ All of these things you can do for different Environments (dev, stage, prod)
 
 
 ## Infrastructure as code
-Infrastructure as Code (IaC) is a type of IT infrastructure that teams can automatically manage and provision through code, rather than using a manual process. Through defining your infrastructure as code you will solve a lot of problems since code is:
-- portable
-- reusable
-- shareable
-- testable.
+Infrastructure as Code (IaC) is a type of IT infrastructure that teams can automatically provision through code, rather than using a manual GUI-centerd process. Through defining your infrastructure as code you can apply similar tools and workflows like when working with your application code like:
+- version control
+- test
+- review
+- share
+- reuse (like creating test envs)
+- audit
 
 
 ## Installation

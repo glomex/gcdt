@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.424] - 2017-08-31
+### Added
+- ramuda: mechanism for flexible event wiring (#264)
+### Deprecated
+- ramuda: 'events' config dictionary like 's3Sources' and 'timeSchedules' (#264)
+
 ## [0.1.423] - 2017-07-21
 ### Added
 - tenkai: improve output in case of errors (#316)
