@@ -1,0 +1,31 @@
+{
+    "status_code": 200, 
+    "data": {
+        "AttachedPolicies": [
+            {
+                "PolicyName": "unittest_hsfmzo_cloudformation_policy", 
+                "PolicyArn": "arn:aws:iam::420189626185:policy/unittest_hsfmzo_cloudformation_policy"
+            }, 
+            {
+                "PolicyName": "AmazonS3FullAccess", 
+                "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+            }, 
+            {
+                "PolicyName": "AWSCodeDeployReadOnlyAccess", 
+                "PolicyArn": "arn:aws:iam::aws:policy/AWSCodeDeployReadOnlyAccess"
+            }
+        ], 
+        "IsTruncated": false, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "d6ef18f4-785b-11e7-adf8-af8dce38a103", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "d6ef18f4-785b-11e7-adf8-af8dce38a103", 
+                "date": "Thu, 03 Aug 2017 14:55:50 GMT", 
+                "content-length": "919", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

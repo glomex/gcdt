@@ -1,15 +1,15 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "3b45efdd-f2cf-11e6-a533-7d27bea21a22",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1c470d54-78e2-11e7-a237-71234a963c42", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "3b45efdd-f2cf-11e6-a533-7d27bea21a22",
-                "date": "Tue, 14 Feb 2017 16:04:14 GMT",
-                "content-length": "397",
+                "x-amzn-requestid": "1c470d54-78e2-11e7-a237-71234a963c42", 
+                "date": "Fri, 04 Aug 2017 06:56:59 GMT", 
+                "content-length": "397", 
                 "content-type": "text/xml"
             }
         }

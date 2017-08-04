@@ -1,0 +1,25 @@
+{
+  "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.",
+  "Outputs": {
+    "BucketName": {
+      "Description": "Name of S3 bucket",
+      "Value": {
+        "Ref": "S3Bucket1"
+      }
+    }
+  },
+  "Parameters": {
+    "InstanceType": {
+      "Description": "Type of EC2 instance",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "S3Bucket1": {
+      "Properties": {
+        "AccessControl": "PublicRead"
+      },
+      "Type": "AWS::S3::Bucket"
+    }
+  }
+}

@@ -75,34 +75,17 @@
                     "Mode": "PassThrough"
                 }, 
                 "Version": "$LATEST", 
-                "CodeSha256": "Zs411FbldKnO2e2TK6xRv3My634oeRc6R7YR2QHWYx0=", 
+                "CodeSha256": "VTpyqtxu3/KSSFri1qOUcQxGVh837XIod2bbixOMJMc=", 
                 "FunctionName": "ops-dev-captain-crunch-slack-notifier", 
                 "MemorySize": 128, 
-                "CodeSize": 6545449, 
+                "CodeSize": 6623517, 
                 "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-dev-captain-crunch-slack-notifier", 
                 "Handler": "app.app", 
                 "Role": "arn:aws:iam::420189626185:role/lambda/ops-dev-captain-crunch-sl-LambdaCaptainCrunchSlack-1GC3X8EWTDWDO", 
                 "Timeout": 30, 
-                "LastModified": "2017-04-25T09:07:56.057+0000", 
+                "LastModified": "2017-07-28T13:56:36.620+0000", 
                 "Runtime": "python2.7", 
                 "Description": "Notifies slack about who is Captain Crunch"
-            }, 
-            {
-                "TracingConfig": {
-                    "Mode": "PassThrough"
-                }, 
-                "Version": "$LATEST", 
-                "CodeSha256": "orzY6OKji/1B49iP2I1KDBMPpyjV1zbd8RX2NzdgJi0=", 
-                "FunctionName": "LambdaStreamToFirehose", 
-                "MemorySize": 128, 
-                "CodeSize": 2766563, 
-                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:LambdaStreamToFirehose", 
-                "Handler": "index.handler", 
-                "Role": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-DdbLambdaExecRole-1XYJD5YA2OF3M", 
-                "Timeout": 60, 
-                "LastModified": "2016-10-20T11:47:13.692+0000", 
-                "Runtime": "nodejs", 
-                "Description": "AWS Lambda Streams to Kinesis Firehose Replicator"
             }, 
             {
                 "TracingConfig": {
@@ -180,11 +163,11 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "53e77b0c-5d9c-11e7-9c86-297358c72b18", 
+            "RequestId": "7bde14dd-7853-11e7-adcc-5fb00180d6e3", 
             "HTTPHeaders": {
-                "date": "Fri, 30 Jun 2017 13:59:25 GMT", 
-                "x-amzn-requestid": "53e77b0c-5d9c-11e7-9c86-297358c72b18", 
-                "content-length": "6775", 
+                "date": "Thu, 03 Aug 2017 13:56:01 GMT", 
+                "x-amzn-requestid": "7bde14dd-7853-11e7-adcc-5fb00180d6e3", 
+                "content-length": "6324", 
                 "content-type": "application/json", 
                 "connection": "keep-alive"
             }

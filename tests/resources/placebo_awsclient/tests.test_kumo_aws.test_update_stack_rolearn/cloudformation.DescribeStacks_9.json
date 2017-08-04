@@ -3,7 +3,7 @@
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/daa642e0-5d9c-11e7-8d9f-50a68645b429", 
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/64d817d0-785b-11e7-8b0d-50a686340229", 
                 "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
                 "Parameters": [
                     {
@@ -16,48 +16,36 @@
                     {
                         "Description": "Name of S3 bucket", 
                         "OutputKey": "BucketName", 
-                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-3rix5ql7yq7l"
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-w1lf4qu9k2bh"
                     }
                 ], 
-                "RoleARN": "arn:aws:iam::420189626185:role/unittest_pirhpv_kumo", 
-                "StackStatusReason": "User Initiated", 
                 "CreationTime": {
                     "hour": 14, 
                     "__class__": "datetime", 
-                    "month": 6, 
-                    "second": 12, 
-                    "microsecond": 279000, 
+                    "month": 8, 
+                    "second": 38, 
+                    "microsecond": 740000, 
                     "year": 2017, 
-                    "day": 30, 
-                    "minute": 3
+                    "day": 3, 
+                    "minute": 52
                 }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
                 ], 
                 "StackName": "infra-dev-kumo-sample-stack", 
                 "NotificationARNs": [], 
-                "StackStatus": "DELETE_IN_PROGRESS", 
-                "DisableRollback": false, 
-                "LastUpdatedTime": {
-                    "hour": 14, 
-                    "__class__": "datetime", 
-                    "month": 6, 
-                    "second": 7, 
-                    "microsecond": 776000, 
-                    "year": 2017, 
-                    "day": 30, 
-                    "minute": 4
-                }
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
             }
         ], 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "075662e3-5d9d-11e7-824f-7da025c63b40", 
+            "RequestId": "872ba1b7-785b-11e7-be2a-f95c9f16ea5c", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "075662e3-5d9d-11e7-824f-7da025c63b40", 
-                "date": "Fri, 30 Jun 2017 14:04:27 GMT", 
-                "content-length": "1641", 
+                "x-amzn-requestid": "872ba1b7-785b-11e7-be2a-f95c9f16ea5c", 
+                "date": "Thu, 03 Aug 2017 14:53:36 GMT", 
+                "content-length": "1429", 
                 "content-type": "text/xml"
             }
         }

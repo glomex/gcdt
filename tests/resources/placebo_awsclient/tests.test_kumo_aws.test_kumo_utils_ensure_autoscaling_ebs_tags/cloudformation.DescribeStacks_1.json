@@ -1,21 +1,21 @@
 {
-    "status_code": 400,
+    "status_code": 400, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 400,
-            "RequestId": "2db4db5d-f2d2-11e6-adf0-01d39ef9c0a4",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "3270c3bb-785a-11e7-bc04-3540ef87f137", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "2db4db5d-f2d2-11e6-adf0-01d39ef9c0a4",
-                "date": "Tue, 14 Feb 2017 16:25:20 GMT",
-                "content-length": "332",
-                "content-type": "text/xml",
+                "x-amzn-requestid": "3270c3bb-785a-11e7-bc04-3540ef87f137", 
+                "date": "Thu, 03 Aug 2017 14:44:03 GMT", 
+                "content-length": "332", 
+                "content-type": "text/xml", 
                 "connection": "close"
             }
-        },
+        }, 
         "Error": {
-            "Message": "Stack with id infra-dev-gcdt-test-ensure-ebs-for-autoscaling does not exist",
-            "Code": "ValidationError",
+            "Message": "Stack with id infra-dev-gcdt-test-ensure-ebs-for-autoscaling does not exist", 
+            "Code": "ValidationError", 
             "Type": "Sender"
         }
     }

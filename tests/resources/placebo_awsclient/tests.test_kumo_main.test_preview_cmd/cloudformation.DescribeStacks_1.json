@@ -4,10 +4,10 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 400, 
-            "RequestId": "54bad12c-5d9c-11e7-bb96-a7fb178e89fb", 
+            "RequestId": "7bffcd7b-7853-11e7-b76a-bd7023340e16", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "54bad12c-5d9c-11e7-bb96-a7fb178e89fb", 
-                "date": "Fri, 30 Jun 2017 13:59:27 GMT", 
+                "x-amzn-requestid": "7bffcd7b-7853-11e7-b76a-bd7023340e16", 
+                "date": "Thu, 03 Aug 2017 13:56:01 GMT", 
                 "content-length": "313", 
                 "content-type": "text/xml", 
                 "connection": "close"

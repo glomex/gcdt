@@ -1,0 +1,43 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/64d817d0-785b-11e7-8b0d-50a686340229", 
+        "Status": "CREATE_IN_PROGRESS", 
+        "ChangeSetName": "IUUSQHJJ", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "8495db54-785b-11e7-be2a-f95c9f16ea5c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "8495db54-785b-11e7-be2a-f95c9f16ea5c", 
+                "date": "Thu, 03 Aug 2017 14:53:31 GMT", 
+                "content-length": "1084", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "Parameters": [
+            {
+                "ParameterValue": "t2.micro", 
+                "ParameterKey": "InstanceType"
+            }
+        ], 
+        "Changes": [], 
+        "CreationTime": {
+            "hour": 14, 
+            "__class__": "datetime", 
+            "month": 8, 
+            "second": 31, 
+            "microsecond": 725000, 
+            "year": 2017, 
+            "day": 3, 
+            "minute": 53
+        }, 
+        "Capabilities": [
+            "CAPABILITY_IAM"
+        ], 
+        "StackName": "infra-dev-kumo-sample-stack", 
+        "NotificationARNs": [], 
+        "ExecutionStatus": "UNAVAILABLE", 
+        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/IUUSQHJJ/a1f23abf-21c2-41cf-afdb-ce05cc21b3ee"
+    }
+}

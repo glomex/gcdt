@@ -1,0 +1,14 @@
+{
+  "kumo": {
+    "stack": {
+      "StackName": "infra-dev-kumo-sample-stack",
+      "NotificationARNs": [
+        "arn:aws:sns:us-east-1:123456789012:mytopic1",
+        "arn:aws:sns:us-east-1:123456789012:mytopic2"
+      ]
+    },
+    "parameters": {
+      "InstanceType": "t2.micro"
+    }
+  }
+}

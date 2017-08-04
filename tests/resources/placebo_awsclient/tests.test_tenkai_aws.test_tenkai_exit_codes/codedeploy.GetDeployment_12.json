@@ -1,52 +1,61 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "33069f20-f2d0-11e6-8517-af726099ed16",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "bba0aafb-785d-11e7-a30c-4f1cb9191436", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "33069f20-f2d0-11e6-8517-af726099ed16",
-                "content-length": "900",
+                "x-amzn-requestid": "bba0aafb-785d-11e7-a30c-4f1cb9191436", 
+                "content-length": "1032", 
                 "content-type": "application/x-amz-json-1.1"
             }
-        },
+        }, 
         "deploymentInfo": {
-            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-AWHMZL5G2U88",
-            "status": "Created",
-            "description": "deploy with tenkai",
-            "deploymentConfigName": "CodeDeployDefault.AllAtOnce",
-            "creator": "user",
-            "deploymentId": "d-8W0CR39HK",
-            "ignoreApplicationStopFailures": true,
+            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-QASR5NXS64M4", 
+            "status": "InProgress", 
+            "deploymentOverview": {
+                "Skipped": 0, 
+                "Succeeded": 0, 
+                "Failed": 1, 
+                "Ready": 0, 
+                "InProgress": 0, 
+                "Pending": 0
+            }, 
+            "description": "deploy with tenkai", 
+            "deploymentConfigName": "CodeDeployDefault.AllAtOnce", 
+            "creator": "user", 
+            "deploymentId": "d-MPPS4SIMN", 
+            "ignoreApplicationStopFailures": true, 
             "autoRollbackConfiguration": {
                 "enabled": false
-            },
+            }, 
             "deploymentStyle": {
-                "deploymentType": "IN_PLACE",
+                "deploymentType": "IN_PLACE", 
                 "deploymentOption": "WITHOUT_TRAFFIC_CONTROL"
-            },
-            "updateOutdatedInstancesOnly": false,
-            "instanceTerminationWaitTimeStarted": false,
-            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-14ZQD7H0MEGI0",
+            }, 
+            "updateOutdatedInstancesOnly": false, 
+            "instanceTerminationWaitTimeStarted": false, 
+            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-1LYTQMTVFQY97", 
             "createTime": {
-                "hour": 17,
-                "__class__": "datetime",
-                "month": 2,
-                "second": 10,
-                "microsecond": 93000,
-                "year": 2017,
-                "day": 14,
-                "minute": 11
-            },
+                "hour": 17, 
+                "__class__": "datetime", 
+                "month": 8, 
+                "second": 29, 
+                "microsecond": 283000, 
+                "year": 2017, 
+                "day": 3, 
+                "minute": 7
+            }, 
+            "fileExistsBehavior": "DISALLOW", 
             "revision": {
-                "revisionType": "S3",
+                "revisionType": "S3", 
                 "s3Location": {
-                    "bundleType": "tgz",
-                    "version": "_UoVOVGETQ0RmigQeuOUlNDjDhaewnRY",
-                    "bucket": "7finity-infra-dev-deployment",
-                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-AWHMZL5G2U88/bundle.tar.gz",
-                    "eTag": "\"449418743ba571eb43be10071342457c\""
+                    "bundleType": "tgz", 
+                    "version": "ukqVJPMxCotrbR4VFS5qMcs6NlsKQjsF", 
+                    "bucket": "7finity-infra-dev-deployment", 
+                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-QASR5NXS64M4/bundle.tar.gz", 
+                    "eTag": "\"8a6018c8737c1275b5fa4b9e77fd3679\""
                 }
             }
         }

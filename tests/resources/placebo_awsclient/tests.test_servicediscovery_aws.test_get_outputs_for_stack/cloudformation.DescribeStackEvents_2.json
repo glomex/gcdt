@@ -1,56 +1,56 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "StackEvents": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
-                "EventId": "S3Bucket1-CREATE_IN_PROGRESS-2017-02-14T16:04:19.893Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::S3::Bucket",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
+                "EventId": "S3Bucket1-CREATE_IN_PROGRESS-2017-08-04T06:57:03.232Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::S3::Bucket", 
                 "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 19,
-                    "microsecond": 893000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 4
-                },
-                "StackName": "infra-dev-kumo-sample-stack",
-                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n",
-                "PhysicalResourceId": "",
+                    "hour": 6, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 3, 
+                    "microsecond": 232000, 
+                    "year": 2017, 
+                    "day": 4, 
+                    "minute": 57
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "", 
                 "LogicalResourceId": "S3Bucket1"
-            },
+            }, 
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
-                "EventId": "3b507720-f2cf-11e6-9ca9-50a68645b236",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::CloudFormation::Stack",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
+                "EventId": "1c4f4ab0-78e2-11e7-8432-500c44f19ed2", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
                 "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 14,
-                    "microsecond": 868000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 4
-                },
-                "ResourceStatusReason": "User Initiated",
-                "StackName": "infra-dev-kumo-sample-stack",
-                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
+                    "hour": 6, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 59, 
+                    "microsecond": 102000, 
+                    "year": 2017, 
+                    "day": 4, 
+                    "minute": 56
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
                 "LogicalResourceId": "infra-dev-kumo-sample-stack"
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "3ebe7502-f2cf-11e6-a533-7d27bea21a22",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1f9e27cc-78e2-11e7-a237-71234a963c42", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "3ebe7502-f2cf-11e6-a533-7d27bea21a22",
-                "date": "Tue, 14 Feb 2017 16:04:20 GMT",
-                "content-length": "1785",
+                "x-amzn-requestid": "1f9e27cc-78e2-11e7-a237-71234a963c42", 
+                "date": "Fri, 04 Aug 2017 06:57:03 GMT", 
+                "content-length": "1785", 
                 "content-type": "text/xml"
             }
         }

@@ -1,16 +1,16 @@
 {
     "status_code": 200, 
     "data": {
-        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/54ee1560-5d9c-11e7-9dc6-500c4267f861", 
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/7c2074d0-7853-11e7-ae93-50faf00dcc35", 
         "Status": "FAILED", 
-        "ChangeSetName": "BQNTYPIA", 
+        "ChangeSetName": "QTPKKUJY", 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "6af100cc-5d9c-11e7-b2bf-ab4862964991", 
+            "RequestId": "92026ab3-7853-11e7-b593-3be84d7723b1", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "6af100cc-5d9c-11e7-b2bf-ab4862964991", 
-                "date": "Fri, 30 Jun 2017 14:00:03 GMT", 
+                "x-amzn-requestid": "92026ab3-7853-11e7-b593-3be84d7723b1", 
+                "date": "Thu, 03 Aug 2017 13:56:37 GMT", 
                 "content-length": "1209", 
                 "content-type": "text/xml"
             }
@@ -23,14 +23,14 @@
         ], 
         "Changes": [], 
         "CreationTime": {
-            "hour": 14, 
+            "hour": 13, 
             "__class__": "datetime", 
-            "month": 6, 
-            "second": 4, 
-            "microsecond": 714000, 
+            "month": 8, 
+            "second": 38, 
+            "microsecond": 342000, 
             "year": 2017, 
-            "day": 30, 
-            "minute": 0
+            "day": 3, 
+            "minute": 56
         }, 
         "StatusReason": "The submitted information didn't contain changes. Submit different information to create a change set.", 
         "StackName": "infra-dev-kumo-sample-stack", 
@@ -39,6 +39,6 @@
             "CAPABILITY_IAM"
         ], 
         "ExecutionStatus": "UNAVAILABLE", 
-        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/BQNTYPIA/4782e0d5-c82c-4bfd-b751-7bb79e2845e0"
+        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/QTPKKUJY/f621fea9-844a-41b9-bebb-170614241ae7"
     }
 }
