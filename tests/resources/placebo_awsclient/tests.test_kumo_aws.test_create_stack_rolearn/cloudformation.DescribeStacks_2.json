@@ -3,7 +3,7 @@
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/37441530-528b-11e7-b8ad-503ac9e65ad1", 
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3bd1ed20-785b-11e7-9052-50faea5d48d2", 
                 "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
                 "Parameters": [
                     {
@@ -12,17 +12,17 @@
                     }
                 ], 
                 "Tags": [], 
-                "RoleARN": "arn:aws:iam::420189626185:role/unittest_btsxhu_kumo", 
+                "RoleARN": "arn:aws:iam::420189626185:role/unittest_nqcsew_kumo", 
                 "StackStatusReason": "User Initiated", 
                 "CreationTime": {
-                    "hour": 11, 
+                    "hour": 14, 
                     "__class__": "datetime", 
-                    "month": 6, 
-                    "second": 13, 
-                    "microsecond": 972000, 
+                    "month": 8, 
+                    "second": 29, 
+                    "microsecond": 950000, 
                     "year": 2017, 
-                    "day": 16, 
-                    "minute": 59
+                    "day": 3, 
+                    "minute": 51
                 }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
@@ -36,10 +36,10 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "3780a9fd-528b-11e7-b9c0-677de7e9d404", 
+            "RequestId": "3c002910-785b-11e7-96dd-4f74eb973834", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "3780a9fd-528b-11e7-b9c0-677de7e9d404", 
-                "date": "Fri, 16 Jun 2017 11:59:14 GMT", 
+                "x-amzn-requestid": "3c002910-785b-11e7-96dd-4f74eb973834", 
+                "date": "Thu, 03 Aug 2017 14:51:30 GMT", 
                 "content-length": "1304", 
                 "content-type": "text/xml"
             }

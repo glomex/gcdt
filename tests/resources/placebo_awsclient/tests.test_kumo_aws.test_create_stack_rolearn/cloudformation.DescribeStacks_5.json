@@ -1,0 +1,55 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3bd1ed20-785b-11e7-9052-50faea5d48d2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-7n7r7chx323g"
+                    }
+                ], 
+                "RoleARN": "arn:aws:iam::420189626185:role/unittest_nqcsew_kumo", 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 29, 
+                    "microsecond": 950000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 51
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "DELETE_IN_PROGRESS", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "521feb55-785b-11e7-96dd-4f74eb973834", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "521feb55-785b-11e7-96dd-4f74eb973834", 
+                "date": "Thu, 03 Aug 2017 14:52:07 GMT", 
+                "content-length": "1573", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

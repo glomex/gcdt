@@ -48,6 +48,10 @@ gcdt-lookups
 gcdt-bundler
 gcdt-slack-integration
 gcdt-datadog-integration
+gcdt-kumo
+gcdt-tenkai
+gcdt-ramuda
+gcdt-yugen
 ```
 You can find more information about plugins in [docs](http://gcdt.readthedocs.io/en/latest/gcdt_plugins/index.html)
 then
@@ -58,6 +62,11 @@ To check that everything is good and `gcdt` installed just do:
 ```bash
 $ gcdt version
 gcdt version 0.1.418
+gcdt commands:
+ * gcdt-kumo 0.2.2
+ * gcdt-tenkai 0.2.0
+ * gcdt-ramuda 0.2.0
+ * gcdt-yugen 0.2.0
 gcdt plugins:
  * gcdt-config-reader version 0.0.11
  * gcdt-bundler version 0.0.27

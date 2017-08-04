@@ -1,0 +1,63 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "cede5b94-785d-11e7-a826-b98318e9f874", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "cede5b94-785d-11e7-a826-b98318e9f874", 
+                "content-length": "1032", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }, 
+        "deploymentInfo": {
+            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-QASR5NXS64M4", 
+            "status": "InProgress", 
+            "deploymentOverview": {
+                "Skipped": 0, 
+                "Succeeded": 0, 
+                "Failed": 0, 
+                "Ready": 0, 
+                "InProgress": 1, 
+                "Pending": 0
+            }, 
+            "description": "deploy with tenkai", 
+            "deploymentConfigName": "CodeDeployDefault.AllAtOnce", 
+            "creator": "user", 
+            "deploymentId": "d-ZDKJOXBMN", 
+            "ignoreApplicationStopFailures": true, 
+            "autoRollbackConfiguration": {
+                "enabled": false
+            }, 
+            "deploymentStyle": {
+                "deploymentType": "IN_PLACE", 
+                "deploymentOption": "WITHOUT_TRAFFIC_CONTROL"
+            }, 
+            "updateOutdatedInstancesOnly": false, 
+            "instanceTerminationWaitTimeStarted": false, 
+            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-1LYTQMTVFQY97", 
+            "createTime": {
+                "hour": 17, 
+                "__class__": "datetime", 
+                "month": 8, 
+                "second": 34, 
+                "microsecond": 742000, 
+                "year": 2017, 
+                "day": 3, 
+                "minute": 9
+            }, 
+            "fileExistsBehavior": "DISALLOW", 
+            "revision": {
+                "revisionType": "S3", 
+                "s3Location": {
+                    "bundleType": "tgz", 
+                    "version": "LUj7.Eaz_SIW1KBSBDapOdxoU3hH8H4T", 
+                    "bucket": "7finity-infra-dev-deployment", 
+                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-QASR5NXS64M4/bundle.tar.gz", 
+                    "eTag": "\"82d483760f5a6d02278cf0e662f8d2eb\""
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-1wj9cg1m6bakc"
+                    }
+                ], 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 6, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 59, 
+                    "microsecond": 102000, 
+                    "year": 2017, 
+                    "day": 4, 
+                    "minute": 56
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "DELETE_IN_PROGRESS", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "3218b026-78e2-11e7-a237-71234a963c42", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "3218b026-78e2-11e7-a237-71234a963c42", 
+                "date": "Fri, 04 Aug 2017 06:57:35 GMT", 
+                "content-length": "1495", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

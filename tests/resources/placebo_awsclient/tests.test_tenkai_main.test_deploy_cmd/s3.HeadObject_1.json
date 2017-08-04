@@ -6,34 +6,34 @@
         "ResponseMetadata": {
             "HTTPStatusCode": 200, 
             "RetryAttempts": 0, 
-            "HostId": "in3Mu3lZQjoAspD8eJo2V1TObSeriXjPl9cQhn4yRaUWQmKOBUwReXnW4MfMxN9FiTzJIDsSp38=", 
-            "RequestId": "F6C86474C34E1F28", 
+            "HostId": "/aeAyznIymaL4W/761V9D+bYDiyklyHSojlx3Ieo6dWBiUKfouF3We1FhD4y2rtgr/etR70x9Vo=", 
+            "RequestId": "B2E44B77D53DDDFB", 
             "HTTPHeaders": {
                 "content-length": "650", 
-                "x-amz-id-2": "in3Mu3lZQjoAspD8eJo2V1TObSeriXjPl9cQhn4yRaUWQmKOBUwReXnW4MfMxN9FiTzJIDsSp38=", 
+                "x-amz-id-2": "/aeAyznIymaL4W/761V9D+bYDiyklyHSojlx3Ieo6dWBiUKfouF3We1FhD4y2rtgr/etR70x9Vo=", 
                 "accept-ranges": "bytes", 
                 "server": "AmazonS3", 
-                "last-modified": "Fri, 21 Jul 2017 11:55:44 GMT", 
-                "x-amz-request-id": "F6C86474C34E1F28", 
-                "etag": "\"fd1eb1ea954c281e6d502c946d2e8cf2\"", 
-                "date": "Fri, 21 Jul 2017 11:55:45 GMT", 
-                "x-amz-version-id": "JzPNY_6DifDTRqmfWGQXShSXXw4E8TnP", 
+                "last-modified": "Thu, 03 Aug 2017 15:20:48 GMT", 
+                "x-amz-request-id": "B2E44B77D53DDDFB", 
+                "etag": "\"83235a424930c4fdcd80d206f670ecb1\"", 
+                "date": "Thu, 03 Aug 2017 15:20:48 GMT", 
+                "x-amz-version-id": "NouA2DftN1S4UrgfAgI.4QyP0jnCRJnq", 
                 "content-type": "binary/octet-stream"
             }
         }, 
         "LastModified": {
-            "hour": 11, 
+            "hour": 15, 
             "__class__": "datetime", 
-            "month": 7, 
-            "second": 44, 
+            "month": 8, 
+            "second": 48, 
             "microsecond": 0, 
             "year": 2017, 
-            "day": 21, 
-            "minute": 55
+            "day": 3, 
+            "minute": 20
         }, 
         "ContentLength": 650, 
-        "VersionId": "JzPNY_6DifDTRqmfWGQXShSXXw4E8TnP", 
-        "ETag": "\"fd1eb1ea954c281e6d502c946d2e8cf2\"", 
+        "VersionId": "NouA2DftN1S4UrgfAgI.4QyP0jnCRJnq", 
+        "ETag": "\"83235a424930c4fdcd80d206f670ecb1\"", 
         "Metadata": {}
     }
 }

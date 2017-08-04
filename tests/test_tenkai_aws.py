@@ -48,7 +48,7 @@ def sample_codedeploy_app(awsclient):
     cloudformation, _ = load_cloudformation_template(
         here('resources/sample_codedeploy_app/cloudformation.py')
     )
-    exit_code = deploy_stack(awsclient, config_sample_codeploy_stack,
+    exit_code = deploy_stack(awsclient, {}, config_sample_codeploy_stack,
                              cloudformation, override_stack_policy=False)
     assert_equal(exit_code, 0)
 
@@ -68,7 +68,7 @@ def test_tenkai_exit_codes(cleanup_stack_tenkai, awsclient):
     cloudformation, _ = load_cloudformation_template(
         here('resources/sample_codedeploy_app/cloudformation.py')
     )
-    exit_code = deploy_stack(awsclient, config_sample_codeploy_stack,
+    exit_code = deploy_stack(awsclient, {}, config_sample_codeploy_stack,
                              cloudformation, override_stack_policy=False)
     assert_equal(exit_code, 0)
 
@@ -120,7 +120,7 @@ def test_output_deployment(cleanup_stack_tenkai, awsclient, logcapture):
     cloudformation, _ = load_cloudformation_template(
         here('resources/sample_codedeploy_app/cloudformation.py')
     )
-    exit_code = deploy_stack(awsclient, config_sample_codeploy_stack,
+    exit_code = deploy_stack(awsclient, {}, config_sample_codeploy_stack,
                              cloudformation, override_stack_policy=False)
     assert_equal(exit_code, 0)
 

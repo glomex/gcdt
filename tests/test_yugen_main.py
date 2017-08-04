@@ -16,4 +16,5 @@ def test_version_cmd(logcapture):
     assert records[0][1] == 'INFO'
     assert records[0][2].startswith('gcdt version ')
     assert records[1][1] == 'INFO'
-    assert records[1][2].startswith('gcdt plugins:')
+    assert (records[1][2].startswith('gcdt plugins:') or
+            records[1][2].startswith('gcdt tools:'))

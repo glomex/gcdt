@@ -1,21 +1,21 @@
 {
-    "status_code": 400,
+    "status_code": 400, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 400,
-            "RequestId": "f50de514-f2cb-11e6-88e1-81f2e21cd91b",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "ab8bb904-785a-11e7-8e50-17b060d73c8b", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "f50de514-f2cb-11e6-88e1-81f2e21cd91b",
-                "date": "Tue, 14 Feb 2017 15:40:47 GMT",
-                "content-length": "316",
-                "content-type": "text/xml",
+                "x-amzn-requestid": "ab8bb904-785a-11e7-8e50-17b060d73c8b", 
+                "date": "Thu, 03 Aug 2017 14:47:27 GMT", 
+                "content-length": "316", 
+                "content-type": "text/xml", 
                 "connection": "close"
             }
-        },
+        }, 
         "Error": {
-            "Message": "Stack with id infra-dev-gcdt-test-ensure-ebs does not exist",
-            "Code": "ValidationError",
+            "Message": "Stack with id infra-dev-gcdt-test-ensure-ebs does not exist", 
+            "Code": "ValidationError", 
             "Type": "Sender"
         }
     }

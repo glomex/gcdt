@@ -1,17 +1,17 @@
 {
     "status_code": 200, 
     "data": {
-        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/c801fd10-5da5-11e7-af33-50faeb52a4d2", 
-        "Status": "CREATE_IN_PROGRESS", 
-        "ChangeSetName": "AGEKUSIU", 
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/d7c1aa40-785b-11e7-bc0a-503ac9eaaafd", 
+        "Status": "CREATE_COMPLETE", 
+        "ChangeSetName": "NTJQRSJN", 
         "ResponseMetadata": {
-            "RetryAttempts": 0, 
+            "RetryAttempts": 1, 
             "HTTPStatusCode": 200, 
-            "RequestId": "c951d68f-5da5-11e7-81a0-89b3b33ef2d7", 
+            "RequestId": "d94f76ef-785b-11e7-a7f2-010aaa32d3bd", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "c951d68f-5da5-11e7-81a0-89b3b33ef2d7", 
-                "date": "Fri, 30 Jun 2017 15:07:08 GMT", 
-                "content-length": "1084", 
+                "x-amzn-requestid": "d94f76ef-785b-11e7-a7f2-010aaa32d3bd", 
+                "date": "Thu, 03 Aug 2017 14:55:53 GMT", 
+                "content-length": "1390", 
                 "content-type": "text/xml"
             }
         }, 
@@ -21,23 +21,34 @@
                 "ParameterKey": "InstanceType"
             }
         ], 
-        "Changes": [], 
+        "Changes": [
+            {
+                "ResourceChange": {
+                    "Action": "Add", 
+                    "ResourceType": "AWS::S3::Bucket", 
+                    "Scope": [], 
+                    "Details": [], 
+                    "LogicalResourceId": "S3Bucket1"
+                }, 
+                "Type": "Resource"
+            }
+        ], 
         "CreationTime": {
-            "hour": 15, 
+            "hour": 14, 
             "__class__": "datetime", 
-            "month": 6, 
-            "second": 6, 
-            "microsecond": 596000, 
+            "month": 8, 
+            "second": 51, 
+            "microsecond": 670000, 
             "year": 2017, 
-            "day": 30, 
-            "minute": 7
+            "day": 3, 
+            "minute": 55
         }, 
         "Capabilities": [
             "CAPABILITY_IAM"
         ], 
         "StackName": "infra-dev-kumo-sample-stack", 
         "NotificationARNs": [], 
-        "ExecutionStatus": "UNAVAILABLE", 
-        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/AGEKUSIU/ede25e0e-0d28-4c79-ae17-e07a12b32bae"
+        "ExecutionStatus": "AVAILABLE", 
+        "ChangeSetId": "arn:aws:cloudformation:eu-west-1:420189626185:changeSet/NTJQRSJN/b6d9a75c-e6f1-4e9e-8f2c-9d1a026e1f63"
     }
 }

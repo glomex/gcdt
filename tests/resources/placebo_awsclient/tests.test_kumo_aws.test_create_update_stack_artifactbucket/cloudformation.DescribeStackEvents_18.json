@@ -1,0 +1,256 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackEvents": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "d2a0cc80-785b-11e7-b3e4-500c3cd570d2", 
+                "ResourceStatus": "DELETE_COMPLETE", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 42, 
+                    "microsecond": 877000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "S3Bucket1-DELETE_COMPLETE-2017-08-03T14:55:41.790Z", 
+                "ResourceStatus": "DELETE_COMPLETE", 
+                "ResourceType": "AWS::S3::Bucket", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 41, 
+                    "microsecond": 790000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-s3bucket1-1ehx6tdvayprr", 
+                "LogicalResourceId": "S3Bucket1"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "S3Bucket1-DELETE_IN_PROGRESS-2017-08-03T14:55:20.886Z", 
+                "ResourceStatus": "DELETE_IN_PROGRESS", 
+                "ResourceType": "AWS::S3::Bucket", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 20, 
+                    "microsecond": 886000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-s3bucket1-1ehx6tdvayprr", 
+                "LogicalResourceId": "S3Bucket1"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "c42b0440-785b-11e7-b4e6-500c3d3cda29", 
+                "ResourceStatus": "DELETE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 18, 
+                    "microsecond": 644000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "bed051d0-785b-11e7-8432-500c44f19ed2", 
+                "ResourceStatus": "UPDATE_COMPLETE", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 9, 
+                    "microsecond": 657000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "be454fe0-785b-11e7-a1a1-50a68642b229", 
+                "ResourceStatus": "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 8, 
+                    "microsecond": 751000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "ba95b560-785b-11e7-9f2c-50a686325ed2", 
+                "ResourceStatus": "UPDATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 2, 
+                    "microsecond": 548000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 55
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "b53fe4f0-785b-11e7-ab34-50a686333cfd", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 53, 
+                    "microsecond": 600000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 54
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "S3Bucket1-CREATE_COMPLETE-2017-08-03T14:54:51.264Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::S3::Bucket", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 51, 
+                    "microsecond": 264000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 54
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-s3bucket1-1ehx6tdvayprr", 
+                "LogicalResourceId": "S3Bucket1"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "S3Bucket1-CREATE_IN_PROGRESS-2017-08-03T14:54:30.798Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::S3::Bucket", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 30, 
+                    "microsecond": 798000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 54
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-s3bucket1-1ehx6tdvayprr", 
+                "LogicalResourceId": "S3Bucket1"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "S3Bucket1-CREATE_IN_PROGRESS-2017-08-03T14:54:29.504Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::S3::Bucket", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 29, 
+                    "microsecond": 504000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 54
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "ResourceProperties": "{\"AccessControl\":\"PublicRead\"}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "S3Bucket1"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "EventId": "a415ab10-785b-11e7-9b5f-500c423d20d2", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 24, 
+                    "microsecond": 900000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 54
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/a414e7c0-785b-11e7-9b5f-500c423d20d2", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "d3697496-785b-11e7-9516-c93ca897d892", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "d3697496-785b-11e7-9516-c93ca897d892", 
+                "vary": "Accept-Encoding", 
+                "content-length": "9284", 
+                "content-type": "text/xml", 
+                "date": "Thu, 03 Aug 2017 14:55:43 GMT"
+            }
+        }
+    }
+}

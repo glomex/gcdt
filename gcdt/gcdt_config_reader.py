@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""config_reader reads a config injson format.
+"""config_reader reads a config in json format.
 """
 from __future__ import unicode_literals, print_function
 import json

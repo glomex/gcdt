@@ -1,38 +1,38 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-gcdt-test-ensure-ebs/f540b400-f2cb-11e6-a3e3-50faea5d48d2",
-                "Tags": [],
-                "StackStatusReason": "User Initiated",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-gcdt-test-ensure-ebs/abae5c10-785a-11e7-b526-500c4267f899", 
+                "Tags": [], 
+                "StackStatusReason": "User Initiated", 
                 "CreationTime": {
-                    "hour": 15,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 48,
-                    "microsecond": 840000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 40
-                },
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 28, 
+                    "microsecond": 87000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 47
+                }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
-                ],
-                "StackName": "infra-dev-gcdt-test-ensure-ebs",
-                "NotificationARNs": [],
-                "StackStatus": "CREATE_IN_PROGRESS",
+                ], 
+                "StackName": "infra-dev-gcdt-test-ensure-ebs", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_IN_PROGRESS", 
                 "DisableRollback": false
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "f5886c5d-f2cb-11e6-8bad-3b53ffecef91",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "abef8496-785a-11e7-8395-8115f62cb58e", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "f5886c5d-f2cb-11e6-8bad-3b53ffecef91",
-                "date": "Tue, 14 Feb 2017 15:40:48 GMT",
-                "content-length": "896",
+                "x-amzn-requestid": "abef8496-785a-11e7-8395-8115f62cb58e", 
+                "date": "Thu, 03 Aug 2017 14:47:28 GMT", 
+                "content-length": "896", 
                 "content-type": "text/xml"
             }
         }

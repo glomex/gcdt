@@ -7,7 +7,7 @@ import random
 import string
 import sys
 import time
-import logging
+import inspect
 
 import os
 import six
@@ -22,7 +22,6 @@ from gcdt.utils import GracefulExit, json2table, dict_merge, dict_selective_merg
 from gcdt.gcdt_logging import getLogger
 
 
-#log = logging.getLogger(__name__)
 log = getLogger(__name__)
 
 
@@ -70,9 +69,9 @@ def get_parameter_diff(awsclient, config):
     """
     client_cf = awsclient.get_client('cloudformation')
     try:
-        stackname = config['stack']['StackName']
-        if stackname:
-            response = client_cf.describe_stacks(StackName=stackname)
+        stack_name = config['stack']['StackName']
+        if stack_name:
+            response = client_cf.describe_stacks(StackName=stack_name)
             if response['Stacks']:
                 stack_id = response['Stacks'][0]['StackId']
                 stack = response['Stacks'][0]
@@ -168,7 +167,6 @@ def _call_hook(awsclient, config, stack_name, parameters, cloudformation,
                   stack_state=stack_state)
 
 
-# TODO research CloudFormation Exports
 def _get_stack_outputs(cfn_client, stack_name):
     response = cfn_client.describe_stacks(StackName=stack_name)
     if response['Stacks']:
@@ -177,9 +175,9 @@ def _get_stack_outputs(cfn_client, stack_name):
             return stack['Outputs']
 
 
-def _get_stack_state(client_cf, stackname):
+def _get_stack_state(client_cf, stack_name):
     try:
-        response = client_cf.describe_stacks(StackName=stackname)
+        response = client_cf.describe_stacks(StackName=stack_name)
         if response['Stacks']:
             stack = response['Stacks'][0]
             return stack['StackStatus']
@@ -188,22 +186,22 @@ def _get_stack_state(client_cf, stackname):
         return
 
 
-def _get_stack_id(awsclient, stackname):
+def get_stack_id(awsclient, stack_name):
     client = awsclient.get_client('cloudformation')
-    response = client.describe_stacks(StackName=stackname)
+    response = client.describe_stacks(StackName=stack_name)
     stack_id = response['Stacks'][0]['StackId']
     return stack_id
 
 
-def _get_stack_events_last_timestamp(awsclient, stackname):
+def _get_stack_events_last_timestamp(awsclient, stack_name):
     # we need to get the last event since updatedTime is when the update stated
     client = awsclient.get_client('cloudformation')
-    stack_id = _get_stack_id(awsclient, stackname)
+    stack_id = get_stack_id(awsclient, stack_name)
     response = client.describe_stack_events(StackName=stack_id)
     return response['StackEvents'][-1]['Timestamp']
 
 
-def _poll_stack_events(awsclient, stackname, last_event=None):
+def _poll_stack_events(awsclient, stack_name, last_event=None):
     # http://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes/25662061#25662061
     finished_statuses = ['CREATE_COMPLETE',
                          'CREATE_FAILED',
@@ -235,7 +233,7 @@ def _poll_stack_events(awsclient, stackname, last_event=None):
     client = awsclient.get_client('cloudformation')
     status = ''
     # for the delete command we need the stack_id
-    stack_id = _get_stack_id(awsclient, stackname)
+    stack_id = get_stack_id(awsclient, stack_name)
     print('%-50s %-25s %-50s %-25s\n' % ('Resource Status', 'Resource ID',
                                          'Reason', 'Timestamp'))
     while status not in finished_statuses:
@@ -263,7 +261,7 @@ def _poll_stack_events(awsclient, stackname, last_event=None):
                     print(colored.green(message))
                 else:
                     print(message)
-                if event['LogicalResourceId'] == stackname:
+                if event['LogicalResourceId'] == stack_name:
                     status = event['ResourceStatus']
         time.sleep(5)
     exit_code = 0
@@ -302,12 +300,12 @@ def _generate_parameters(conf):
     return parameter_list
 
 
-def stack_exists(awsclient, stackName):
+def stack_exists(awsclient, stack_name):
     # TODO handle failure based on API call limit
     client = awsclient.get_client('cloudformation')
     try:
         response = client.describe_stacks(
-            StackName=stackName
+            StackName=stack_name
         )
     except GracefulExit:
         raise
@@ -317,22 +315,26 @@ def stack_exists(awsclient, stackName):
         return True
 
 
-def deploy_stack(awsclient, conf, cloudformation, override_stack_policy=False):
+def deploy_stack(awsclient, context, conf, cloudformation, override_stack_policy=False):
     """Deploy the stack to AWS cloud. Does either create or update the stack.
 
     :param conf:
     :param override_stack_policy:
     :return: exit_code
     """
-    stackname = _get_stack_name(conf)
+    stack_name = _get_stack_name(conf)
     parameters = _generate_parameters(conf)
-    if stack_exists(awsclient, stackname):
-        exit_code = _update_stack(awsclient, conf, cloudformation,
+    if stack_exists(awsclient, stack_name):
+        exit_code = _update_stack(awsclient, context, conf, cloudformation,
                                   parameters, override_stack_policy)
     else:
-        exit_code = _create_stack(awsclient, conf, cloudformation,
+        exit_code = _create_stack(awsclient, context, conf, cloudformation,
                                   parameters)
-    _call_hook(awsclient, conf, stackname, parameters, cloudformation,
+    # add 'stack_output' to the context so it becomes available
+    # in 'command_finalized' hook
+    context['stack_output'] = _get_stack_outputs(
+        awsclient.get_client('cloudformation'), stack_name)
+    _call_hook(awsclient, conf, stack_name, parameters, cloudformation,
                hook='post_hook',
                message='CloudFormation is done, now executing post hook...')
     return exit_code
@@ -408,16 +410,15 @@ def _get_stack_policy_during_update(cloudformation, override_stack_policy):
     return stack_policy_during_update
 
 
-def _create_stack(awsclient, conf, cloudformation, parameters):
+def _create_stack(awsclient, context, conf, cloudformation, parameters):
     # create stack with all the information we have
     client_cf = awsclient.get_client('cloudformation')
-    stackname = _get_stack_name(conf)
+    stack_name = _get_stack_name(conf)
 
-    _call_hook(awsclient, conf, stackname, parameters, cloudformation,
+    _call_hook(awsclient, conf, stack_name, parameters, cloudformation,
                hook='pre_create_hook')
 
     request = {
-        #'StackName': stackname,
         'Parameters': parameters,
         'Capabilities': ['CAPABILITY_IAM'],
         'StackPolicyBody': _get_stack_policy(cloudformation)
@@ -426,40 +427,49 @@ def _create_stack(awsclient, conf, cloudformation, parameters):
                          ['StackName', 'RoleARN', 'NotificationARNs'])
 
     if _get_artifact_bucket(conf):
-        request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
+        request['TemplateURL'] = _s3_upload(
+            awsclient, conf, generate_template(context, conf, cloudformation))
     else:
-        request['TemplateBody'] = cloudformation.generate_template()
+        request['TemplateBody'] = generate_template(context, conf, cloudformation)
 
     response = client_cf.create_stack(**request)
 
-    exit_code = _poll_stack_events(awsclient, stackname)
-    _call_hook(awsclient, conf, stackname, parameters, cloudformation,
+    exit_code = _poll_stack_events(awsclient, stack_name)
+    _call_hook(awsclient, conf, stack_name, parameters, cloudformation,
                hook='post_create_hook',
                message='CloudFormation is done, now executing post create hook...')
     return exit_code
 
 
-def _s3_upload(awsclient, conf, cloudformation):
+def wait_for_stack_create_complete(awsclient, stack_id):
+    # helper to wait for stack to be deleted
+    client = awsclient.get_client('cloudformation')
+    waiter = client.get_waiter('stack_create_complete')
+
+    waiter.wait(StackName=stack_id)
+
+
+def _s3_upload(awsclient, conf, template_body):
     region = awsclient.get_client('s3').meta.region_name
     bucket = _get_artifact_bucket(conf)
     dest_key = 'kumo/%s/%s-cloudformation.json' % (
         region, _get_stack_name(conf))
-    source_file = generate_template_file(conf, cloudformation)
+    source_file = write_template_to_file(conf, template_body)
     upload_file_to_s3(awsclient, bucket, dest_key, source_file)
     s3url = 'https://s3-%s.amazonaws.com/%s/%s' % (region, bucket, dest_key)
     return s3url
 
 
-def _update_stack(awsclient, conf, cloudformation, parameters,
+def _update_stack(awsclient, context, conf, cloudformation, parameters,
                   override_stack_policy):
     # update stack with all the information we have
     exit_code = 0
     client_cf = awsclient.get_client('cloudformation')
-    stackname = _get_stack_name(conf)
-    last_event = _get_stack_events_last_timestamp(awsclient, stackname)
+    stack_name = _get_stack_name(conf)
+    last_event = _get_stack_events_last_timestamp(awsclient, stack_name)
 
     try:
-        _call_hook(awsclient, conf, stackname, parameters, cloudformation,
+        _call_hook(awsclient, conf, stack_name, parameters, cloudformation,
                    hook='pre_update_hook')
         request = {
             'Parameters': parameters,
@@ -474,21 +484,22 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
                              ['StackName', 'RoleARN', 'NotificationARNs'])
 
         if _get_artifact_bucket(conf):
-            request['TemplateURL'] = _s3_upload(awsclient, conf, cloudformation)
+            request['TemplateURL'] = _s3_upload(
+                awsclient, conf, generate_template(context, conf, cloudformation))
         else:
             # if we have no artifacts bucket configured then upload the template directly
-            request['TemplateBody'] = cloudformation.generate_template()
+            request['TemplateBody'] = cloudformation.generate_template(context, conf)
 
         response = client_cf.update_stack(**request)
 
-        exit_code = _poll_stack_events(awsclient, stackname, last_event)
-        _call_hook(awsclient, conf, stackname, parameters, cloudformation,
+        exit_code = _poll_stack_events(awsclient, stack_name, last_event)
+        _call_hook(awsclient, conf, stack_name, parameters, cloudformation,
                    hook='post_update_hook',
                    message='CloudFormation is done, now executing post update hook...')
     except GracefulExit as e:
         log.info('Received %s signal - cancel cloudformation update for \'%s\'',
-                 str(e), stackname)
-        client_cf.cancel_update_stack(StackName=stackname)
+                 str(e), stack_name)
+        client_cf.cancel_update_stack(StackName=stack_name)
         exit_code = 1
     except Exception as e:
         if 'No updates' in repr(e):
@@ -500,6 +511,14 @@ def _update_stack(awsclient, conf, cloudformation, parameters,
     return exit_code
 
 
+def wait_for_stack_update_complete(awsclient, stack_id):
+    # helper to wait for stack to be deleted
+    client = awsclient.get_client('cloudformation')
+    waiter = client.get_waiter('stack_update_complete')
+
+    waiter.wait(StackName=stack_id)
+
+
 def delete_stack(awsclient, conf, feedback=True):
     """Delete the stack from AWS cloud.
 
@@ -508,8 +527,8 @@ def delete_stack(awsclient, conf, feedback=True):
     :param feedback: print out stack events (defaults to True)
     """
     client_cf = awsclient.get_client('cloudformation')
-    stackname = _get_stack_name(conf)
-    last_event = _get_stack_events_last_timestamp(awsclient, stackname)
+    stack_name = _get_stack_name(conf)
+    last_event = _get_stack_events_last_timestamp(awsclient, stack_name)
 
     request = {}
     dict_selective_merge(request, conf['stack'], ['StackName', 'RoleARN'])
@@ -517,7 +536,15 @@ def delete_stack(awsclient, conf, feedback=True):
     response = client_cf.delete_stack(**request)
 
     if feedback:
-        return _poll_stack_events(awsclient, stackname, last_event)
+        return _poll_stack_events(awsclient, stack_name, last_event)
+
+
+def wait_for_stack_delete_complete(awsclient, stack_id):
+    # helper to wait for stack to be deleted
+    client = awsclient.get_client('cloudformation')
+    waiter = client.get_waiter('stack_delete_complete')
+
+    waiter.wait(StackName=stack_id)
 
 
 def list_stacks(awsclient):
@@ -549,7 +576,7 @@ def list_stacks(awsclient):
     print('listed %s stacks' % str(stack_sum))
 
 
-def create_change_set(awsclient, conf, cloudformation):
+def create_change_set(awsclient, context, conf, cloudformation):
     client = awsclient.get_client('cloudformation')
     stack_name = _get_stack_name(conf)
     change_set_name = ''.join(random.SystemRandom().choice(
@@ -561,8 +588,7 @@ def create_change_set(awsclient, conf, cloudformation):
         change_set_type = 'CREATE'
 
     request = {
-        #'StackName': stack_name,
-        'TemplateBody': cloudformation.generate_template(),
+        'TemplateBody': generate_template(context, conf, cloudformation),
         'Parameters': _generate_parameters(conf),
         'Capabilities': ['CAPABILITY_IAM'],
         'ChangeSetName': change_set_name,
@@ -625,13 +651,30 @@ def _get_artifact_bucket(conf):
         return bucket
 
 
-def generate_template_file(conf, cloudformation):
+def write_template_to_file(conf, template_body):
     """Writes the template to disk
     """
-    template_body = cloudformation.generate_template()
+    #template_body =
     template_file_name = _get_stack_name(conf) + '-generated-cf-template.json'
     with open(template_file_name, 'w') as opened_file:
         opened_file.write(template_body)
     print('wrote cf-template for %s to disk: %s' % (
         get_env(), template_file_name))
     return template_file_name
+
+
+def generate_template(context, config, cloudformation):
+    """call cloudformation to generate the template (json format).
+
+    :param context:
+    :param config:
+    :param cloudformation:
+    :return:
+    """
+    spec = inspect.getargspec(cloudformation.generate_template)[0]
+    if len(spec) == 0:
+        return cloudformation.generate_template()
+    elif spec == ['context', 'config']:
+        return cloudformation.generate_template(context, config)
+    else:
+        raise Exception('Arguments of \'generate_template\' not as expected: %s' % spec)

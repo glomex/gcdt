@@ -1,52 +1,51 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
-                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
                 "Parameters": [
                     {
-                        "ParameterValue": "t2.micro",
+                        "ParameterValue": "t2.micro", 
                         "ParameterKey": "InstanceType"
                     }
-                ],
-                "Tags": [],
+                ], 
+                "Tags": [], 
                 "Outputs": [
                     {
-                        "Description": "Name of S3 bucket",
-                        "OutputKey": "BucketName",
-                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-k50hd3ywgbbw"
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-1wj9cg1m6bakc"
                     }
-                ],
-                "StackStatusReason": "User Initiated",
+                ], 
                 "CreationTime": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 14,
-                    "microsecond": 868000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 4
-                },
+                    "hour": 6, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 59, 
+                    "microsecond": 102000, 
+                    "year": 2017, 
+                    "day": 4, 
+                    "minute": 56
+                }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
-                ],
-                "StackName": "infra-dev-kumo-sample-stack",
-                "NotificationARNs": [],
-                "StackStatus": "DELETE_IN_PROGRESS",
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
                 "DisableRollback": false
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "5158e157-f2cf-11e6-a533-7d27bea21a22",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "31e2d30b-78e2-11e7-a237-71234a963c42", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "5158e157-f2cf-11e6-a533-7d27bea21a22",
-                "date": "Tue, 14 Feb 2017 16:04:50 GMT",
-                "content-length": "1494",
+                "x-amzn-requestid": "31e2d30b-78e2-11e7-a237-71234a963c42", 
+                "date": "Fri, 04 Aug 2017 06:57:34 GMT", 
+                "content-length": "1430", 
                 "content-type": "text/xml"
             }
         }
