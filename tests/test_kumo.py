@@ -9,9 +9,11 @@ from nose.tools import assert_equal, assert_true, \
 import pytest
 
 from gcdt.kumo_core import _generate_parameters, \
-    load_cloudformation_template, generate_template_file, _get_stack_name, \
+    load_cloudformation_template, write_template_to_file, _get_stack_name, \
     _get_stack_policy, _get_stack_policy_during_update, _get_conf_value, \
-    _generate_parameter_entry, _call_hook
+    _generate_parameter_entry, _call_hook, generate_template
+from gcdt.utils import fix_old_kumo_config
+from gcdt.gcdt_config_reader import read_json_config
 
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from gcdt_testtools.helpers import Bunch
@@ -64,7 +66,7 @@ def test_simple_cloudformation_stack():
 
     expected_templ_file_name = '%s-generated-cf-template.json' % \
                                _get_stack_name(config)
-    actual = generate_template_file(config, cloudformation)
+    actual = write_template_to_file(config, generate_template({}, config, cloudformation))
     assert_equal(actual, expected_templ_file_name)
 
 
@@ -250,3 +252,51 @@ def test_new_cloudformation_template_hooks():
     assert module.COUNTER['register'] == 1
     # currently deregister is not called (but we need that later!)
     #assert module.COUNTER['deregister'] == 1
+
+
+def test_generate_template_no_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation.py')
+    )
+    context = {}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+    expected_template_body = read_json_config(
+        here('resources/simple_cloudformation_stack/expected_template_body.json')
+    )
+    template_body = json.loads(
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    )
+    assert template_body == expected_template_body
+
+
+def test_generate_template_with_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation_with_arguments.py')
+    )
+    context = {'foo': 'bar'}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+    expected_template_body = read_json_config(
+        here('resources/simple_cloudformation_stack/expected_template_body.json')
+    )
+    template_body = json.loads(
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    )
+    assert template_body == expected_template_body
+
+
+def test_generate_template_invalid_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation_invalid_arguments.py')
+    )
+    context = {'foo': 'bar'}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+
+    with pytest.raises(Exception) as einfo:
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    assert einfo.match(r"Arguments of 'generate_template' not as expected: \['invalid_context', 'invalid_config'\]")

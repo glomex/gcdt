@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.428] - 2017-08-03
+### Added
+- kumo: use 'context' and 'config' in cloudformation templates (#353)
+- kumo: add 'stack_output' attribute to context (#353)
+- added section on version pinning to installation guide
+
 ## [0.1.427] - 2017-08-01
 ### Added
 - yugen: cacheClusterEnabled setting (#328)

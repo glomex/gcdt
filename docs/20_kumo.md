@@ -2,9 +2,11 @@
 
 `kumo` (雲 from Japanese: cloud) is gcdts cloudformation deploy tool.
 
+
 ### Related documents
 
 * [AWS CloudFormation service](https://aws.amazon.com/cloudformation/)
+
 
 ### Usage
 
@@ -24,6 +26,7 @@ Usage:
 -h --help           show this
 -v --verbose        show debug messages
 ```
+
 
 ### Commands
 
@@ -139,6 +142,7 @@ Will load the config file named `gcdt_dev_eu-west-1.json`
 2. create and fill `settings_<env>.conf` with valid parameters for your CloudFormation template
 3. call `kumo deploy` to deploy your stack to AWS
 
+
 ### Kumo lifecycle hooks
 
 Kumo lifecycle hooks work exactly like gcdt lifecycle hooks but have a specialized integration for kumo templates.
@@ -159,9 +163,15 @@ def deregister():
     gcdt_signals.initialized.disconnect(my_hook)
 ```
 
+One kumo speciality for the `command_finalized` hook is that you can access the context attribute 'stack_output'. to access 
+and use outputs of your stack within the hook implementation.
+
+
 ### Kumo legacy hooks
 
-The hooks in this section are deprecated please use gcdt lifecycle hooks (see above)
+The hooks in this section are deprecated please use gcdt lifecycle hooks (see above).
+
+**Please note the legacy hooks will be removed with the next minor release (v 0.2.0).**
 
 kumo offers numerous hook functions that get called during the lifecycle of a kumo deploy run:
 
@@ -189,6 +199,7 @@ Multiple ways of using parameters in your hook functions:
 * use all arguments as keyword arguments or mix.
 * with version 0.0.77 we decided to move away from using boto_sessions towards awsclient (more flexible and low-level).
 
+
 ### Using gcdt functionality in your cloudformation templates
 
 Historically `cloudformation.py` templates imported functionality from gcdt and glomex_utils packages. With version 0.0.77 we consolidated and copied `get_env` over to gcdt.utils.
@@ -203,6 +214,29 @@ The following functionality requires `awsclient` to lookup information from AWS.
 * gcdt.servicediscovery: get_outputs_for_stack
 * gcdt.route53: create_record
 * gcdt.kumo_util: ensure_ebs_volume_tags_autoscaling_group
+
+
+### Accessing context and config in cloudformation
+
+In the last few month we learned about a few usecases where it is desired to have access to config and context within your template. We had some workarounds using hooks but now there is a proper implementation for this feature.
+
+In order to access context and config in your `cloudformation.py` you need to add both `context` and `config` as arguments to the `generate_template? function of your template:
+
+``` python
+def generate_template(context, config):
+    template = troposphere.Template()
+    ph.initialize(template, 'miaImportProcessor')
+    assemble_particles(template, context, config)
+    return template.to_json()
+```
+
+In case you do not want to use this information in your template you don't have to use it (like before).
+
+``` python
+def generate_template():
+    ...
+```
+
 
 ### Stack Policies
 kumo does offer support for stack policies. It has a default stack policy that will get applied to each stack:
@@ -248,6 +282,7 @@ If you want to lock down your stack even more you can implement two functions in
 * * the policy that gets applied during updates
 
 These should return a valid stack policy document which is then preferred over the default value.
+
 
 ### Signal handling
 

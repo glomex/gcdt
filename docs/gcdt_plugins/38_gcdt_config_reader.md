@@ -68,6 +68,15 @@ On a more technical note: all ignore patterns you provide are consolidated by th
 
 The gcdt_config_reader plugin supports a `baseconfig` property which gives a basepath. This works with all supported config file formats like json, yaml and .py config files.
 
+``` json
+{
+  "baseconfig": "baseconfig",
+  "ramuda": {
+    "lambda": {
+      "runtime": "nodejs4.3",
+  ...
+```
+
 With that you can for example implement the following config structure with your config files:
  
 ``` text

@@ -61,7 +61,7 @@ def delete_bucket(awsclient, bucket):
         log.debug('deleting keys')
         objects = client_s3.list_objects_v2(Bucket=bucket)
         if objects['KeyCount'] > 0:
-            delete={'Objects': [{'Key': k['Key']} for k in objects['Contents']]}
+            delete = {'Objects': [{'Key': k['Key']} for k in objects['Contents']]}
             client_s3.delete_objects(Bucket=bucket, Delete=delete)
 
         log.debug('deleting bucket')
@@ -87,6 +87,18 @@ def upload_file_to_s3(awsclient, bucket, key, filename):
     etag = response.get('ETag')
     version_id = response.get('VersionId', None)
     return etag, version_id
+
+
+def remove_file_from_s3(awsclient, bucket, key):
+    """Remove a file from an AWS S3 bucket.
+
+    :param awsclient:
+    :param bucket:
+    :param key:
+    :return:
+    """
+    client_s3 = awsclient.get_client('s3')
+    response = client_s3.delete_object(Bucket=bucket, Key=key)
 
 
 def ls(awsclient, bucket, prefix=None):

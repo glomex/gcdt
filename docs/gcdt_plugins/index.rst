@@ -7,7 +7,7 @@ Plugins for gcdt (gcdt-plugins)
    02_introduction
    10_overview
    15_plugin_mechanism
-   20_config
+   20_context_and_config
    38_gcdt_config_reader
    50_gcdt_lookups
    55_gcdt_bundler

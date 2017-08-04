@@ -23,7 +23,7 @@ kumo particles are perfectly optional. There is no tight coupling! You can total
 * complexity is handled in particle
 
 
-## Detailed requirements
+### Detailed requirements
 
 * particle has default parameters that can be overridden
 * particle provides default permission that can be overridden
