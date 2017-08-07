@@ -488,7 +488,7 @@ def _update_stack(awsclient, context, conf, cloudformation, parameters,
                 awsclient, conf, generate_template(context, conf, cloudformation))
         else:
             # if we have no artifacts bucket configured then upload the template directly
-            request['TemplateBody'] = cloudformation.generate_template(context, conf)
+            request['TemplateBody'] = generate_template(context, conf, cloudformation)
 
         response = client_cf.update_stack(**request)
 

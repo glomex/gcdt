@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.429] - 2017-08-07
+### Added
+- kumo: fixed compatibility issue with templates in update case (#357)
+
 ## [0.1.428] - 2017-08-03
 ### Added
 - kumo: use 'context' and 'config' in cloudformation templates (#353)
