@@ -48,6 +48,7 @@ def get_ssl_certificate(awsclient, domain):
     client_iam = awsclient.get_client('iam')
     response = client_iam.list_server_certificates()
     arn = ""
+    # TODO needs sorting for longest valid period (not expired)
     for cert in response["ServerCertificateMetadataList"]:
         if domain in cert["ServerCertificateName"]:
             print(cert['Expiration'])
