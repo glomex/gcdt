@@ -55,6 +55,11 @@ will print the version of gcdt you are using
             "targetStage": "dev",
             "apiKey": "xxx",
             "cacheClusterEnabled": true
+            "methodSettings": {
+                "/cdn/usage/inGbs/byAccessToken/GET": {
+                    "cachingEnabled": true
+                }
+            }
         }
     },
     "ramuda": {
@@ -77,6 +82,8 @@ will print the version of gcdt you are using
 ```
 
 Set the config attribute `cacheClusterEnabled` to `true` in your gcdt_<env>.json config file to enable a cache cluster for the specified stage resource.
+
+Set the config attribute `methodSettings` contains your method specific settings. The `setting_key` is defined as <resource_path>/<http_method>. So it is important that your path contains the http_method (GET, PUT, OPTIONS, etc.), too. You can specify method setting properties as defined in the AWS docs: https://botocore.readthedocs.io/en/latest/reference/services/apigateway.html#APIGateway.Client.update_stage like for example 'cachingEnabled', 'loggingLevel', etc.
 
 
 #### Setting the ENV variable

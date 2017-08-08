@@ -1,0 +1,6 @@
+MoinMoin fin0007m!
+Please consider an update to gcdt version: 0.1.388
+create api key: jenkins-yugen-testkey
+{u'description': u'Created for unittest-gcdt-sample-api-dev', 'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 201, 'RequestId': '4e292b7d-45d9-11e7-a77a-a932af532532', 'HTTPHeaders': {'date': 'Wed, 31 May 2017 08:15:28 GMT', 'x-amzn-requestid': '4e292b7d-45d9-11e7-a77a-a932af532532', 'content-length': '243', 'content-type': 'application/json', 'connection': 'keep-alive'}}, u'enabled': True, u'value': u'Sakn8Y1x7rdMVOYqZQY2hllr1HrGQE8Fo1k3SM30', u'stageKeys': [], u'lastUpdatedDate': datetime.datetime(2017, 5, 31, 10, 15, 27, tzinfo=tzlocal()), u'createdDate': datetime.datetime(2017, 5, 31, 10, 15, 27, tzinfo=tzlocal()), u'id': u'sros591etd', u'name': u'jenkins-yugen-testkey'}
+Add this api key 'sros591etd' to your api.conf
+Bye fin0007m. Talk to you soon!

@@ -6,7 +6,8 @@ import textwrap
 from nose.tools import assert_equal
 
 from gcdt.yugen_core import _compile_template, _arn_to_uri, \
-    _get_region_and_account_from_lambda_arn
+    _get_region_and_account_from_lambda_arn, \
+    _convert_method_settings_into_operations
 from gcdt_testtools.helpers import create_tempfile, cleanup_tempfiles
 
 
@@ -65,4 +66,42 @@ def test_get_region_and_account_from_lambda_arn():
 def test_arn_to_uri():
     lambda_arn = 'arn:aws:lambda:eu-west-1:644239850139:function:dp-dev-process-keyword-extraction'
     uri = _arn_to_uri(lambda_arn, 'ACTIVE')
-    assert_equal(uri, 'arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:644239850139:function:dp-dev-process-keyword-extraction:ACTIVE/invocations')
+    assert_equal(uri,
+                 'arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:644239850139:function:dp-dev-process-keyword-extraction:ACTIVE/invocations')
+
+
+def test_convert_method_settings_into_operations():
+    method_settings = {
+        '/billing/MES/final/GET': {
+            'cachingEnabled': False,
+            'throttlingBurstLimit': 123
+        },
+        '/billing/MES/sth/GET': {
+            'cachingEnabled': True,
+            'throttlingBurstLimit': 321
+        }
+    }
+    expected = [
+        {
+            u'op': u'replace',
+            u'path': u'/billing/MES/final/GET/caching/enabled',
+            u'value': u'false'
+        },
+        {
+            u'op': u'replace',
+            u'path': u'/billing/MES/final/GET/throttling/burstLimit',
+            u'value': 123
+        },
+        {
+            u'op': u'replace',
+            u'path': u'/billing/MES/sth/GET/caching/enabled',
+            u'value': u'true'
+        },
+        {
+            u'op': u'replace',
+            u'path': u'/billing/MES/sth/GET/throttling/burstLimit',
+            u'value': 321
+        }
+    ]
+    actual = _convert_method_settings_into_operations(method_settings)
+    assert actual == expected

@@ -64,16 +64,17 @@ def list_apis(awsclient):
 
 
 def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
-               lambdas, cache_cluster_enabled):
+               lambdas, cache_cluster_enabled, method_settings=None):
     """Deploy API Gateway to AWS cloud.
-    
+
     :param awsclient:
     :param api_name:
     :param api_description:
-    :param stage_name: 
-    :param api_key: 
-    :param lambdas: 
+    :param stage_name:
+    :param api_key:
+    :param lambdas:
     :param cache_cluster_enabled:
+    :param method_settings:
     """
     if not _api_exists(awsclient, api_name):
         if os.path.isfile(SWAGGER_FILE):
@@ -90,6 +91,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
             _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
+            _update_stage(awsclient, api['id'], stage_name, method_settings)
             _wire_api_key(awsclient, api_name, api_key, stage_name)
         else:
             print('API name unknown')
@@ -104,6 +106,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
             _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
+            _update_stage(awsclient, api['id'], stage_name, method_settings)
         else:
             print('API name unknown')
 
@@ -434,6 +437,71 @@ def _ensure_correct_base_path_mapping(awsclient, domain_name, base_path,
             patchOperations=operations)
 
 
+def _update_stage(awsclient, api_id, stage_name, method_settings):
+    """Helper to apply method_settings to stage
+
+    :param awsclient:
+    :param api_id:
+    :param stage_name:
+    :param method_settings:
+    :return:
+    """
+    # settings docs in response: https://botocore.readthedocs.io/en/latest/reference/services/apigateway.html#APIGateway.Client.update_stage
+    client_api = awsclient.get_client('apigateway')
+    operations = _convert_method_settings_into_operations(method_settings)
+    if operations:
+        print('update method settings for stage')
+        response = client_api.update_stage(
+            restApiId=api_id,
+            stageName=stage_name,
+            patchOperations=operations)
+
+
+def _resolve_key(key):
+    """Helper to resolve key into /feature/setting
+
+    :param key:
+    :return:
+    """
+    map = {
+        'metricsEnabled': '/metrics/enabled',
+        'loggingLevel': '/logging/loglevel',
+        'dataTraceEnabled': '/logging/dataTrace',
+        'throttlingBurstLimit': '/throttling/burstLimit',
+        'throttlingRateLimit': '/throttling/rateLimit',
+        'cachingEnabled': '/caching/enabled',
+        'cacheTtlInSeconds': '/caching/ttlInSeconds',
+        'cacheDataEncrypted': '/caching/dataEncrypted',
+        'requireAuthorizationForCacheControl': '/caching/requireAuthorizationForCacheControl',
+        'unauthorizedCacheControlHeaderStrategy': '/caching/unauthorizedCacheControlHeaderStrategy'
+    }
+    return map[key]
+
+
+def _convert_method_settings_into_operations(method_settings=None):
+    """Helper to handle the conversion of method_settings to operations
+
+    :param method_settings:
+    :return: list of operations
+    """
+    # operations docs here: https://tools.ietf.org/html/rfc6902#section-4
+    operations = []
+    if method_settings:
+        for method in method_settings.keys():
+            for key, value in method_settings[method].items():
+                if isinstance(value, bool):
+                    if value:
+                        value = 'true'
+                    else:
+                        value = 'false'
+                operations.append({
+                    'op': 'replace',
+                    'path': method + _resolve_key(key),
+                    'value': value
+                })
+    return operations
+
+
 def _base_path_mapping_exists(awsclient, domain_name, base_path):
     client_api = awsclient.get_client('apigateway')
     base_path_mappings = client_api.get_base_path_mappings(
@@ -587,23 +655,6 @@ def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
         and p.get('Effect') == 'Allow'
         and p.get('Principal', {}).get('Service') == AMAZON_API_PRINCIPAL
         ]
-
-
-'''
-# TODO: possible to consolidate this with the one for ramuda?
-def json2table(data):
-    filter_terms = ['ResponseMetadata']
-    table = []
-    try:
-        for k, v in filter(lambda k, v: k not in filter_terms,
-                           data.iteritems()):
-            table.append([k, str(v)])
-        return tabulate(table, tablefmt='fancy_grid')
-    except GracefulExit:
-        raise
-    except Exception as e:
-        return data
-'''
 
 
 def _custom_domain_name_exists(awsclient, domain_name):

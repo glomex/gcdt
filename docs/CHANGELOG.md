@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.430] - 2017-08-08
+### Added
+- yugen: implement cache settings on method level (#328)
+
 ## [0.1.429] - 2017-08-07
 ### Added
 - kumo: fixed compatibility issue with templates in update case (#357)

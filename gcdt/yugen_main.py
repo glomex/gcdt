@@ -49,13 +49,13 @@ def deploy_cmd(**tooldata):
     config = tooldata.get('config')
     awsclient = context.get('_awsclient')
 
-    #api_name = conf.get('api.name')
     api_name = config['api'].get('name')
     api_description = config['api'].get('description')
     target_stage = config['api'].get('targetStage')
     api_key = config['api'].get('apiKey')
     lambdas = get_lambdas(awsclient, config, add_arn=True)
-    cache_cluster_enabled=config['api'].get('cacheClusterEnabled', False)
+    cache_cluster_enabled = config['api'].get('cacheClusterEnabled', False)
+    method_settings = config['api'].get('methodSettings', {})
     exit_code = deploy_api(
         awsclient=awsclient,
         api_name=api_name,
@@ -63,7 +63,8 @@ def deploy_cmd(**tooldata):
         stage_name=target_stage,
         api_key=api_key,
         lambdas=lambdas,
-        cache_cluster_enabled=cache_cluster_enabled
+        cache_cluster_enabled=cache_cluster_enabled,
+        method_settings=method_settings
     )
     if 'customDomain' in config:
         domain_name = config['customDomain'].get('domainName')
