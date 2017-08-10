@@ -9,7 +9,7 @@ import re
 
 import maya
 
-from gcdt_logging import getLogger
+from .gcdt_logging import getLogger
 
 
 log = getLogger(__name__)
