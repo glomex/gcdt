@@ -116,8 +116,10 @@ def test_s3_upload(cleanup_buckets, awsclient):
     upload_conf = {
         'stack': {
             'StackName': "infra-dev-kumo-sample-stack",
-            'InstanceType': "t2.micro",
             'artifactBucket': "unittest-kumo-artifact-bucket"
+        },
+        'parameters': {
+            'InstanceType': "t2.micro"
         }
     }
 
