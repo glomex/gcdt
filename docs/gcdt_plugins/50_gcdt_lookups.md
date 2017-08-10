@@ -19,9 +19,30 @@ sample: `lookup:secret:slack.token`
 ### lookup ssl certificate
 
 format: `lookup:ssl:<stackname>:<output>`
-sample: `lookup:ssl:wildcard.glomex.com`
+sample: `lookup:ssl:*.infra.glomex.coud`
+sample: `lookup:ssl:*.infra.glomex.coud`
 
-'ssl' is configured as lookup by default so for each stack also the certificates are added to stackdata.
+'ssl' lookup uses the `server_certificate` functionality built into AWS IAM. It is configured default lookup so for each stack also the certificates are added to stackdata.
+
+I possible, please use the new acm lookup!
+
+
+### lookup acm certificate
+
+format: `lookup:acm:<name_1>:...:<name_n>:`
+sample: `lookup:acm:foo.mes.glomex.cloud:supercars.infra.glomex.cloud:*.dev.infra.glomex.cloud`
+
+'acm' lookup uses the AWS ACM (Certificate Manager) functionality. It is configured as default lookup.
+
+Features of the `acm lookup`:
+
+* pass a list of hostnames that should be secured.
+* check all certificates in ACM if the configured CN (DomainName) or SANs (SubjectAlternativeNames) (including wildcards) if they match for the given list of hostnames
+* the chosen certificates STATUS must be **ISSUED**
+* if there are multiple matches, use the one with the most distant expiry date
+* return the ARN of the certificate
+* wildcards for hosted zone are expressed with "*."
+* 'ERROR' in case a certificate matching the specified list of names can not be found
 
 
 ### lookup secret
@@ -37,6 +58,6 @@ lookup the 'slack.token' entry from credstash
 note that the `slack.token` lookup does not fail it the accounts credstash does not have the `slack.token` entry.
 
 
-### lookup baseami
+### DEPRECATED lookup baseami
 
 The `baseami` lookup is used lookup the baseami for cloudformation infrastructures.

@@ -9,6 +9,11 @@ import re
 
 import maya
 
+from gcdt_logging import getLogger
+
+
+log = getLogger(__name__)
+
 
 def parse_ts(ts):
     """
@@ -47,16 +52,15 @@ def get_outputs_for_stack(awsclient, stack_name):
 def get_ssl_certificate(awsclient, domain):
     client_iam = awsclient.get_client('iam')
     response = client_iam.list_server_certificates()
+    # sort by 'Expiration' to get the cert with the `most distant expiry date`
+    certs_ordered = sorted(response['ServerCertificateMetadataList'],
+                           key=lambda k: k['Expiration'], reverse=True)
     arn = ""
-    # TODO needs sorting for longest valid period (not expired)
-    for cert in response["ServerCertificateMetadataList"]:
+    for cert in certs_ordered:
         if domain in cert["ServerCertificateName"]:
-            print(cert['Expiration'])
-            #print(datetime.now(UTC()))
-            #if datetime.now(UTC()) > cert['Expiration']:
-            print(maya.now().datetime())
+            log.debug('cert expiration: %s', cert['Expiration'])
             if maya.now().datetime() > cert['Expiration']:
-                print("certificate has expired")
+                log.info('certificate has expired')
             else:
                 arn = cert["Arn"]
                 break
@@ -65,6 +69,7 @@ def get_ssl_certificate(awsclient, domain):
 
 def get_base_ami(awsclient, owners):
     """
+    DEPRECATED!!!
     return the latest version of our base AMI
     we can't use tags for this, so we have only the name as resource
     note: this functionality is deprecated since this only works for "old"
@@ -80,7 +85,6 @@ def get_base_ami(awsclient, owners):
         },
     ]
 
-    #latest_ts = datetime.fromtimestamp(0)
     latest_ts = maya.MayaDT(0).datetime(naive=True)
     latest_version = StrictVersion('0.0.0')
     latest_id = None
@@ -91,7 +95,7 @@ def get_base_ami(awsclient, owners):
         m = re.search(r'(Ops_Base-Image)_(\d+.\d+.\d+)_(\d+)$', i['Name'])
         if m:
             version = StrictVersion(m.group(2))
-            timestamp = m.group(3)
+            #timestamp = m.group(3)
             creation_date = parse_ts(i['CreationDate'])
 
             if creation_date > latest_ts and version >=latest_version:

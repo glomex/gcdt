@@ -38,7 +38,8 @@ DEFAULT_CONFIG = {
 # note this config is used in the config_reader to "overlay" the
 # gcdt_defaults of gcdt.
 CONFIG_READER_CONFIG = {
-    'lookups': ['secret', 'ssl', 'stack', 'baseami'],
+    # TODO remove baseami
+    'lookups': ['secret', 'ssl', 'stack', 'baseami', 'acm'],
     'plugins': {
         'gcdt_datadog_integration': {
             'datadog_api_key': 'lookup:secret:datadog.api_key'

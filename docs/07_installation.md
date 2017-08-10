@@ -180,7 +180,11 @@ No more 'pre_hook', 'pre_create_hook', 'pre_update_hook', 'post_create_hook', 'p
 
 ##### with v 0.2.x you explicitly need to install all used gcdt tools
  
-You need to install gcdt-tools (gcdt-kumo, gcdt-tenkai, gcdt-ramuda, gcdt-yugen). Please add the tools to your `requirements_gcdt.txt` like described in the installation section above. 
+You need to install gcdt-tools (gcdt-kumo, gcdt-tenkai, gcdt-ramuda, gcdt-yugen). Please add the tools to your `requirements_gcdt.txt` like described in the installation section above.
+
+##### with v 0.2.x we remove the deprecated ami lookup
+
+Newer glomex `base_ami` uses a different naming scheme. Consequently the ami lookup implemented in gcdt provides you with old base_ami ids. Current working mode is to put the ami id into credstash (key: 'ops.dev.base_ami').
 
 
 #### Updating gcdt from 0.0.x to 0.1.x
