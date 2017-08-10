@@ -9,8 +9,6 @@ import logging
 import botocore.session
 import pytest
 from awacs.aws import Action, Allow, Policy, Principal, Statement
-from gcdt_bundler.bundler import get_zipped_file
-from gcdt_lookups.lookups import _resolve_lookups
 
 from gcdt import utils
 from gcdt.ramuda_core import deploy_lambda
@@ -91,6 +89,7 @@ def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
     :param kwargs: additional kwargs are used in deploy_lambda
     :return:
     """
+    from gcdt_bundler.bundler import get_zipped_file
     settings_requirements()
 
     lambda_description = 'lambda created for unittesting ramuda deployment'
@@ -363,6 +362,7 @@ def file_reader(record_dir, filename, datatype=None):
 def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
                  location=None):
     """Helper for main tests to assemble tool data.
+    used in testing to read from 'gcdt_<env>.json' files
 
     :param awsclient:
     :param tool:
@@ -372,7 +372,7 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
     :param location:
     :return:
     """
-    # for testing to read from 'gcdt_<env>.json' files
+    from gcdt_lookups.lookups import _resolve_lookups
     if config is None:
         if config_base_name is None:
             config_base_name = 'gcdt'
