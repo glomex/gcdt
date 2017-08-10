@@ -23,7 +23,7 @@ sample: `lookup:ssl:*.infra.glomex.cloud`
 
 'ssl' lookup uses the `server_certificate` functionality built into AWS IAM. It is configured default lookup so for each stack also the certificates are added to stackdata.
 
-I possible, please use the new acm lookup!
+If possible, please use the new acm lookup!
 
 
 ### lookup acm certificate
