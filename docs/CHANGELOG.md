@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.432] - 2017-08-10
+### Fixed
+- gcdt: removed explicit requests dependency (#359)
+
 ## [0.1.431] - 2017-08-10
 ### Added
 - gcdt-lookups: added acm lookup documentation, do acm lookup by default (#359)
