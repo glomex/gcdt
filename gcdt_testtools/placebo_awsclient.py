@@ -8,12 +8,11 @@ from six import StringIO
 import glob
 import re
 from io import BytesIO
-from requests.structures import CaseInsensitiveDict
+from botocore.vendored.requests.structures import CaseInsensitiveDict
 
 from botocore.response import StreamingBody
 
 from gcdt.gcdt_awsclient import AWSClient
-#from gcdt.servicediscovery import UTC
 ZERO = datetime.timedelta(0)
 
 
