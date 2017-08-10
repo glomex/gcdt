@@ -19,8 +19,7 @@ sample: `lookup:secret:slack.token`
 ### lookup ssl certificate
 
 format: `lookup:ssl:<stackname>:<output>`
-sample: `lookup:ssl:*.infra.glomex.coud`
-sample: `lookup:ssl:*.infra.glomex.coud`
+sample: `lookup:ssl:*.infra.glomex.cloud`
 
 'ssl' lookup uses the `server_certificate` functionality built into AWS IAM. It is configured default lookup so for each stack also the certificates are added to stackdata.
 
