@@ -1,0 +1,34 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "defdbcf9-7e9f-11e7-9fda-11f9e8520ff5", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "defdbcf9-7e9f-11e7-9fda-11f9e8520ff5", 
+                "date": "Fri, 11 Aug 2017 14:17:55 GMT", 
+                "content-length": "720", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "StackResourceSummaries": [
+            {
+                "ResourceType": "AWS::S3::Bucket", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-s3bucket1-xu5ukwqxp8wa", 
+                "LastUpdatedTimestamp": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 45, 
+                    "microsecond": 326000, 
+                    "year": 2017, 
+                    "day": 11, 
+                    "minute": 17
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "S3Bucket1"
+            }
+        ]
+    }
+}
