@@ -81,7 +81,9 @@ def get_parameter_diff(awsclient, config):
             print(
                 'StackName is not configured, could not create parameter diff')
             return None
-    except:
+    except GracefulExit:
+        raise
+    except Exception:
         # probably the stack is not existent
         return None
 
@@ -181,6 +183,8 @@ def _get_stack_state(client_cf, stack_name):
         if response['Stacks']:
             stack = response['Stacks'][0]
             return stack['StackStatus']
+    except GracefulExit:
+        raise
     except:
         print('Failed to get stack state.')
         return
@@ -654,7 +658,6 @@ def _get_artifact_bucket(conf):
 def write_template_to_file(conf, template_body):
     """Writes the template to disk
     """
-    #template_body =
     template_file_name = _get_stack_name(conf) + '-generated-cf-template.json'
     with open(template_file_name, 'w') as opened_file:
         opened_file.write(template_body)
@@ -680,6 +683,7 @@ def generate_template(context, config, cloudformation):
         raise Exception('Arguments of \'generate_template\' not as expected: %s' % spec)
 
 
+# TODO move to utils and add tests!!!
 def all_pages(method, request, accessor, cond=None):
     """Helper to process all pages using botocore service methods (exhausts NextToken).
     note: `cond` is optional... you can use it to make filtering more explicit
@@ -714,6 +718,101 @@ def all_pages(method, request, accessor, cond=None):
     return result
 
 
+def _stop_ec2_instances(awsclient, ec2_instances, wait=True):
+    """Helper to stop ec2 instances.
+    By default it waits for instances to stop.
+
+    :param awsclient:
+    :param ec2_instances:
+    :param wait: waits for instances to stop
+    :return:
+    """
+    client_ec2 = awsclient.get_client('ec2')
+
+    # get running instances
+    running_instances = all_pages(
+        client_ec2.describe_instance_status,
+        {
+            'InstanceIds': ec2_instances,
+            'Filters': [{
+                'Name': 'instance-state-name',
+                'Values': ['pending', 'running']
+            }]
+        },
+        lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
+    )
+
+    if running_instances:
+        log.info('Stopping EC2 instances: %s', running_instances)
+        client_ec2.stop_instances(InstanceIds=running_instances)
+
+        if wait:
+            # wait for instances to stop
+            waiter_inst_stopped = client_ec2.get_waiter('instance_stopped')
+            waiter_inst_stopped.wait(InstanceIds=running_instances)
+
+
+def _start_ec2_instances(awsclient, ec2_instances, wait=True):
+    """Helper to start ec2 instances
+
+    :param awsclient:
+    :param ec2_instances:
+    :param wait: waits for instances to start
+    :return:
+    """
+    client_ec2 = awsclient.get_client('ec2')
+
+    # get stopped instances
+    stopped_instances = all_pages(
+        client_ec2.describe_instance_status,
+        {
+            'InstanceIds': ec2_instances,
+            'Filters': [{
+                'Name': 'instance-state-name',
+                'Values': ['stopping', 'stopped']
+            }],
+            'IncludeAllInstances': True
+        },
+        lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
+    )
+
+    if stopped_instances:
+        # start all stopped instances
+        log.info('Starting instances: %s', stopped_instances)
+        client_ec2.start_instances(InstanceIds=stopped_instances)
+
+        if wait:
+            # wait for instances to come up
+            waiter_inst_running = client_ec2.get_waiter('instance_running')
+            waiter_inst_running.wait(InstanceIds=stopped_instances)
+
+            # wait for status checks
+            waiter_status_ok = client_ec2.get_waiter('instance_status_ok')
+            waiter_status_ok.wait(InstanceIds=stopped_instances)
+
+
+def _filter_db_instances_by_status(awsclient, db_instances, status_list):
+    """helper to select dbinstances.
+
+    :param awsclient:
+    :param db_instances:
+    :param status_list:
+    :return: list of db_instances that match the filter
+    """
+    client_rds = awsclient.get_client('rds')
+    db_instances_with_status = []
+
+    for db in db_instances:
+        response = client_rds.describe_db_instances(
+            DBInstanceIdentifier=db
+        )
+        for entry in response.get('DBInstances', []):
+            if entry['DBInstanceStatus'] in status_list:
+                db_instances_with_status.append(db)
+
+    return db_instances_with_status
+
+
 def stop_stack(awsclient, conf):
     """Stop an existing stack on AWS cloud.
 
@@ -735,6 +834,7 @@ def stop_stack(awsclient, conf):
             client_cfn = awsclient.get_client('cloudformation')
             client_autoscaling = awsclient.get_client('autoscaling')
             client_ec2 = awsclient.get_client('ec2')
+            client_rds = awsclient.get_client('rds')
 
             resources = all_pages(
                 client_cfn.list_stack_resources,
@@ -770,30 +870,27 @@ def stop_stack(awsclient, conf):
                     lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
                                if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
                 )
+                _stop_ec2_instances(awsclient, instances)
 
-                # get running instances
-                running_instances = all_pages(
-                    client_ec2.describe_instance_status,
-                    {
-                        'InstanceIds': instances,
-                        'Filters': [{
-                            'Name': 'instance-state-name',
-                            'Values': ['pending', 'running']
-                        }]
-                    },
-                    lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
-                )
+            # stopping ec2 instances
+            # TODO: filter instances we want to stop!!!!!!!
+            #instances = [
+            #    r['InstanceId'] for r in resources
+            #    if r['ResourceType'] == 'AWS::EC2::Instance'
+            #]
+            #_stop_ec2_instances(awsclient, instances)
 
-                # stop running instances
-                if running_instances:
-                    log.info('Stopping instances: %s', running_instances)
-                    client_ec2.stop_instances(InstanceIds=running_instances)
-
-                # wait for instances to come up
-                waiter_inst_stopped = client_ec2.get_waiter('instance_stopped')
-                waiter_inst_stopped.wait(InstanceIds=running_instances)
-
-                # TODO stop RDS
+            # stopping db instances
+            db_instances = [
+                r['PhysicalResourceId'] for r in resources
+                if r['ResourceType'] == 'AWS::RDS::DBInstance'
+            ]
+            running_db_instances = _filter_db_instances_by_status(
+                awsclient, db_instances, ['available']
+            )
+            for db in running_db_instances:
+                log.info('Stopping RDS instance \'%s\'', db)
+                client_rds.stop_db_instance(DBInstanceIdentifier=db)
 
     return exit_code
 
@@ -819,6 +916,7 @@ def start_stack(awsclient, conf):
             client_cfn = awsclient.get_client('cloudformation')
             client_autoscaling = awsclient.get_client('autoscaling')
             client_ec2 = awsclient.get_client('ec2')
+            client_rds = awsclient.get_client('rds')
 
             resources = all_pages(
                 client_cfn.list_stack_resources,
@@ -837,7 +935,30 @@ def start_stack(awsclient, conf):
             response = client_autoscaling.describe_scaling_process_types()
             scaling_process_types = [t['ProcessName'] for t in response.get('Processes', [])]
 
-            # TODO start RDS
+            # starting db instances
+            db_instances = [
+                r['PhysicalResourceId'] for r in resources
+                if r['ResourceType'] == 'AWS::RDS::DBInstance'
+            ]
+            stopped_db_instances = _filter_db_instances_by_status(
+                awsclient, db_instances, ['stopped']
+            )
+            for db in stopped_db_instances:
+                log.info('Starting RDS instance \'%s\'', db)
+                client_rds.start_db_instance(DBInstanceIdentifier=db)
+
+            # wait for db instances to become available
+            for db in stopped_db_instances:
+                waiter_db_available = client_rds.get_waiter('db_instance_available')
+                waiter_db_available.wait(DBInstanceIdentifier=db)
+
+            # starting ec2 instances
+            # TODO check if this is the instances we want to start!!!!!
+            #instances = [
+            #    r['InstanceId'] for r in resources
+            #    if r['ResourceType'] == 'AWS::EC2::Instance'
+            #]
+            #_start_ec2_instances(awsclient, instances)
 
             for asg in autoscaling_groups:
                 # find instances in autoscaling group
@@ -847,33 +968,7 @@ def start_stack(awsclient, conf):
                     lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
                                if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
                 )
-
-                # get stopped instances
-                stopped_instances = all_pages(
-                    client_ec2.describe_instance_status,
-                    {
-                        'InstanceIds': instances,
-                        'Filters': [{
-                            'Name': 'instance-state-name',
-                            'Values': ['stopping', 'stopped']
-                        }],
-                        'IncludeAllInstances': True
-                    },
-                    lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
-                )
-
-                if stopped_instances:
-                    # start all stopped instances
-                    log.info('Starting instances: %s', stopped_instances)
-                    client_ec2.start_instances(InstanceIds=stopped_instances)
-
-                    # wait for instances to come up
-                    waiter_inst_running = client_ec2.get_waiter('instance_running')
-                    waiter_inst_running.wait(InstanceIds=stopped_instances)
-
-                    # wait for status checks
-                    waiter_status_ok = client_ec2.get_waiter('instance_status_ok')
-                    waiter_status_ok.wait(InstanceIds=stopped_instances)
+                _start_ec2_instances(awsclient, instances)
 
                 # resume all autoscaling processes
                 log.info('Resuming all autoscaling processes for \'%s\'', asg['LogicalResourceId'])
