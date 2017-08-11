@@ -5,7 +5,7 @@ import pytest
 import regex
 
 from gcdt.kumo_main import version_cmd, list_cmd, preview_cmd, dot_cmd, \
-    generate_cmd, deploy_cmd, delete_cmd, load_template
+    generate_cmd, deploy_cmd, delete_cmd, load_template, start_cmd, stop_cmd
 from gcdt.kumo_core import _get_stack_state
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
@@ -91,11 +91,21 @@ def test_generate_cmd(awsclient, simple_cloudformation_stack_folder):
 
 @pytest.mark.aws
 @check_preconditions
-def test_deploy_delete_cmds(awsclient, simple_cloudformation_stack_folder):
+def test_basic_lifecycle_cmds(awsclient, simple_cloudformation_stack_folder):
+    # note this only covers parts of the lifecycle
+    # a more sorrow lifecycle test using `gcdt-sample-stack` is contained
+    # in the gcdt PR builder lifecycle
     tooldata = get_tooldata(awsclient, 'kumo', 'deploy')
     assert deploy_cmd(False, **tooldata) == 0
     assert _get_stack_state(awsclient.get_client('cloudformation'),
                             'infra-dev-kumo-sample-stack') in ['CREATE_COMPLETE']
+
+    tooldata['context']['command'] = 'stop'
+    assert stop_cmd(**tooldata) == 0
+
+    tooldata['context']['command'] = 'start'
+    assert start_cmd(**tooldata) == 0
+
     tooldata['context']['command'] = 'delete'
     assert delete_cmd(True, **tooldata) == 0
     assert _get_stack_state(awsclient.get_client('cloudformation'),
