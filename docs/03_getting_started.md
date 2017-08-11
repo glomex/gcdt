@@ -140,7 +140,7 @@ Run your first infrastructure deployment. It's really easy:
 ```bash
 $ kumo deploy
 ```
-![Kumo deploy output](_static/gifs/kumo_deploy_output.gif "Kumo_Deploy_Output")
+![Kumo deploy output](/_static/gifs/kumo_deploy_output.gif "Kumo_Deploy_Output")
 **More information about `kumo` can be found in [docs](http://gcdt.readthedocs.io/en/latest/20_kumo.html)**
 
 

@@ -13,7 +13,6 @@
 To see available commands, call this:
 
 ```bash
-$ tenkai
 Usage:
         tenkai bundle [-v]
         tenkai deploy [-v]
@@ -37,7 +36,7 @@ codedeploy -> folder containing your deployment bundle
 
 codedeploy_env.conf -> settings for your code
 
-```json
+``` js
 "codedeploy": {
     "applicationName": "mep-dev-cms-stack2-mediaExchangeCms-F5PZ6BM2TI8",
     "deploymentGroupName": "mep-dev-cms-stack2-mediaExchangeCmsDg-1S2MHZ0NEB5MN",
@@ -66,7 +65,7 @@ If you need a convenient way of using the stack output during codedeploy on your
 #### Adding a settings.json file
 
 tenkai supports a `settings` section. If it is used a `settings.json` file is added to the zip bundle containing the values. You can specify the settings within the `tenkai` section.
-``` json
+``` js
     ...
     "settings": {
         "MYVALUE": "FOO"
@@ -75,7 +74,7 @@ tenkai supports a `settings` section. If it is used a `settings.json` file is ad
 
 You can use lookups like for the rest of the configuration. Note that the values are looked up BEFORE the the instance is deployed via codedeploy. If values change during the instance lifecycle it does not recognise the changes. For values that must be updated you should lookup the values in your code using for example credstash.
 
-``` json
+``` js
     ...
     "settings": {
         "accountId": "lookup:stack:infra-dev:AWSAccountId"
@@ -86,7 +85,7 @@ You can use lookups like for the rest of the configuration. Note that the values
 #### Configure log group
 In case `tenkai deploy` fails we attempt to provide the log output from the ec2 instance to ease your troubleshooting. The default log group is '/var/log/messages'. In case your ec2 instances are configured to log into another log group you can provide the necessary log group configuration to tenkai like this:
 
-``` json
+``` js
 "tenkai": {
     ...
     "deployment": {

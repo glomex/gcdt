@@ -15,13 +15,12 @@ from tempfile import NamedTemporaryFile
 
 from clint.textui import colored
 from pyspin.spin import Default, Spinner
-from tabulate import tabulate
 
 from . import utils
 from .kumo_core import get_parameter_diff, delete_stack, \
     deploy_stack, write_template_to_file, list_stacks, create_change_set, \
     describe_change_set, load_cloudformation_template, call_pre_hook, \
-    generate_template
+    generate_template, stop_stack, start_stack
 from .kumo_viz import cfn_viz, svg_output
 from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
@@ -34,8 +33,10 @@ DOC = '''Usage:
         kumo delete -f [-v]
         kumo generate [-v]
         kumo preview [-v]
-        kumo version
         kumo dot [-v]
+        kumo stop [-v]
+        kumo start [-v]
+        kumo version
 
 -h --help           show this
 -v --verbose        show debug messages
@@ -143,6 +144,30 @@ def preview_cmd(**tooldata):
         # so we delete the stack in "REVIEW" state
         # more details here: https://github.com/glomex/gcdt/issues/73
         delete_stack(awsclient, conf, feedback=False)
+
+
+@cmd(spec=['stop'])
+def stop_cmd(**tooldata):
+    context = tooldata.get('context')
+    conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    #cloudformation = load_template()
+
+    exit_code = stop_stack(awsclient, conf)
+    return exit_code
+
+
+@cmd(spec=['start'])
+def start_cmd(**tooldata):
+    context = tooldata.get('context')
+    conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    #cloudformation = load_template()
+
+    exit_code = start_stack(awsclient, conf)
+    return exit_code
 
 
 def main():

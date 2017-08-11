@@ -63,6 +63,7 @@ def filter_log_events(awsclient, log_group_name, start_ts, end_ts=None):
     :return: list of log entries
     """
     client_logs = awsclient.get_client('logs')
+    # TODO use all_pages instead!
     logs = []
     next_token = None
     while True:
@@ -209,6 +210,7 @@ def get_log_events(awsclient, log_group_name, log_stream_name, start_ts=None):
         request['startTime'] = start_ts
 
     # TODO exhaust the events!
+    # TODO use all_pages !
     response = client_logs.get_log_events(**request)
 
     if 'events' in response and response['events']:

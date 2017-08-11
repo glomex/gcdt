@@ -13,7 +13,6 @@
 To see available commands, call this:
 
 ```bash
-$ ramuda
 Usage:
         ramuda clean
         ramuda bundle [--keep] [-v]
@@ -42,7 +41,6 @@ Options:
 --end=end               log end UTC '2017-06-28 14:25' or '2h', '4d', '6w', ...
 --tail                  continuously output logs (can't use '--end'), stop 'Ctrl-C'
 ```
-
 
 #### clean
 removes local bundle files.
@@ -250,7 +248,7 @@ sample gcdt_dev.json file:
 
 Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
 
-``` json
+``` js
 "lambda": {
     ...
     "logs": {
@@ -264,7 +262,7 @@ Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 1
 ramuda can upload your lambda functions to S3 instead of inline through the API.
 To enable this feature add this to the "ramuda" section of your `gcdt_<env>.json` config file:
 
-``` json
+``` js
 "deployment": {
     "region": "eu-west-1",
     "artifactBucket": "7finity-$PROJECT-deployment"
@@ -280,7 +278,7 @@ gcdt supports the `nodejs4.3`, `nodejs6.10`, `python2.7`, `python3.6` runtimes.
 
 Add the runtime config to the `lambda` section of your gcdt configuration.
 
-``` json
+``` js
     "runtime": "nodejs4.3"
 ```
 
@@ -300,7 +298,7 @@ Note: for this to work you need to **have npm installed** on the machine you wan
 
 Ramuda supports AWS Lambda environment variables. You can specify them within the `lambda` section.
 
-``` json
+``` js
     ...
     "environment": {
         "MYVALUE": "FOO"
@@ -314,7 +312,7 @@ More information you can find in [AWS docs](http://docs.aws.amazon.com/lambda/la
 
 Ramuda supports a settings section. If used a `settings.json` file is added to the zip bundle. You can specify the settings within the `ramuda` section.
 
-``` json
+``` js
     ...
     "settings": {
         "MYVALUE": "FOO"
@@ -323,7 +321,7 @@ Ramuda supports a settings section. If used a `settings.json` file is added to t
 
 You can use lookups like for the rest of the configuration. Note that the values are looked up BEFORE the AWS Lambda function is deployed. If values change during the AWS Lambda function lifecycle it does not recognise the changes. For values that must be updated you should lookup the values in your code using for example credstash.
 
-``` json
+``` js
     ...
     "settings": {
         "accountId": "lookup:stack:infra-dev:AWSAccountId"
@@ -335,7 +333,7 @@ You can use lookups like for the rest of the configuration. Note that the values
 
 gcdt can be used to easily schedule functions to occur on regular intervals. Just list your expressions to schedule them using cron or rate syntax in your gcdt_<env>.json config file like this:
 
-``` json
+``` js
 ...
 "events": [{
     "event_source": {
@@ -355,7 +353,7 @@ Similarly, you can have your functions execute in response to events that happen
 
 In your gcdt_<env>.json config file, define your event sources. The following sample config will execute your AWS Lambda function in response to new objects in your my-bucket S3 bucket. Note that your function must accept event and context parameters.
 
-``` json
+``` js
 ...
 "events": [{
     "event_source": {
@@ -368,7 +366,7 @@ In your gcdt_<env>.json config file, define your event sources. The following sa
 
 Similarly, for a Simple Notification Service (SNS) event:
 
-``` json
+``` js
 ...
 "events": [{
     "event_source": {
@@ -380,7 +378,7 @@ Similarly, for a Simple Notification Service (SNS) event:
 
 Kinesis is slightly different as it is not event-based but pulling from a stream:
 
-``` json
+``` js
 ...
 "events": [{
     "event_source": {
@@ -410,7 +408,7 @@ Please put the environment specific configuration for your lambda function into 
 
 A sample `package.json` file to that defines a dependency to the `1337` npm module:
 
-``` json
+``` js
 {
   "name": "my-sample-lambda",
   "version": "0.0.1",

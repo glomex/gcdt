@@ -34,7 +34,7 @@ The following diagram gives an overview on the gcdt packages. Please note how we
 * gcdt plugins - packages to customize how you use gcdt
 * gcdt generators and tools - scaffolding and tools to make your work even more efficient
 
-![gcdt package structure overview](_static/images/gcdt-package-structure.png "gcdt package structure overview")
+![gcdt package structure overview](/_static/images/gcdt-package-structure.png "gcdt package structure overview")
 
 At glomex we have very few (currently one) gcdt packages we do not want to open-source. The glomex-config-reader has very opinionated defaults on how we use gcdt on our AWS infrastructure that is very specific and optimized for our media usecase.
 

@@ -10,7 +10,6 @@
 
 To see available commands, call this:
 ```bash
-$ yugen
 Usage:
         yugen deploy
         yugen delete -f
@@ -21,6 +20,7 @@ Usage:
         yugen apikey-delete
         yugen version
 ```
+
 #### deploy
 creates/updates an API from a given swagger file
 
@@ -46,7 +46,7 @@ will print the version of gcdt you are using
 
 `swagger.yaml` -> API definition in swagger with API Gateway extensions
 
-``` json
+``` js
 {
     "yugen": {
         "api": {

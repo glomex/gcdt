@@ -10,7 +10,7 @@ Create code bundles for tenkai and ramuda.
 ### Sample config
 
 bundling sample for kumo:
-``` json
+``` js
 ...
 "bundling": {
     "folders": [
@@ -23,7 +23,7 @@ bundling sample for kumo:
 ```
 
 Bundling sample for ramuda:
-``` json
+``` js
 ...
 "bundling": {
   "zip": "bundle.zip",

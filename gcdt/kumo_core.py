@@ -678,3 +678,210 @@ def generate_template(context, config, cloudformation):
         return cloudformation.generate_template(context, config)
     else:
         raise Exception('Arguments of \'generate_template\' not as expected: %s' % spec)
+
+
+def all_pages(method, request, accessor, cond=None):
+    """Helper to process all pages using botocore service methods (exhausts NextToken).
+    note: `cond` is optional... you can use it to make filtering more explicit
+    if you like. Alternatively you can do the filtering in the `accessor` which
+    is perfectly fine, too
+
+    :param method: service method
+    :param request: request dictionary for service call
+    :param accessor: function to extract data from each response
+    :param cond: filter function to return True / False based on a response
+    :return: list of collected resources
+    """
+    if cond is None:
+        cond = lambda x: True
+    result = []
+    next_token = None
+    while True:
+        if next_token:
+            request['nextToken'] = next_token
+        response = method(**request)
+        if cond(response):
+            data = accessor(response)
+            if data:
+                if isinstance(data, list):
+                    result.extend(data)
+                else:
+                    result.append(data)
+        if 'nextToken' not in response:
+            break
+        next_token = response['nextToken']
+
+    return result
+
+
+def stop_stack(awsclient, conf):
+    """Stop an existing stack on AWS cloud.
+
+    :param awsclient:
+    :param conf:
+    :return: exit_code
+    """
+    stack_name = _get_stack_name(conf)
+    exit_code = 0
+
+    # check for DisableStop
+    disable_stop = conf.get('deployment', {}).get('DisableStop', False)
+    if disable_stop:
+        log.warn('\'DisableStop\' is set - nothing to do!')
+    else:
+        if not stack_exists(awsclient, stack_name):
+            log.warn('Stack \'%s\' not deployed - nothing to do!', stack_name)
+        else:
+            client_cfn = awsclient.get_client('cloudformation')
+            client_autoscaling = awsclient.get_client('autoscaling')
+            client_ec2 = awsclient.get_client('ec2')
+
+            resources = all_pages(
+                client_cfn.list_stack_resources,
+                { 'StackName': stack_name },
+                lambda r: r['StackResourceSummaries']
+            )
+
+            autoscaling_groups = [
+                r for r in resources
+                if r['ResourceType'] == 'AWS::AutoScaling::AutoScalingGroup'
+            ]
+
+            # lookup all types of scaling processes
+            #    [Launch, Terminate, HealthCheck, ReplaceUnhealthy, AZRebalance
+            #     AlarmNotification, ScheduledActions, AddToLoadBalancer]
+            response = client_autoscaling.describe_scaling_process_types()
+            scaling_process_types = [t['ProcessName'] for t in response.get('Processes', [])]
+
+            for asg in autoscaling_groups:
+                # suspend all autoscaling processes
+                log.info('Suspending all autoscaling processes for \'%s\'', asg['LogicalResourceId'])
+                response = client_autoscaling.suspend_processes(
+                    AutoScalingGroupName=asg['PhysicalResourceId'],
+                    ScalingProcesses=scaling_process_types
+                )
+
+                # (resize autoscaling group (min, max = 0))  don't think this is necessary!
+
+                # find instances in autoscaling group
+                instances = all_pages(
+                    client_autoscaling.describe_auto_scaling_instances,
+                    {},
+                    lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
+                               if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
+                )
+
+                # get running instances
+                running_instances = all_pages(
+                    client_ec2.describe_instance_status,
+                    {
+                        'InstanceIds': instances,
+                        'Filters': [{
+                            'Name': 'instance-state-name',
+                            'Values': ['pending', 'running']
+                        }]
+                    },
+                    lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
+                )
+
+                # stop running instances
+                if running_instances:
+                    log.info('Stopping instances: %s', running_instances)
+                    client_ec2.stop_instances(InstanceIds=running_instances)
+
+                # wait for instances to come up
+                waiter_inst_stopped = client_ec2.get_waiter('instance_stopped')
+                waiter_inst_stopped.wait(InstanceIds=running_instances)
+
+                # TODO stop RDS
+
+    return exit_code
+
+
+def start_stack(awsclient, conf):
+    """Start an existing stack on AWS cloud.
+
+    :param awsclient:
+    :param conf:
+    :return: exit_code
+    """
+    stack_name = _get_stack_name(conf)
+    exit_code = 0
+
+    # check for DisableStop
+    disable_stop = conf.get('deployment', {}).get('DisableStop', False)
+    if disable_stop:
+        log.warn('\'DisableStop\' is set - nothing to do!')
+    else:
+        if not stack_exists(awsclient, stack_name):
+            log.warn('Stack \'%s\' not deployed - nothing to do!', stack_name)
+        else:
+            client_cfn = awsclient.get_client('cloudformation')
+            client_autoscaling = awsclient.get_client('autoscaling')
+            client_ec2 = awsclient.get_client('ec2')
+
+            resources = all_pages(
+                client_cfn.list_stack_resources,
+                { 'StackName': stack_name },
+                lambda r: r['StackResourceSummaries']
+            )
+
+            autoscaling_groups = [
+                r for r in resources
+                if r['ResourceType'] == 'AWS::AutoScaling::AutoScalingGroup'
+            ]
+
+            # lookup all types of scaling processes
+            #    [Launch, Terminate, HealthCheck, ReplaceUnhealthy, AZRebalance
+            #     AlarmNotification, ScheduledActions, AddToLoadBalancer]
+            response = client_autoscaling.describe_scaling_process_types()
+            scaling_process_types = [t['ProcessName'] for t in response.get('Processes', [])]
+
+            # TODO start RDS
+
+            for asg in autoscaling_groups:
+                # find instances in autoscaling group
+                instances = all_pages(
+                    client_autoscaling.describe_auto_scaling_instances,
+                    {},
+                    lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
+                               if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
+                )
+
+                # get stopped instances
+                stopped_instances = all_pages(
+                    client_ec2.describe_instance_status,
+                    {
+                        'InstanceIds': instances,
+                        'Filters': [{
+                            'Name': 'instance-state-name',
+                            'Values': ['stopping', 'stopped']
+                        }],
+                        'IncludeAllInstances': True
+                    },
+                    lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
+                )
+
+                if stopped_instances:
+                    # start all stopped instances
+                    log.info('Starting instances: %s', stopped_instances)
+                    client_ec2.start_instances(InstanceIds=stopped_instances)
+
+                    # wait for instances to come up
+                    waiter_inst_running = client_ec2.get_waiter('instance_running')
+                    waiter_inst_running.wait(InstanceIds=stopped_instances)
+
+                    # wait for status checks
+                    waiter_status_ok = client_ec2.get_waiter('instance_status_ok')
+                    waiter_status_ok.wait(InstanceIds=stopped_instances)
+
+                # resume all autoscaling processes
+                log.info('Resuming all autoscaling processes for \'%s\'', asg['LogicalResourceId'])
+                response = client_autoscaling.resume_processes(
+                    AutoScalingGroupName=asg['PhysicalResourceId'],
+                    ScalingProcesses=scaling_process_types
+                )
+
+                # (resize autoscaling group) don't think this is necessary!
+
+    return exit_code
