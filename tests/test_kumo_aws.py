@@ -2,7 +2,6 @@
 from __future__ import unicode_literals, print_function
 import os
 from copy import deepcopy
-import time
 
 from nose.tools import assert_equal, assert_false, \
     assert_is_not_none, assert_true
@@ -14,10 +13,11 @@ from gcdt.kumo_core import load_cloudformation_template, \
     delete_stack, create_change_set, _get_stack_name, describe_change_set, \
     _get_artifact_bucket, _s3_upload, _get_stack_state, delete_change_set, \
     generate_template, wait_for_stack_delete_complete, wait_for_stack_create_complete, \
-    wait_for_stack_update_complete, get_stack_id
+    wait_for_stack_update_complete, get_stack_id, stop_stack, start_stack, \
+    _stop_ec2_instances, _start_ec2_instances
 from gcdt.kumo_util import ensure_ebs_volume_tags_ec2_instance, \
     ensure_ebs_volume_tags_autoscaling_group
-from gcdt.utils import are_credentials_still_valid, fix_old_kumo_config
+from gcdt.utils import are_credentials_still_valid, fix_old_kumo_config, all_pages
 from gcdt.servicediscovery import get_outputs_for_stack
 from gcdt.s3 import prepare_artifacts_bucket, remove_file_from_s3
 from gcdt.gcdt_config_reader import read_json_config
@@ -35,6 +35,7 @@ config_simple_stack = fix_old_kumo_config(read_json_config(
     here('resources/simple_cloudformation_stack/gcdt_dev.json')
 ))['kumo']
 
+# all things are hardcoded here :(
 config_ec2 = fix_old_kumo_config(read_json_config(
     here('resources/sample_ec2_cloudformation_stack/gcdt_dev.json')
 ))['kumo']
@@ -42,6 +43,14 @@ config_ec2 = fix_old_kumo_config(read_json_config(
 config_autoscaling = fix_old_kumo_config(read_json_config(
     here('resources/sample_autoscaling_cloudformation_stack/gcdt_dev.json')
 ))['kumo']
+
+config_rds_stack = read_json_config(
+    here('resources/simple_cloudformation_stack_with_rds/gcdt_dev_lookups.json')
+)['kumo']
+
+config_ec2_stack = read_json_config(
+    here('resources/simple_cloudformation_stack_with_ec2/gcdt_dev_lookups.json')
+)['kumo']
 
 
 @pytest.fixture(scope='function')  # 'function' or 'module'
@@ -69,6 +78,57 @@ def simple_cloudformation_stack_folder():
     # helper to get into the sample folder so kumo can find cloudformation.py
     cwd = (os.getcwd())
     os.chdir(here('./resources/simple_cloudformation_stack/'))
+    yield
+    # cleanup
+    os.chdir(cwd)  # cd back to original folder
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def simple_cloudformation_stack_with_rds(awsclient):
+    # create a stack we use for the test lifecycle
+    stack_name = "infra-dev-kumo-sample-stack-with-rds"
+    are_credentials_still_valid(awsclient)
+    cloudformation_simple_stack_with_rds, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack_with_rds/cloudformation.py')
+    )
+    exit_code = deploy_stack(awsclient, {}, config_rds_stack,
+                             cloudformation_simple_stack_with_rds,
+                             override_stack_policy=False)
+    assert not exit_code
+
+    yield stack_name
+    # cleanup
+    exit_code = delete_stack(awsclient, config_rds_stack)
+    # check whether delete was completed!
+    assert not exit_code, 'delete_stack was not completed please make sure to clean up the stack manually'
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def simple_cloudformation_stack_with_ec2(awsclient):
+    # create a stack we use for the test lifecycle
+    stack_name = "infra-dev-kumo-sample-stack-with-ec2"
+    are_credentials_still_valid(awsclient)
+    cloudformation_simple_stack_with_rds, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack_with_ec2/cloudformation.py')
+    )
+    exit_code = deploy_stack(awsclient, {}, config_ec2_stack,
+                             cloudformation_simple_stack_with_rds,
+                             override_stack_policy=False)
+    assert not exit_code
+    wait_for_stack_create_complete(awsclient, get_stack_id(awsclient, stack_name))
+
+    yield stack_name
+    # cleanup
+    exit_code = delete_stack(awsclient, config_ec2_stack)
+    # check whether delete was completed!
+    assert not exit_code, 'delete_stack was not completed please make sure to clean up the stack manually'
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def simple_cloudformation_stack_with_rds_folder():
+    # helper to get into the sample folder so kumo can find cloudformation.py
+    cwd = (os.getcwd())
+    os.chdir(here('./resources/simple_cloudformation_stack_with_rds/'))
     yield
     # cleanup
     os.chdir(cwd)  # cd back to original folder
@@ -519,3 +579,47 @@ def test_kumo_context_contains_stack_output(awsclient):
     # cleanup
     exit_code = delete_stack(awsclient, config_simple_stack)
     assert exit_code == 0
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_rds_stop_start(awsclient, simple_cloudformation_stack_with_rds,
+                        simple_cloudformation_stack_with_rds_folder):
+    assert stop_stack(awsclient, config_rds_stack) == 0
+    assert start_stack(awsclient, config_rds_stack) == 0
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_ec2_instance_stop_start(awsclient, simple_cloudformation_stack_with_ec2):
+    def _get_instance_status(ec2_instance):
+        # helper to check the status
+        client_ec2 = awsclient.get_client('ec2')
+        instances_status = all_pages(
+            client_ec2.describe_instance_status,
+            {
+                'InstanceIds': [ec2_instance],
+                'IncludeAllInstances': True
+            },
+            lambda r: [i['InstanceState']['Name'] for i in r.get('InstanceStatuses', [])],
+        )[0]
+        return instances_status
+
+    stack_name = _get_stack_name(config_ec2_stack)
+    client_cfn = awsclient.get_client('cloudformation')
+    resources = all_pages(
+        client_cfn.list_stack_resources,
+        { 'StackName': stack_name },
+        lambda r: r['StackResourceSummaries']
+    )
+    instances = [
+        r['PhysicalResourceId'] for r in resources
+        if r['ResourceType'] == 'AWS::EC2::Instance'
+    ]
+    assert _get_instance_status(instances[0]) == 'running'
+
+    _stop_ec2_instances(awsclient, instances, wait=True)
+    assert _get_instance_status(instances[0]) == 'stopped'
+
+    _start_ec2_instances(awsclient, instances, wait=True)
+    assert _get_instance_status(instances[0]) == 'running'

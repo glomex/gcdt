@@ -271,3 +271,15 @@ We had some issues in the past using datetimes correctly across different timezo
 gcdt uses entry points similar to [pluggy](https://github.com/pytest-dev/pluggy) to find installed plugins
 
 For communication with the plugin we use [Blinker signals](https://pythonhosted.org/blinker/). This helps us to decouple the gcdt code base from plugin code and vice-versa. Blinker is of cause only one way to do that. Blinker is fast, simple, well documented, etc. so there are some popular frameworks using it (Flask, Pelican, ...).
+
+#### Config handling using openapi
+
+A wide area of gcdt functionality is related to configuration:
+
+* default values for tools and plugins
+* validation of configuration
+* scaffolding of minimal (required properties) configuration
+* sample of complete configuration
+* documentation of configuration including examples
+
+To cover all this gcdt configuration usecases we decided to use the `openapi` specification. Using openapi alows us to build on existing workflows and tooling. 

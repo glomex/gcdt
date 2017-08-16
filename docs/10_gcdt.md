@@ -23,19 +23,36 @@ To see available commands, call gcdt without any arguments:
 ```bash
 $ gcdt
 Usage:
+        gcdt config
         gcdt version
 ```
 
 ### Commands
 
+#### config
+This command is intended to provide tooling support for maintaining configuration.
+
+The `config` command does the following:
+
+* read configuration defaults
+* read the config from file ('gcdt_<env>.json')
+* run the lookups
+* format and output the config to the console
+
 #### version
-If you need help please ask on the gcdt slack channel or open a ticket. For this it is always great if you are able to provide the gcdt version you are using.
+If you need help please ask on the gcdt slack channel or open a ticket. For this it is always great if you are able to provide information about the gcdt version you are using.
 A convenient way to find out the version of your gcdt install provides the following command:
 
 ```bash
 $ gcdt version
-Please consider an update to gcdt version: 0.0.74
-gcdt version 0.0.33
+WARNING: Please consider an update to gcdt version: 0.1.433
+gcdt version 0.1.432
+gcdt plugins:
+ * gcdt-config-reader version 0.0.11
+ * gcdt-bundler version 0.0.27
+ * gcdt-slack-integration version 0.0.11
+ * gcdt-datadog-integration version 0.0.15
+ * gcdt-lookups version 0.0.12
 ```
 
 `gcdt version` also provides you with an easy way to check whether a new release of gcdt is available.

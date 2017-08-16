@@ -4,6 +4,7 @@
 """
 from __future__ import unicode_literals, print_function
 import sys
+import json
 
 from . import utils
 from . import gcdt_lifecycle
@@ -17,9 +18,10 @@ GCDT_GENERATOR_GROUP = 'gcdtgen10'
 
 # creating docopt parameters and usage help
 DOC = '''Usage:
-        gcdt version
         gcdt list
         gcdt generate <generator>
+        gcdt config
+        gcdt version
 
 -h --help           show this
 '''
@@ -49,6 +51,13 @@ def list_cmd():
     print('Installed gcdt generators:')
     for g in router.generators:
         print('  - %s' % g)
+
+
+@cmd(spec=['config'])
+def config_cmd(**tooldata):
+    conf = tooldata.get('config')
+    print('Resolved gcdt configuration after lookups:')
+    print(json.dumps(conf, sort_keys=True, indent=2))
 
 
 def main():

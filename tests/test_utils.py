@@ -11,16 +11,16 @@ import pytest
 from nose.tools import assert_equal
 
 from gcdt import utils
-from gcdt.utils import retries,  \
+from gcdt.utils import retries, \
     get_command, dict_merge, get_env, get_context, flatten, json2table, \
-    fix_old_kumo_config, dict_selective_merge
+    fix_old_kumo_config, dict_selective_merge, all_pages
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
 from gcdt_testtools.helpers import logcapture  # fixtures!
 
 from . import here
 
-
 PY3 = sys.version_info[0] >= 3
+
 
 # Note: version() is tested via multiple test_version_cmd in test_*_main.py
 
@@ -55,7 +55,7 @@ def test_retries_until_it_works():
     def works_after_four_tries():
         state['r'] += 1
         if state['r'] < 5:
-            x = 5/0
+            x = 5 / 0
 
     works_after_four_tries()
     assert state['r'] == 5
@@ -67,7 +67,8 @@ def test_retries_raises_exception():
 
     def a_hook(tries_remaining, e, delay):
         assert tries_remaining == (state['tries'] - state['r'])
-        assert str(e) in ['division by zero', 'integer division or modulo by zero']
+        assert str(e) in ['division by zero',
+                          'integer division or modulo by zero']
         assert delay == 0.0
         state['h'] += 1
 
@@ -75,7 +76,7 @@ def test_retries_raises_exception():
              exceptions=(ZeroDivisionError,), hook=a_hook)
     def never_works():
         state['r'] += 1
-        x = 5/0
+        x = 5 / 0
 
     try:
         never_works()
@@ -162,7 +163,7 @@ def test_get_context():
 
 
 def test_flatten():
-    actual = flatten(['junk', ['nested stuff'], [], [[]] ])
+    actual = flatten(['junk', ['nested stuff'], [], [[]]])
     assert actual == ['junk', 'nested stuff']
 
 
@@ -184,9 +185,11 @@ def test_json2table_create_lambda_response():
         ('FunctionName', 'jenkins-gcdt-lifecycle-for-ramuda'),
         ('CodeSize', 430078),
         ('MemorySize', 256),
-        ('FunctionArn', 'arn:aws:lambda:eu-west-1:644239850139:function:jenkins-gcdt-lifecycle-for-ramuda'),
+        ('FunctionArn',
+         'arn:aws:lambda:eu-west-1:644239850139:function:jenkins-gcdt-lifecycle-for-ramuda'),
         ('Version', '13'),
-        ('Role', 'arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4'),
+        ('Role',
+         'arn:aws:iam::644239850139:role/lambda/dp-dev-store-redshift-cdn-lo-LambdaCdnRedshiftLoad-DD2S84CZFGT4'),
         ('Timeout', 300),
         ('LastModified', '2016-08-23T15:27:07.658+0000'),
         ('Handler', 'handler.handle'),
@@ -199,7 +202,7 @@ def test_json2table_create_lambda_response():
         expected = efile.read()
         if not PY3:
             expected = expected.decode('utf-8')
-    actual = json2table(response)  #.encode('utf-8')
+    actual = json2table(response)  # .encode('utf-8')
     assert actual == expected
 
 
@@ -295,6 +298,65 @@ def test_random_string_length10():
     print(ts)
     assert_equal(len(ts), 10)
     nose.tools.assert_not_equal(ts, utils.random_string())
+
+
+def test_all_pages():
+    state = {'counter': 0}
+
+    def dummy_method(**kwargs):
+        # I represent the service method
+        nextToken = kwargs.pop('nextToken', None)
+        if nextToken:
+            assert nextToken == state['counter']
+        if state['counter'] < 5:
+            state['counter'] += 1
+            kwargs['nextToken'] = state['counter']
+        return kwargs
+
+    actual = all_pages(
+        dummy_method,
+        {'foo': 'bar'},
+        lambda r: r['foo'] + str(r.get('nextToken', '')),
+        lambda r: r.get('nextToken', 0) % 2 == 0
+    )
+    assert actual == ['bar2', 'bar4', 'bar']
+
+
+def test_all_pages_no_condition():
+    state = {'counter': 0}
+
+    def dummy_method(**kwargs):
+        # I represent the service method
+        nextToken = kwargs.pop('nextToken', None)
+        if nextToken:
+            assert nextToken == state['counter']
+        if state['counter'] < 5:
+            state['counter'] += 1
+            kwargs['nextToken'] = state['counter']
+        return kwargs
+
+    actual = all_pages(
+        dummy_method,
+        {'foo': 'bar'},
+        lambda r: r['foo'] + str(r.get('nextToken', ''))
+    )
+    assert actual == ['bar1', 'bar2', 'bar3', 'bar4', 'bar5', 'bar']
+
+
+# def all_pages(method, request, accessor, cond=None):
+"""Helper to process all pages using botocore service methods (exhausts NextToken).
+note: `cond` is optional... you can use it to make filtering more explicit
+if you like. Alternatively you can do the filtering in the `accessor` which
+is perfectly fine, too
+
+:param method: service method
+:param request: request dictionary for service call
+:param accessor: function to extract data from each response
+:param cond: filter function to return True / False based on a response
+:return: list of collected resources
+"""
+
+
 
 
 # TODO get_outputs_for_stack

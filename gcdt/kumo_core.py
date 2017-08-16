@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-from funcsigs import signature  # python3 only: from inspect import signature
+import os
+import six
 import imp
+import inspect
 import json
 import random
 import string
 import sys
 import time
-import inspect
 
-import os
-import six
 from clint.textui import colored
+from funcsigs import signature  # python3 only: from inspect import signature
 from tabulate import tabulate
 
-from .utils import get_env
-from .s3 import upload_file_to_s3
+from .gcdt_logging import getLogger
+from .utils import GracefulExit, json2table, dict_selective_merge, all_pages, \
+    get_env
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
-from gcdt.utils import GracefulExit, json2table, dict_merge, dict_selective_merge
-from gcdt.gcdt_logging import getLogger
+from .s3 import upload_file_to_s3
 
 
 log = getLogger(__name__)
@@ -683,41 +683,6 @@ def generate_template(context, config, cloudformation):
         raise Exception('Arguments of \'generate_template\' not as expected: %s' % spec)
 
 
-# TODO move to utils and add tests!!!
-def all_pages(method, request, accessor, cond=None):
-    """Helper to process all pages using botocore service methods (exhausts NextToken).
-    note: `cond` is optional... you can use it to make filtering more explicit
-    if you like. Alternatively you can do the filtering in the `accessor` which
-    is perfectly fine, too
-
-    :param method: service method
-    :param request: request dictionary for service call
-    :param accessor: function to extract data from each response
-    :param cond: filter function to return True / False based on a response
-    :return: list of collected resources
-    """
-    if cond is None:
-        cond = lambda x: True
-    result = []
-    next_token = None
-    while True:
-        if next_token:
-            request['nextToken'] = next_token
-        response = method(**request)
-        if cond(response):
-            data = accessor(response)
-            if data:
-                if isinstance(data, list):
-                    result.extend(data)
-                else:
-                    result.append(data)
-        if 'nextToken' not in response:
-            break
-        next_token = response['nextToken']
-
-    return result
-
-
 def _stop_ec2_instances(awsclient, ec2_instances, wait=True):
     """Helper to stop ec2 instances.
     By default it waits for instances to stop.
@@ -727,6 +692,8 @@ def _stop_ec2_instances(awsclient, ec2_instances, wait=True):
     :param wait: waits for instances to stop
     :return:
     """
+    if len(ec2_instances) == 0:
+        return
     client_ec2 = awsclient.get_client('ec2')
 
     # get running instances
@@ -760,6 +727,8 @@ def _start_ec2_instances(awsclient, ec2_instances, wait=True):
     :param wait: waits for instances to start
     :return:
     """
+    if len(ec2_instances) == 0:
+        return
     client_ec2 = awsclient.get_client('ec2')
 
     # get stopped instances
@@ -778,7 +747,7 @@ def _start_ec2_instances(awsclient, ec2_instances, wait=True):
 
     if stopped_instances:
         # start all stopped instances
-        log.info('Starting instances: %s', stopped_instances)
+        log.info('Starting EC2 instances: %s', stopped_instances)
         client_ec2.start_instances(InstanceIds=stopped_instances)
 
         if wait:
@@ -813,11 +782,12 @@ def _filter_db_instances_by_status(awsclient, db_instances, status_list):
     return db_instances_with_status
 
 
-def stop_stack(awsclient, conf):
+def stop_stack(awsclient, conf, use_suspend=False):
     """Stop an existing stack on AWS cloud.
 
     :param awsclient:
     :param conf:
+    :param use_suspend: use suspend and resume on the autoscaling group
     :return: exit_code
     """
     stack_name = _get_stack_name(conf)
@@ -833,8 +803,8 @@ def stop_stack(awsclient, conf):
         else:
             client_cfn = awsclient.get_client('cloudformation')
             client_autoscaling = awsclient.get_client('autoscaling')
-            client_ec2 = awsclient.get_client('ec2')
             client_rds = awsclient.get_client('rds')
+            client_ec2 = awsclient.get_client('ec2')
 
             resources = all_pages(
                 client_cfn.list_stack_resources,
@@ -854,31 +824,57 @@ def stop_stack(awsclient, conf):
             scaling_process_types = [t['ProcessName'] for t in response.get('Processes', [])]
 
             for asg in autoscaling_groups:
-                # suspend all autoscaling processes
-                log.info('Suspending all autoscaling processes for \'%s\'', asg['LogicalResourceId'])
-                response = client_autoscaling.suspend_processes(
-                    AutoScalingGroupName=asg['PhysicalResourceId'],
-                    ScalingProcesses=scaling_process_types
-                )
-
-                # (resize autoscaling group (min, max = 0))  don't think this is necessary!
-
                 # find instances in autoscaling group
-                instances = all_pages(
+                ec2_instances = all_pages(
                     client_autoscaling.describe_auto_scaling_instances,
                     {},
                     lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
                                if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
                 )
-                _stop_ec2_instances(awsclient, instances)
+
+                if use_suspend:
+                    # alternative implementation to speed up start
+                    # only problem is that instances must survive stop & start
+                    # suspend all autoscaling processes
+                    log.info('Suspending all autoscaling processes for \'%s\'',
+                             asg['LogicalResourceId'])
+                    response = client_autoscaling.suspend_processes(
+                        AutoScalingGroupName=asg['PhysicalResourceId'],
+                        ScalingProcesses=scaling_process_types
+                    )
+
+                    _stop_ec2_instances(awsclient, ec2_instances)
+                else:
+                    running_instances = all_pages(
+                        client_ec2.describe_instance_status,
+                        {
+                            'InstanceIds': ec2_instances,
+                            'Filters': [{
+                                'Name': 'instance-state-name',
+                                'Values': ['pending', 'running']
+                            }]
+                        },
+                        lambda r: [i['InstanceId'] for i in r.get('InstanceStatuses', [])],
+                    )
+                    # resize autoscaling group (min, max = 0)
+                    log.info('Resize autoscaling group \'%s\' to minSize=0, maxSize=0',
+                             asg['LogicalResourceId'])
+                    response = client_autoscaling.update_auto_scaling_group(
+                        AutoScalingGroupName=asg['PhysicalResourceId'],
+                        MinSize=0,
+                        MaxSize=0
+                    )
+                    if running_instances:
+                        # wait for instances to terminate
+                        waiter_inst_terminated = client_ec2.get_waiter('instance_terminated')
+                        waiter_inst_terminated.wait(InstanceIds=running_instances)
 
             # stopping ec2 instances
-            # TODO: filter instances we want to stop!!!!!!!
-            #instances = [
-            #    r['InstanceId'] for r in resources
-            #    if r['ResourceType'] == 'AWS::EC2::Instance'
-            #]
-            #_stop_ec2_instances(awsclient, instances)
+            instances = [
+                r['PhysicalResourceId'] for r in resources
+                if r['ResourceType'] == 'AWS::EC2::Instance'
+            ]
+            _stop_ec2_instances(awsclient, instances)
 
             # stopping db instances
             db_instances = [
@@ -895,11 +891,35 @@ def stop_stack(awsclient, conf):
     return exit_code
 
 
-def start_stack(awsclient, conf):
+def _get_autoscaling_min_max(template, parameters, asg_name):
+    """Helper to extract the configured MinSize, MaxSize attributes from the
+    template.
+
+    :param template: cloudformation template (json)
+    :param parameters: list of {'ParameterKey': 'x1', 'ParameterValue': 'y1'}
+    :param asg_name: logical resource name of the autoscaling group
+    :return: MinSize, MaxSize
+    """
+    params = {e['ParameterKey']: e['ParameterValue'] for e in parameters}
+    asg = template.get('Resources', {}).get(asg_name, None)
+    if asg:
+        assert asg['Type'] == 'AWS::AutoScaling::AutoScalingGroup'
+        min = asg.get('Properties', {}).get('MinSize', None)
+        max = asg.get('Properties', {}).get('MaxSize', None)
+        if 'Ref' in min:
+            min = params.get(min['Ref'], None)
+        if 'Ref' in max:
+            max = params.get(max['Ref'], None)
+        if min and max:
+            return int(min), int(max)
+
+
+def start_stack(awsclient, conf, use_suspend=False):
     """Start an existing stack on AWS cloud.
 
     :param awsclient:
     :param conf:
+    :param use_suspend: use suspend and resume on the autoscaling group
     :return: exit_code
     """
     stack_name = _get_stack_name(conf)
@@ -915,7 +935,6 @@ def start_stack(awsclient, conf):
         else:
             client_cfn = awsclient.get_client('cloudformation')
             client_autoscaling = awsclient.get_client('autoscaling')
-            client_ec2 = awsclient.get_client('ec2')
             client_rds = awsclient.get_client('rds')
 
             resources = all_pages(
@@ -953,30 +972,55 @@ def start_stack(awsclient, conf):
                 waiter_db_available.wait(DBInstanceIdentifier=db)
 
             # starting ec2 instances
-            # TODO check if this is the instances we want to start!!!!!
-            #instances = [
-            #    r['InstanceId'] for r in resources
-            #    if r['ResourceType'] == 'AWS::EC2::Instance'
-            #]
-            #_start_ec2_instances(awsclient, instances)
+            instances = [
+                r['PhysicalResourceId'] for r in resources
+                if r['ResourceType'] == 'AWS::EC2::Instance'
+            ]
+            _start_ec2_instances(awsclient, instances)
+
+            if autoscaling_groups and not use_suspend:
+                # get template and parameters from cloudformation
+                response = client_cfn.get_template(
+                    StackName=stack_name,
+                    TemplateStage='Processed'
+                )
+                template = response.get('TemplateBody', {})
+                response = client_cfn.describe_stacks(
+                    StackName=stack_name
+                )
+
+                parameters = response['Stacks'][0].get('Parameters', {})
 
             for asg in autoscaling_groups:
-                # find instances in autoscaling group
-                instances = all_pages(
-                    client_autoscaling.describe_auto_scaling_instances,
-                    {},
-                    lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
-                               if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
-                )
-                _start_ec2_instances(awsclient, instances)
+                if use_suspend:
+                    # alternative implementation to speed up start
+                    # only problem is that instances must survive stop & start
+                    # find instances in autoscaling group
+                    instances = all_pages(
+                        client_autoscaling.describe_auto_scaling_instances,
+                        {},
+                        lambda r: [i['InstanceId'] for i in r.get('AutoScalingInstances', [])
+                                   if i['AutoScalingGroupName'] == asg['PhysicalResourceId']],
+                    )
+                    _start_ec2_instances(awsclient, instances)
 
-                # resume all autoscaling processes
-                log.info('Resuming all autoscaling processes for \'%s\'', asg['LogicalResourceId'])
-                response = client_autoscaling.resume_processes(
-                    AutoScalingGroupName=asg['PhysicalResourceId'],
-                    ScalingProcesses=scaling_process_types
-                )
-
-                # (resize autoscaling group) don't think this is necessary!
+                    # resume all autoscaling processes
+                    log.info('Resuming all autoscaling processes for \'%s\'',
+                             asg['LogicalResourceId'])
+                    response = client_autoscaling.resume_processes(
+                        AutoScalingGroupName=asg['PhysicalResourceId'],
+                        ScalingProcesses=scaling_process_types
+                    )
+                else:
+                    # resize autoscaling group back to its original values
+                    log.info('Resize autoscaling group \'%s\' back to original values',
+                             asg['LogicalResourceId'])
+                    min, max = _get_autoscaling_min_max(
+                        template, parameters, asg['LogicalResourceId'])
+                    response = client_autoscaling.update_auto_scaling_group(
+                        AutoScalingGroupName=asg['PhysicalResourceId'],
+                        MinSize=min,
+                        MaxSize=max
+                    )
 
     return exit_code

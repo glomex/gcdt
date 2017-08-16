@@ -51,13 +51,28 @@ will create a CloudFormation ChangeSet with your current changes to the template
 #### dot
 Visualize the cloudformation template of your stack using `kumo dot`.
 
+![Sample Cloudformation](/_static/images/cloudformation.svg "Supercars Demo Stack")
+
+Installation of the dot binary is required on your Mac to convert the graph into svg (http://www.graphviz.org/Download_macos.php).
+
+``` bash
+$ brew install graphviz
+```
+
 #### stop
-Stop resources contained in your cloudformation stack using `kumo stop`.
+
+``` text
+"kumo stop" is a brand new feature we start rolling out to glomex AWS accounts.
+We would like your feedback. Please talk to us if you require any improvements 
+(additional resources etc.).
+```
+
+Use `kumo stop` to stop resources contained in your cloudformation stack using `kumo stop`.
 
 `kumo stop` currently comprises of the following features:
 
-* suspend autoscaling processes
-* stop instances
+* resize autoscaling group to minSize=0, maxSize=0
+* stop Ec2 instances
 * stop RDS
 
 Add this optional configuration to the `kumo` section of the config file to exclude your stack resources from start / stop. 
@@ -69,24 +84,23 @@ Add this optional configuration to the `kumo` section of the config file to excl
 ```
 
 #### start
+
+``` text
+"kumo start" is a brand new feature we start rolling out to glomex AWS accounts.
+We would like your feedback. Please talk to us if you require any improvements.
+```
+
 Start resources contained in your cloudformation stack using `kumo start`.
 
 `kumo start` currently comprises of the following features:
 
 * start RDS
-* start instances
-* resume autoscaling processes
+* start EC2 instances
+* restore autoscaling group minSize, maxSize to original values
 
 #### version
 will print the version of gcdt you are using
 
-![Sample Cloudformation](/_static/images/cloudformation.svg "Supercars Demo Stack")
-
-Installation of the dot binary is required on your Mac to convert the graph into svg (http://www.graphviz.org/Download_macos.php).
-
-``` bash
-$ brew install graphviz
-```
 
 ### Folder Layout
 

@@ -12,7 +12,7 @@
 
 To see available commands, call this:
 
-```bash
+``` text
 Usage:
         ramuda clean
         ramuda bundle [--keep] [-v]
@@ -65,7 +65,7 @@ In any case configuration will be updated and an alias called "ACTIVE" will be s
 
 #### list
 lists all existing lambda functions including additional information like config and active version:
-```bash
+``` text
 dp-dev-store-redshift-create-cdn-tables
 	Memory: 128
 	Timeout: 180
@@ -78,7 +78,7 @@ dp-dev-store-redshift-create-cdn-tables
 
 #### metrics
 displays metric for a given lambda:
-```bash
+``` text
 dp-dev-ingest-lambda-cdnnorm
 	Duration 488872443
 	Errors 642
@@ -179,7 +179,7 @@ will print the version of gcdt you are using
 
 sample gcdt_dev.json file:
 
-```text
+``` js
 {
   "ramuda": {
     "lambda": {
@@ -249,11 +249,12 @@ sample gcdt_dev.json file:
 Possible values for the log retention in days are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
 
 ``` js
-"lambda": {
-    ...
-    "logs": {
-        "retentionInDays": 90
-    }
+{
+    "lambda": {
+        ...
+        "logs": {
+            "retentionInDays": 90
+        }
 }
 ```
 
@@ -394,7 +395,7 @@ Kinesis is slightly different as it is not event-based but pulling from a stream
 ### Setting the ENV variable
 
 You you need to set an environment variable "ENV" which indicates the account/staging area you want to work with. This parameter tells the tools which config file to use. For example if you want to set the environment variable ENV to 'DEV' you can do that as follows:
-``` bash
+``` text
 export ENV=DEV
 ```
 
@@ -427,7 +428,7 @@ From using lambda extensively we find it a good practise to implement the `ping`
 
  Please consider to implement a `ping` in your own lambda functions:
 
- ```javascript
+``` js
 var l33t = require('1337')
 
 
