@@ -1,0 +1,82 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "d05ab65a-825b-11e7-a45c-413363250619", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "d05ab65a-825b-11e7-a45c-413363250619", 
+                "date": "Wed, 16 Aug 2017 08:20:50 GMT", 
+                "content-length": "1982", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "StackResourceSummaries": [
+            {
+                "ResourceType": "AWS::EC2::Instance", 
+                "PhysicalResourceId": "i-0050336b8ae66cd23", 
+                "LastUpdatedTimestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 38, 
+                    "microsecond": 4000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "EC2Instance"
+            }, 
+            {
+                "ResourceType": "AWS::IAM::Role", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO", 
+                "LastUpdatedTimestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 11, 
+                    "microsecond": 665000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 18
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "ResourceType": "AWS::IAM::InstanceProfile", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ", 
+                "LastUpdatedTimestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 18, 
+                    "microsecond": 277000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance"
+            }, 
+            {
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "PhysicalResourceId": "sg-d246dcaa", 
+                "LastUpdatedTimestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 43, 
+                    "microsecond": 859000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }
+        ]
+    }
+}

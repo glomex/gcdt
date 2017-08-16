@@ -1,0 +1,30 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StartingInstances": [
+            {
+                "InstanceId": "i-0050336b8ae66cd23", 
+                "CurrentState": {
+                    "Code": 0, 
+                    "Name": "pending"
+                }, 
+                "PreviousState": {
+                    "Code": 80, 
+                    "Name": "stopped"
+                }
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "be1dfc92-5e3d-4771-bb9e-0faa06091a94", 
+            "HTTPHeaders": {
+                "transfer-encoding": "chunked", 
+                "vary": "Accept-Encoding", 
+                "server": "AmazonEC2", 
+                "content-type": "text/xml;charset=UTF-8", 
+                "date": "Wed, 16 Aug 2017 08:21:37 GMT"
+            }
+        }
+    }
+}

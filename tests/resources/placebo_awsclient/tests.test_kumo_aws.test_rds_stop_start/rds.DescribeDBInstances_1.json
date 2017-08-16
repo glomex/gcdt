@@ -1,0 +1,121 @@
+{
+    "status_code": 200, 
+    "data": {
+        "DBInstances": [
+            {
+                "PubliclyAccessible": false, 
+                "MasterUsername": "asdf", 
+                "MonitoringInterval": 0, 
+                "LicenseModel": "general-public-license", 
+                "VpcSecurityGroups": [
+                    {
+                        "Status": "active", 
+                        "VpcSecurityGroupId": "sg-ba0997c2"
+                    }
+                ], 
+                "InstanceCreateTime": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 37, 
+                    "microsecond": 986000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 26
+                }, 
+                "CopyTagsToSnapshot": false, 
+                "OptionGroupMemberships": [
+                    {
+                        "Status": "in-sync", 
+                        "OptionGroupName": "default:mysql-5-5"
+                    }
+                ], 
+                "PendingModifiedValues": {}, 
+                "Engine": "mysql", 
+                "MultiAZ": false, 
+                "LatestRestorableTime": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 47, 
+                    "microsecond": 877000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 28
+                }, 
+                "DBSecurityGroups": [], 
+                "DBParameterGroups": [
+                    {
+                        "DBParameterGroupName": "infra-dev-kumo-sample-stack-with-rds-myrdsparamgroup-b6rlkr2j5qxo", 
+                        "ParameterApplyStatus": "in-sync"
+                    }
+                ], 
+                "AutoMinorVersionUpgrade": true, 
+                "PreferredBackupWindow": "23:30-00:00", 
+                "DBSubnetGroup": {
+                    "Subnets": [
+                        {
+                            "SubnetStatus": "Active", 
+                            "SubnetIdentifier": "subnet-7ed09408", 
+                            "SubnetAvailabilityZone": {
+                                "Name": "eu-west-1b"
+                            }
+                        }, 
+                        {
+                            "SubnetStatus": "Active", 
+                            "SubnetIdentifier": "subnet-b6eaa5d2", 
+                            "SubnetAvailabilityZone": {
+                                "Name": "eu-west-1a"
+                            }
+                        }, 
+                        {
+                            "SubnetStatus": "Active", 
+                            "SubnetIdentifier": "subnet-85ee66dd", 
+                            "SubnetAvailabilityZone": {
+                                "Name": "eu-west-1c"
+                            }
+                        }
+                    ], 
+                    "DBSubnetGroupName": "infra-dev-opsdefaultrdsubnetgroup-1k55vj7tlvxo1", 
+                    "VpcId": "vpc-88d2a7ec", 
+                    "DBSubnetGroupDescription": "Default ops-managed DB subnet-Group", 
+                    "SubnetGroupStatus": "Complete"
+                }, 
+                "ReadReplicaDBInstanceIdentifiers": [], 
+                "AllocatedStorage": 5, 
+                "DBInstanceArn": "arn:aws:rds:eu-west-1:420189626185:db:iijl7xu2zjmk03", 
+                "BackupRetentionPeriod": 1, 
+                "PreferredMaintenanceWindow": "mon:03:34-mon:04:04", 
+                "Endpoint": {
+                    "HostedZoneId": "Z29XKXDKYMONMX", 
+                    "Port": 3306, 
+                    "Address": "iijl7xu2zjmk03.colr91l6nqvt.eu-west-1.rds.amazonaws.com"
+                }, 
+                "DBInstanceStatus": "available", 
+                "IAMDatabaseAuthenticationEnabled": false, 
+                "EngineVersion": "5.5.54", 
+                "AvailabilityZone": "eu-west-1c", 
+                "DomainMemberships": [], 
+                "StorageType": "standard", 
+                "DbiResourceId": "db-RNLQREG3QS3BX62DLCENMP5JOE", 
+                "CACertificateIdentifier": "rds-ca-2015", 
+                "StorageEncrypted": false, 
+                "DBInstanceClass": "db.m1.small", 
+                "DbInstancePort": 0, 
+                "DBInstanceIdentifier": "iijl7xu2zjmk03"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "8559215b-8105-11e7-9341-3f9023606aa6", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "8559215b-8105-11e7-9341-3f9023606aa6", 
+                "vary": "Accept-Encoding", 
+                "content-length": "4299", 
+                "content-type": "text/xml", 
+                "date": "Mon, 14 Aug 2017 15:30:36 GMT"
+            }
+        }
+    }
+}

@@ -1,0 +1,141 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackEvents": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_COMPLETE-2017-08-16T08:17:43.859Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 43, 
+                    "microsecond": 859000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "sg-d246dcaa", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_IN_PROGRESS-2017-08-16T08:17:42.577Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 42, 
+                    "microsecond": 577000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "sg-d246dcaa", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance-CREATE_IN_PROGRESS-2017-08-16T08:17:41.713Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::Role", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 41, 
+                    "microsecond": 713000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Path\":\"/ec2/\",\"ManagedPolicyArns\":[\"arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O\"],\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance-CREATE_IN_PROGRESS-2017-08-16T08:17:41.125Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::Role", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 41, 
+                    "microsecond": 125000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Path\":\"/ec2/\",\"ManagedPolicyArns\":[\"arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O\"],\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_IN_PROGRESS-2017-08-16T08:17:40.742Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 40, 
+                    "microsecond": 742000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "5c4881e0-825b-11e7-a5a4-50a6863366c5", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 36, 
+                    "microsecond": 3000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack-with-ec2"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "65a730ed-825b-11e7-a45c-413363250619", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "65a730ed-825b-11e7-a45c-413363250619", 
+                "vary": "Accept-Encoding", 
+                "content-length": "7399", 
+                "content-type": "text/xml", 
+                "date": "Wed, 16 Aug 2017 08:17:51 GMT"
+            }
+        }
+    }
+}
