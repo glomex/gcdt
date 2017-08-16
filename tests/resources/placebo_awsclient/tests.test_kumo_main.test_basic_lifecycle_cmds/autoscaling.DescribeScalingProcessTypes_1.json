@@ -1,0 +1,42 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Processes": [
+            {
+                "ProcessName": "AZRebalance"
+            }, 
+            {
+                "ProcessName": "AddToLoadBalancer"
+            }, 
+            {
+                "ProcessName": "AlarmNotification"
+            }, 
+            {
+                "ProcessName": "HealthCheck"
+            }, 
+            {
+                "ProcessName": "Launch"
+            }, 
+            {
+                "ProcessName": "ReplaceUnhealthy"
+            }, 
+            {
+                "ProcessName": "ScheduledActions"
+            }, 
+            {
+                "ProcessName": "Terminate"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "dee6d956-7e9f-11e7-90e8-87484972ef48", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "dee6d956-7e9f-11e7-90e8-87484972ef48", 
+                "date": "Fri, 11 Aug 2017 14:17:56 GMT", 
+                "content-length": "990", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

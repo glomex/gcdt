@@ -13,15 +13,16 @@
 To see available commands, call kumo without any arguments:
 
 ```bash
-$ kumo
 Usage:
         kumo deploy [--override-stack-policy] [-v]
         kumo list [-v]
         kumo delete -f [-v]
         kumo generate [-v]
         kumo preview [-v]
-        kumo version
         kumo dot [-v]
+        kumo stop [-v]
+        kumo start [-v]
+        kumo version
 
 -h --help           show this
 -v --verbose        show debug messages
@@ -47,19 +48,59 @@ will generate the CloudFormation template for the given stack and write it to yo
 #### preview
 will create a CloudFormation ChangeSet with your current changes to the template
 
-#### version
-will print the version of gcdt you are using
-
 #### dot
 Visualize the cloudformation template of your stack using `kumo dot`.
 
-![Sample Cloudformation](_static/images/cloudformation.svg "Supercars Demo Stack")
+![Sample Cloudformation](/_static/images/cloudformation.svg "Supercars Demo Stack")
 
 Installation of the dot binary is required on your Mac to convert the graph into svg (http://www.graphviz.org/Download_macos.php).
 
 ``` bash
 $ brew install graphviz
 ```
+
+#### stop
+
+``` text
+"kumo stop" is a brand new feature we start rolling out to glomex AWS accounts.
+We would like your feedback. Please talk to us if you require any improvements 
+(additional resources etc.).
+```
+
+Use `kumo stop` to stop resources contained in your cloudformation stack using `kumo stop`.
+
+`kumo stop` currently comprises of the following features:
+
+* resize autoscaling group to minSize=0, maxSize=0
+* stop Ec2 instances
+* stop RDS
+
+Add this optional configuration to the `kumo` section of the config file to exclude your stack resources from start / stop. 
+``` js
+...
+"deployment": {
+  "DisableStop": true
+}
+```
+
+#### start
+
+``` text
+"kumo start" is a brand new feature we start rolling out to glomex AWS accounts.
+We would like your feedback. Please talk to us if you require any improvements.
+```
+
+Start resources contained in your cloudformation stack using `kumo start`.
+
+`kumo start` currently comprises of the following features:
+
+* start RDS
+* start EC2 instances
+* restore autoscaling group minSize, maxSize to original values
+
+#### version
+will print the version of gcdt you are using
+
 
 ### Folder Layout
 
@@ -80,10 +121,10 @@ Further settings files, depending on your environments in the format of `gcdt_<E
 
 #### Config file example
 
-```json
+``` js
 "stack": {
     "StackName": "sample-stack"
-}
+} 
 ```
 You like examples better than documentation? Check out our sample-stack at https://github.com/glomex/gcdt-sample-stack/tree/master/infrastructure
 
@@ -93,7 +134,7 @@ You like examples better than documentation? Check out our sample-stack at https
 There is a new Feature in CloudFormation which lets a User specify a Role which shall be used to execute the Stack. Docs can be found at http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html
 This can be used to limit access of users drastically and only give CloudFormation the permission to do all the heavy lifting.
 
-```json
+``` js
 "stack": {
     "RoleARN": "arn:aws:iam::<AccountID>:role/<CloudFormationRoleName>"
 }
@@ -105,7 +146,7 @@ Make sure the role may be assumed by CloudFormation. See also: http://docs.aws.a
 
 Amazon Simple Notification Service topic Amazon Resource Names (ARNs) that AWS CloudFormation associates with the stack. 
 
-```json
+``` js
 {
   "kumo": {
     "stack": {
@@ -167,7 +208,7 @@ One kumo speciality for the `command_finalized` hook is that you can access the 
 and use outputs of your stack within the hook implementation.
 
 
-### Kumo legacy hooks
+### DEPRECATED Kumo legacy hooks
 
 The hooks in this section are deprecated please use gcdt lifecycle hooks (see above).
 
@@ -241,7 +282,7 @@ def generate_template():
 ### Stack Policies
 kumo does offer support for stack policies. It has a default stack policy that will get applied to each stack:
 
-```json
+``` js
 {
   "Statement" : [
     {
@@ -261,7 +302,7 @@ kumo does offer support for stack policies. It has a default stack policy that w
 ```
 This allows an update operation to modify each resource but disables replacement or deletion. If you supply "--override-stack-policy" to kumo then it will use another default policy that gets applied during updates and allows every operation on every resource:
 
-```json
+``` js
 {
   "Statement" : [
     {

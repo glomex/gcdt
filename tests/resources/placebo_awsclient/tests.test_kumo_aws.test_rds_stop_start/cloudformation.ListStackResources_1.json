@@ -1,0 +1,66 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "83ce14c4-8105-11e7-a8d8-c35d7d01525c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "83ce14c4-8105-11e7-a8d8-c35d7d01525c", 
+                "date": "Mon, 14 Aug 2017 15:30:34 GMT", 
+                "content-length": "1476", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "StackResourceSummaries": [
+            {
+                "ResourceType": "AWS::RDS::DBParameterGroup", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-with-rds-myrdsparamgroup-b6rlkr2j5qxo", 
+                "LastUpdatedTimestamp": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 35, 
+                    "microsecond": 448000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 21
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "MyRDSParamGroup"
+            }, 
+            {
+                "ResourceType": "AWS::RDS::DBInstance", 
+                "PhysicalResourceId": "iijl7xu2zjmk03", 
+                "LastUpdatedTimestamp": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 25, 
+                    "microsecond": 727000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 30
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "infraDevUnittestSampleRDS"
+            }, 
+            {
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "PhysicalResourceId": "sg-ba0997c2", 
+                "LastUpdatedTimestamp": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 29, 
+                    "microsecond": 598000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 21
+                }, 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "LogicalResourceId": "infraDevUnittestSampleRDSsg"
+            }
+        ]
+    }
+}

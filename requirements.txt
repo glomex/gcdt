@@ -1,4 +1,4 @@
-# Dependencies have to be in sync with other packages (gcdt, glomex-credstash, gcdt-plugins)
+# Dependencies have to be in sync with other packages (gcdt, glomex-credstash, gcdt plugins)
 botocore==1.5.76
 s3transfer==0.1.10
 pybars3==0.9.1
@@ -18,3 +18,4 @@ pip>=9.0.1
 funcsigs>=1.0.2
 maya==0.3.2
 testfixtures>=5.1.1
+bravado-core==4.8.0

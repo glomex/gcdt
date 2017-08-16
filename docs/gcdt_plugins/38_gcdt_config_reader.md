@@ -68,7 +68,7 @@ On a more technical note: all ignore patterns you provide are consolidated by th
 
 The gcdt_config_reader plugin supports a `baseconfig` property which gives a basepath. This works with all supported config file formats like json, yaml and .py config files.
 
-``` json
+``` js
 {
   "baseconfig": "baseconfig",
   "ramuda": {

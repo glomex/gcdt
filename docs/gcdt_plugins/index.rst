@@ -1,5 +1,5 @@
-Plugins for gcdt (gcdt-plugins)
--------------------------------
+Plugins for gcdt
+----------------
 
 .. toctree::
    :glob:

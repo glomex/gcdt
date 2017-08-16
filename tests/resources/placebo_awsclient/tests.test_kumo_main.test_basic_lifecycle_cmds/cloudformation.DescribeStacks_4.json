@@ -1,0 +1,53 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/c8253170-7e9f-11e7-9af4-50fae9b818d2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-xu5ukwqxp8wa"
+                    }
+                ], 
+                "CreationTime": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 18, 
+                    "microsecond": 94000, 
+                    "year": 2017, 
+                    "day": 11, 
+                    "minute": 17
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "dde213a9-7e9f-11e7-9fda-11f9e8520ff5", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "dde213a9-7e9f-11e7-9fda-11f9e8520ff5", 
+                "date": "Fri, 11 Aug 2017 14:17:54 GMT", 
+                "content-length": "1429", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

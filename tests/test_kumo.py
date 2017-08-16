@@ -11,7 +11,8 @@ import pytest
 from gcdt.kumo_core import _generate_parameters, \
     load_cloudformation_template, write_template_to_file, _get_stack_name, \
     _get_stack_policy, _get_stack_policy_during_update, _get_conf_value, \
-    _generate_parameter_entry, _call_hook, generate_template
+    _generate_parameter_entry, _call_hook, generate_template, \
+    _get_autoscaling_min_max
 from gcdt.utils import fix_old_kumo_config
 from gcdt.gcdt_config_reader import read_json_config
 
@@ -300,3 +301,15 @@ def test_generate_template_invalid_arguments():
     with pytest.raises(Exception) as einfo:
         generate_template(context, config_simple_stack, cloudformation_simple_stack)
     assert einfo.match(r"Arguments of 'generate_template' not as expected: \['invalid_context', 'invalid_config'\]")
+
+
+def test_get_autoscaling_min_max():
+    with open(here('resources/cfn_template/cloudformation.template'), 'r') as tfile:
+        template_json = json.load(tfile)
+
+    parameters = [{'ParameterKey': 'ScaleMinCapacity', 'ParameterValue': '1'},
+                  {'ParameterKey': 'ScaleMaxCapacity', 'ParameterValue': '2'}]
+
+    assert _get_autoscaling_min_max(
+        template_json, parameters, 'SupercarsAutoscalingGroup'
+    ) == (1, 2)

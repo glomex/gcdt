@@ -101,7 +101,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     if context['command'] in \
             DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
         pass  # we do not require a config for this command
-    elif tool not in config:
+    elif tool not in config and tool != 'gcdt':
         context['error'] = 'Configuration missing for \'%s\'.' % tool
         log.error(context['error'])
         gcdt_signals.error.send((context, config))
@@ -132,9 +132,13 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.command_init.send((context, config))
     log.debug('### command_init')
     try:
+        if tool == 'gcdt':
+            conf = config  # gcdt works on the whole config
+        else:
+            conf = config.get(tool, {})
         exit_code = cmd.dispatch(arguments,
                                  context=context,
-                                 config=config.get(tool, {}))
+                                 config=conf)
     except GracefulExit:
         raise
     except Exception as e:

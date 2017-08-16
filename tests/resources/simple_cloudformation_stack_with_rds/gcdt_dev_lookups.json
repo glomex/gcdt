@@ -1,0 +1,13 @@
+{
+  "kumo": {
+    "stack": {
+      "StackName": "infra-dev-kumo-sample-stack-with-rds"
+    },
+    "parameters": {
+      "DBUser": "asdf",
+      "DBPassword": "asdf1234",
+      "VPCId": "vpc-88d2a7ec",
+      "RDSSubnetGroupName": "infra-dev-opsdefaultrdsubnetgroup-1k55vj7tlvxo1"
+    }
+  }
+}
