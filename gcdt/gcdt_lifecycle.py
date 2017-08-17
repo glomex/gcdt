@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-
+import os
 import imp
 import logging
 import signal
@@ -8,10 +8,9 @@ import sys
 from logging.config import dictConfig
 
 import botocore.session
-import os
 from docopt import docopt
 
-from gcdt.utils import GracefulExit, signal_handler, fix_old_kumo_config
+from .utils import GracefulExit, signal_handler, fix_old_kumo_config
 from . import gcdt_signals
 from .gcdt_awsclient import AWSClient
 from .gcdt_cmd_dispatcher import cmd, get_command
@@ -84,14 +83,22 @@ def lifecycle(awsclient, env, tool, command, arguments):
         # deprecated: this needs to be removed once all old-style "cloudformation" entries are gone
         fix_old_kumo_config(config)
 
+    # check_credentials
+    gcdt_signals.check_credentials_init.send((context, config))
+    log.debug('### check_credentials_init')
+    gcdt_signals.check_credentials_finalized.send((context, config))
+    log.debug('### check_credentials_finalized')
+    if 'error' in context:
+        log.error(context['error'])
+        gcdt_signals.error.send((context, config))
+        return 1
+
     ## lookup
-    # credential retrieval should be done using lookups
     gcdt_signals.lookup_init.send((context, config))
     log.debug('### lookup_init')
     gcdt_signals.lookup_finalized.send((context, config))
-    log.debug('### config after lookup:')
     log.debug('### lookup_finalized')
-    log.debug('### config:')
+    log.debug('### config after lookup:')
     log.debug(config)
 
     ## config validation
@@ -109,6 +116,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)
+    # DEPRECATED, use gcdt-logon plugin instead
     if are_credentials_still_valid(awsclient):
         context['error'] = \
             'Your credentials have expired... Please renew and try again!'

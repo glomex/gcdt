@@ -64,7 +64,7 @@ def list_apis(awsclient):
 
 
 def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
-               lambdas, cache_cluster_enabled, method_settings=None):
+               lambdas, cache_cluster_enabled, cache_cluster_size, method_settings=None):
     """Deploy API Gateway to AWS cloud.
 
     :param awsclient:
@@ -74,6 +74,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
     :param api_key:
     :param lambdas:
     :param cache_cluster_enabled:
+    :param cache_cluster_size:
     :param method_settings:
     """
     if not _api_exists(awsclient, api_name):
@@ -90,7 +91,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled, cache_cluster_size)
             _update_stage(awsclient, api['id'], stage_name, method_settings)
             _wire_api_key(awsclient, api_name, api_key, stage_name)
         else:
@@ -105,7 +106,7 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled, cache_cluster_size)
             _update_stage(awsclient, api['id'], stage_name, method_settings)
         else:
             print('API name unknown')
@@ -366,20 +367,22 @@ def _update_api():
 
 
 def _create_deployment(awsclient, api_name, stage_name,
-                       cache_cluster_enabled=False):
+                       cache_cluster_enabled=False, cache_cluster_size=0.5):
     client_api = awsclient.get_client('apigateway')
     print('create deployment')
 
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
-
-        response = client_api.create_deployment(
-            restApiId=api['id'],
-            stageName=stage_name,
-            description='TO BE FILLED',
-            cacheClusterEnabled=cache_cluster_enabled,
-        )
+        request = {
+            'restApiId': api['id'],
+            'stageName': stage_name,
+            'description': 'TO BE FILLED',
+            'cacheClusterEnabled': cache_cluster_enabled
+        }
+        if cache_cluster_enabled:
+            request['cacheClusterSize'] = cache_cluster_size
+        response = client_api.create_deployment(**request)
 
         print(json2table(response))
     else:

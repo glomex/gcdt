@@ -55,6 +55,7 @@ def deploy_cmd(**tooldata):
     api_key = config['api'].get('apiKey')
     lambdas = get_lambdas(awsclient, config, add_arn=True)
     cache_cluster_enabled = config['api'].get('cacheClusterEnabled', False)
+    cache_cluster_size = config['api'].get('cacheClusterSize', False)
     method_settings = config['api'].get('methodSettings', {})
     exit_code = deploy_api(
         awsclient=awsclient,
@@ -64,6 +65,7 @@ def deploy_cmd(**tooldata):
         api_key=api_key,
         lambdas=lambdas,
         cache_cluster_enabled=cache_cluster_enabled,
+        cache_cluster_size=cache_cluster_size,
         method_settings=method_settings
     )
     if 'customDomain' in config:

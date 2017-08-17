@@ -54,7 +54,8 @@ def test_create_api(awsclient, cleanup_api_keys, cleanup_apis):
         stage_name=target_stage,
         api_key=api_key,
         lambdas=lambdas,
-        cache_cluster_enabled=False
+        cache_cluster_enabled=False,
+        cache_cluster_size=0.5
     )
     cleanup_apis.append(api_name)
 
