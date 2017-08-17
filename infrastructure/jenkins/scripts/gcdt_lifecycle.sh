@@ -71,7 +71,7 @@ kumo stop
 kumo start
 
 ## check if the application works (after health checks are green)
-sleep 20
+sleep 180
 curl --fail http://autotest:tsetotua@supercars-eu-west-1.dev.infra.glomex.cloud/health_check
 
 ## cleanup the stack
