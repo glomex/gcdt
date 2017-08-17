@@ -62,12 +62,12 @@ pip install -r requirements_gcdt.txt
 sleep 180
 curl --fail http://autotest:tsetotua@supercars-eu-west-1.dev.infra.glomex.cloud/health_check
 
-## stop the stack
 cd ./infrastructure
+
+## stop the stack
 kumo stop
 
 ## start the stack
-cd ./infrastructure
 kumo start
 
 ## check if the application works (after health checks are green)
@@ -75,7 +75,6 @@ sleep 20
 curl --fail http://autotest:tsetotua@supercars-eu-west-1.dev.infra.glomex.cloud/health_check
 
 ## cleanup the stack
-cd ./infrastructure
 kumo delete -f
 
 
