@@ -367,7 +367,7 @@ def _update_api():
 
 
 def _create_deployment(awsclient, api_name, stage_name,
-                       cache_cluster_enabled=False, cache_cluster_size=0.5):
+                       cache_cluster_enabled=False, cache_cluster_size='0.5'):
     client_api = awsclient.get_client('apigateway')
     print('create deployment')
 
