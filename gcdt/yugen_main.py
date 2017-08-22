@@ -5,7 +5,7 @@ import sys
 
 from .yugen_core import list_api_keys, get_lambdas, delete_api, \
     export_to_swagger, create_api_key, list_apis, \
-    create_custom_domain, delete_api_key, deploy_api
+    deploy_custom_domain, delete_api_key, deploy_api
 from . import utils
 from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
@@ -13,17 +13,18 @@ from . import gcdt_lifecycle
 
 # creating docopt parameters and usage help
 DOC = '''Usage:
-        yugen deploy
-        yugen delete -f
-        yugen export
-        yugen list
-        yugen apikey-create <keyname>
-        yugen apikey-list
-        yugen apikey-delete
-        yugen custom-domain-create
+        yugen deploy [-v]
+        yugen delete -f [-v]
+        yugen export [-v]
+        yugen list [-v]
+        yugen apikey-create <keyname> [-v]
+        yugen apikey-list [-v]
+        yugen apikey-delete [-v]
+        yugen custom-domain-create [-v]
         yugen version
 
 -h --help           show this
+-v --verbose        show debug messages
 '''
 
 
@@ -71,22 +72,25 @@ def deploy_cmd(**tooldata):
     if 'customDomain' in config:
         domain_name = config['customDomain'].get('domainName')
         route_53_record = config['customDomain'].get('route53Record')
-        ssl_cert = {
-            'name': config['customDomain'].get('certificateName'),
-            'body': config['customDomain'].get('certificateBody'),
-            'private_key': config['customDomain'].get('certificatePrivateKey'),
-            'chain': config['customDomain'].get('certificateChain')
-        }
+        #ssl_cert = {
+        #    'name': config['customDomain'].get('certificateName'),
+        #    'body': config['customDomain'].get('certificateBody'),
+        #    'private_key': config['customDomain'].get('certificatePrivateKey'),
+        #    'chain': config['customDomain'].get('certificateChain')
+        #}
+        cert_name = config['customDomain'].get('certificateName')
+        cert_arn = config['customDomain'].get('certificateArn')
         hosted_zone_id = config['customDomain'].get('hostedDomainZoneId')
         api_base_path = config['customDomain'].get('basePath')
-        create_custom_domain(
+        deploy_custom_domain(
             awsclient=awsclient,
             api_name=api_name,
             api_target_stage=target_stage,
             api_base_path=api_base_path,
             domain_name=domain_name,
             route_53_record=route_53_record,
-            ssl_cert=ssl_cert,
+            cert_name=cert_name,
+            cert_arn=cert_arn,
             hosted_zone_id=hosted_zone_id
         )
     return exit_code
@@ -164,22 +168,25 @@ def custom_domain_create_cmd(**tooldata):
     domain_name = config['customDomain'].get('domainName')
     route_53_record = config['customDomain'].get('route53Record')
     api_base_path = config['customDomain'].get('basePath')
-    ssl_cert = {
-        'name': config['customDomain'].get('certificateName'),
-        'body': config['customDomain'].get('certificateBody'),
-        'private_key': config['customDomain'].get('certificatePrivateKey'),
-        'chain': config['customDomain'].get('certificateChain')
-    }
+    #ssl_cert = {
+    #    'name': config['customDomain'].get('certificateName'),
+    #    'body': config['customDomain'].get('certificateBody'),
+    #    'private_key': config['customDomain'].get('certificatePrivateKey'),
+    #    'chain': config['customDomain'].get('certificateChain')
+    #}
+    cert_name = config['customDomain'].get('certificateName')
+    cert_arn = config['customDomain'].get('certificateArn')
     hosted_zone_id = config['customDomain'].get('hostedDomainZoneId')
 
-    return create_custom_domain(
+    return deploy_custom_domain(
         awsclient=awsclient,
         api_name=api_name,
         api_target_stage=api_target_stage,
         api_base_path=api_base_path,
         domain_name=domain_name,
         route_53_record=route_53_record,
-        ssl_cert=ssl_cert,
+        cert_name=cert_name,
+        cert_arn=cert_arn,
         hosted_zone_id=hosted_zone_id
     )
 

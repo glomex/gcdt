@@ -49,6 +49,7 @@ def get_outputs_for_stack(awsclient, stack_name):
         return result
 
 
+# I do not think we support these DEPRECATED functionality any more
 def get_ssl_certificate(awsclient, domain):
     client_iam = awsclient.get_client('iam')
     response = client_iam.list_server_certificates()

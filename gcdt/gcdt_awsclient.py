@@ -14,8 +14,12 @@ class AWSClient(object):
         self._session = session
         self._client_cache = {}
 
-    def get_client(self, service_name):
-        if service_name not in self._client_cache:
-            self._client_cache[service_name] = self._session.create_client(
-                service_name)
-        return self._client_cache[service_name]
+    def get_client(self, service_name, region_name=None):
+        if region_name is None:
+            # use the region from the session
+            region_name = self._session.get_config_variable('region')
+
+        if (service_name, region_name) not in self._client_cache:
+            self._client_cache[(service_name, region_name)] = \
+                self._session.create_client(service_name, region_name)
+        return self._client_cache[(service_name, region_name)]
