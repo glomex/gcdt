@@ -1,0 +1,951 @@
+---
+  swagger: "2.0"
+  info: 
+    title: {{apiName}}
+    description: {{apiDescription}}
+    version: "0.0.1"
+  basePath: "/{{apiBasePath}}"
+  host: "{{apiHostname}}"
+  schemes: 
+    - "https"
+  consumes: 
+    - "application/json"
+  produces: 
+    - "application/json"
+  securityDefinitions:
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+  paths: 
+    /cdn/usage/inVideoMinutes/byTime:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - CDN
+        description: CDN usage in minutes for CDN providers specified in the CDNProvider array, for customers specified in the accessKey array, for the time period specified in 'from' to 'to'.
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+        parameters:
+          - name: contentProviderID
+            in: query
+            description: array of content provider ID (customer)
+            required: false
+            default: [ All ]
+            type: array
+            items:
+              type: string
+            collectionFormat: csv
+          - $ref: "#/parameters/cdnProviders"
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionCdn"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"CDN usage",
+                    "data":[{"value":[1001012, 1212333, 3421442, 4312441, 2313213, 4132135],
+                           "bucket":["2016-02-10T00:20:00.00Z","2016-02-11T00:20:00.00Z","2016-02-12T00:20:00.00Z", "2016-02-13T00:20:00.00Z", "2016-02-14T00:20:00.00Z", "2016-02-15T00:20:00.00Z"]}],
+                    "dataformat":{"value":"minutes","bucket":"days"},
+                    "querySettings":{"vasAccessTokens":["prosieben", "sat1"],
+                                      "CDNProviders":["Akamai","Level3"],
+                                      "from":"2016-02-10T00:20:00.00Z",
+                                      "to":"2016-02-15T00:20:00.00Z"}
+                  }
+
+    /cdn/usage/inGbs/byAccessToken:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - CDN
+        description: CDN volume usage for customers specified in the accessKey array for a given time period. Standard output is minutes video content per day in period.
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+        parameters:
+          - $ref: "#/parameters/cdnProviders"
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionCdn"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"CDN usage in volume",
+                    "data":[{"value":[1001012, 1212333, 3421442, 4312441, 2313213, 4132135],
+                           "bucket":["2016-02-10T00:20:00.00Z","2016-02-11T00:20:00.00Z","2016-02-12T00:20:00.00Z", "2016-02-13T00:20:00.00Z", "2016-02-14T00:20:00.00Z", "2016-02-15T00:20:00.00Z"]}],
+                    "dataformat":{"value":"Gb","bucket":"days"},
+                    "querySettings":{"vasAccessTokens":["prosieben", "sat1"],
+                                      "CDNProviders":["Akamai","Level3"],
+                                      "from":"2016-02-10T00:20:00.00Z",
+                                      "to":"2016-02-15T00:20:00.00Z"}
+                  }
+
+    /cdn/usage/inVideoMinutes/byCDNProvider:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - CDN
+        description: CDN usage for customer specified in accessTokens array for the CDN providers specified in CDN providers array.
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+        parameters:
+          - $ref: "#/parameters/cdnProviders"
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionCdn"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"CDN usage in minutes",
+                    "data":[
+                          {
+                            "value":[501012, 612333],
+                            "bucket":["Akamai","Level3"]
+                            }
+                          ],
+                    "dataformat":{"value":"minutes","bucket":"cdn"},
+                    "querySettings":{"vasAccessTokens":["prosieben", "sat1"],
+                                      "CDNProviders":["Akamai","Level3"],
+                                      "from":"2016-02-10T00:20:00.00Z",
+                                      "to":"2016-02-15T00:20:00.00Z"}
+                  }
+
+    /cdn/usage/inVideoMinutes/byContentId:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {\"mock\":\"true\"}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - CDN
+        description: Content top list, sorted by dataFormat specified in dataFormat, elements in top list specified in topListSize.
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+        parameters:
+          - name: topListSize
+            in: query
+            description: The number top content
+            required: false
+            type: integer
+            format: int32
+            default: 10
+          - $ref: "#/parameters/cdnProviders"
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionCdn"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"CDN - Content Top List",
+                    "accessTokens":["prosieben", "sat1"],
+                    "CDNProviders":["Akamai","Level3"],
+                    "data":[{"value":[1240, 785, 321, 317, 151, 149,149],
+                           "key":[4210189, 417676, 3635410, 365428, 4174673, 4279622, 4285087]}],
+                    "dataformat":{"value":"hours","bucket":"contentId"},
+                    "querySettings":{"vasAccessTokens":["prosieben", "sat1"],
+                                      "CDNProviders":["Akamai","sat1"],
+                                      "from":"2016-02-10T00:20:00.00Z",
+                                      "to":"2016-02-15T00:20:00.00Z"}
+                  }
+
+    /player/videoStreamingExperience/videoErrorRatio/byTime:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - Player
+        description: Video exits before start (ratio).
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+
+        parameters:
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/hostname"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionPlayer"
+          - $ref: "#/parameters/technologyType"
+          - $ref: "#/parameters/publisher"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"Video exits before start",
+                    "data":[{"value":[0.1237, 0.1000, 0.0812, 0.1219, 0.1216, 0.1334],
+                           "bucket":["2016-05-10T00:20:00.00Z","2016-05-11T00:20:00.00Z","2016-05-12T00:20:00.00Z", "2016-05-13T00:20:00.00Z", "2016-05-14T00:20:00.00Z", "2016-05-15T00:20:00.00Z"]}],
+                    "dataformat":{"value":"ratio","bucket":"days"},
+                    "querySettings":{ "vasAccessTokens":["prosieben", "sat1"],
+                                      "publisher_id": "t-b603i6jm8v61",
+                                      "technologyType":"All",
+                                      "from":"2016-05-10T00:20:00.00Z",
+                                      "to":"2016-05-15T00:20:00.00Z"}
+                  }
+
+    /player/videoStreamingExperience/videoExitsBeforeStart/byTime:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+      get:
+        security:
+            - api_key: []
+        tags:
+          - Player
+        description: Video error rate (ratio).
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+
+        parameters:
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/hostname"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionPlayer"
+          - $ref: "#/parameters/technologyType"
+          - $ref: "#/parameters/publisher"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"Video player errors",
+                    "data":[{"value":[0.0237, 0.0130, 0.0812, 0.0112, 0.0086, 0.0114],
+                           "bucket":["2016-05-10T00:20:00.00Z","2016-05-11T00:20:00.00Z","2016-05-12T00:20:00.00Z", "2016-05-13T00:20:00.00Z", "2016-05-14T00:20:00.00Z", "2016-05-15T00:20:00.00Z"]}],
+                    "dataformat":{"value":"ratio","bucket":"days"},
+                    "querySettings":{ "vasAccessTokens":["prosieben", "sat1"],
+                                      "publisher_id": "t-b603i6jm8v61",
+                                      "technologyType":"All",
+                                      "from":"2016-05-10T00:20:00.00Z",
+                                      "to":"2016-05-15T00:20:00.00Z"}
+                  }
+
+    /player/videoStreamingExperience/videoStarts/byTime:
+      options:
+        tags:
+          - CORS
+        summary: CORS support
+        description: |
+          Enable CORS by returning correct headers
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        x-amazon-apigateway-integration:
+          type: mock
+          requestTemplates:
+            application/json: |
+              {
+                "statusCode" : 200
+              }
+          responses:
+            "default":
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {}
+        responses:
+          200:
+            description: Default response for CORS method
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+
+      get:
+        security:
+            - api_key: []
+        tags:
+          - Player
+        description: Sum of event type Event:Content-Clip Start.
+        responses:
+          200:
+            description: "successful response"
+            headers:
+              Access-Control-Allow-Headers:
+                type: "string"
+              Access-Control-Allow-Methods:
+                type: "string"
+              Access-Control-Allow-Origin:
+                type: "string"
+
+        parameters:
+          - $ref: "#/parameters/accessTokens"
+          - $ref: "#/parameters/hostname"
+          - $ref: "#/parameters/from"
+          - $ref: "#/parameters/to"
+          - $ref: "#/parameters/resolutionPlayer"
+          - $ref: "#/parameters/technologyType"
+          - $ref: "#/parameters/publisher"
+          - $ref: "#/parameters/product"
+        x-amazon-apigateway-integration:
+          type: "mock"
+          httpMethod: "GET"
+          requestTemplates:
+            application/json: "{\"statusCode\": 200 }"
+          responses:
+            default:
+              statusCode: "200"
+              responseParameters:
+                method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                method.response.header.Access-Control-Allow-Methods : "'*'"
+                method.response.header.Access-Control-Allow-Origin : "'*'"
+              responseTemplates:
+                application/json: |
+                  {
+                    "title":"Video Starts",
+                    "data":[{"value":[1001012, 1212333, 3421442, 4312441, 2313213, 4132135],
+                           "bucket":["2016-05-10T00:20:00.00Z","2016-05-11T00:20:00.00Z","2016-05-12T00:20:00.00Z", "2016-05-13T00:20:00.00Z", "2016-05-14T00:20:00.00Z", "2016-05-15T00:20:00.00Z"]}],
+                    "dataformat":{"value":"count","bucket":"day"},
+                    "querySettings":{ "vasAccessTokens":["prosieben", "sat1"],
+                                      "publisher_id": "t-b603i6jm8v61",
+                                      "technologyType":"All",
+                                      "from":"2016-05-10T00:20:00.00Z",
+                                      "to":"2016-05-15T00:20:00.00Z"}
+                  }
+
+    /player/videoStreamingExperience/videoStarts/byContentId:
+          options:
+            tags:
+              - CORS
+            summary: CORS support
+            description: |
+              Enable CORS by returning correct headers
+            consumes:
+              - application/json
+            produces:
+              - application/json
+            x-amazon-apigateway-integration:
+              type: mock
+              requestTemplates:
+                application/json: |
+                  {
+                    "statusCode" : 200
+                  }
+              responses:
+                "default":
+                  statusCode: "200"
+                  responseParameters:
+                    method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                    method.response.header.Access-Control-Allow-Methods : "'*'"
+                    method.response.header.Access-Control-Allow-Origin : "'*'"
+                  responseTemplates:
+                    application/json: |
+                      {}
+            responses:
+              200:
+                description: Default response for CORS method
+                headers:
+                  Access-Control-Allow-Headers:
+                    type: "string"
+                  Access-Control-Allow-Methods:
+                    type: "string"
+                  Access-Control-Allow-Origin:
+                    type: "string"
+
+          get:
+            security:
+                - api_key: []
+            tags:
+              - Player
+            description: Sum of event type Event:Content-Clip Start.
+            responses:
+              200:
+                description: "successful response"
+                headers:
+                  Access-Control-Allow-Headers:
+                    type: "string"
+                  Access-Control-Allow-Methods:
+                    type: "string"
+                  Access-Control-Allow-Origin:
+                    type: "string"
+
+            parameters:
+              - name: topListSize
+                in: query
+                description: The number top content
+                required: false
+                type: integer
+                format: int32
+                default: 10
+              - $ref: "#/parameters/accessTokens"
+              - $ref: "#/parameters/hostname"
+              - $ref: "#/parameters/from"
+              - $ref: "#/parameters/to"
+              - $ref: "#/parameters/technologyType"
+              - $ref: "#/parameters/publisher"
+              - $ref: "#/parameters/product"
+            x-amazon-apigateway-integration:
+              type: "mock"
+              httpMethod: "GET"
+              requestTemplates:
+                application/json: "{\"statusCode\": 200 }"
+              responses:
+                default:
+                  statusCode: "200"
+                  responseParameters:
+                    method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                    method.response.header.Access-Control-Allow-Methods : "'*'"
+                    method.response.header.Access-Control-Allow-Origin : "'*'"
+                  responseTemplates:
+                    application/json: |
+                      {
+                        "title":"Video Starts",
+                        "data":[{"value":[1001012, 1212333],
+                               "bucket":["v-12345","v-45678"]}],
+                        "dataformat":{"value":"count","bucket":"videoId"},
+                        "querySettings":{ "vasAccessTokens":["prosieben", "sat1"],
+                                          "publisher_id": "t-b603i6jm8v61",
+                                          "technologyType":"All",
+                                          "from":"2016-05-10T00:20:00.00Z",
+                                          "to":"2016-05-15T00:20:00.00Z"}
+                      }
+
+    /player/videoStreamingExperience/adrollStarts/byTime:
+        options:
+          tags:
+            - CORS
+          summary: CORS support
+          description: |
+            Enable CORS by returning correct headers
+          consumes:
+            - application/json
+          produces:
+            - application/json
+          x-amazon-apigateway-integration:
+            type: mock
+            requestTemplates:
+              application/json: |
+                {
+                  "statusCode" : 200
+                }
+            responses:
+              "default":
+                statusCode: "200"
+                responseParameters:
+                  method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                  method.response.header.Access-Control-Allow-Methods : "'*'"
+                  method.response.header.Access-Control-Allow-Origin : "'*'"
+                responseTemplates:
+                  application/json: |
+                    {}
+          responses:
+            200:
+              description: Default response for CORS method
+              headers:
+                Access-Control-Allow-Headers:
+                  type: "string"
+                Access-Control-Allow-Methods:
+                  type: "string"
+                Access-Control-Allow-Origin:
+                  type: "string"
+        get:
+          security:
+              - api_key: []
+          tags:
+            - Player
+          description: Sum of event type Event:AdRoll Start.
+          responses:
+            200:
+              description: "successful response"
+              headers:
+                Access-Control-Allow-Headers:
+                  type: "string"
+                Access-Control-Allow-Methods:
+                  type: "string"
+                Access-Control-Allow-Origin:
+                  type: "string"
+
+          parameters:
+            - $ref: "#/parameters/accessTokens"
+            - $ref: "#/parameters/hostname"
+            - $ref: "#/parameters/from"
+            - $ref: "#/parameters/to"
+            - $ref: "#/parameters/resolutionPlayer"
+            - $ref: "#/parameters/technologyType"
+            - $ref: "#/parameters/publisher"
+            - $ref: "#/parameters/product"
+            - name: adType
+              in: query
+              description: Which kind of ad types to filter for?
+              required: false
+              type: string
+              enum: ["All","preroll","postroll"]
+              default: "All"
+          x-amazon-apigateway-integration:
+            type: "mock"
+            httpMethod: "GET"
+            requestTemplates:
+              application/json: "{\"statusCode\": 200 }"
+            responses:
+              default:
+                statusCode: "200"
+                responseParameters:
+                  method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                  method.response.header.Access-Control-Allow-Methods : "'*'"
+                  method.response.header.Access-Control-Allow-Origin : "'*'"
+                responseTemplates:
+                  application/json: |
+                    {
+                      "title":"AdRoll Starts",
+                      "data":[{"value":[1001012, 1212333, 3421442, 4312441, 2313213, 4132135],
+                             "bucket":["2016-05-10T00:20:00.00Z","2016-05-11T00:20:00.00Z","2016-05-12T00:20:00.00Z", "2016-05-13T00:20:00.00Z", "2016-05-14T00:20:00.00Z", "2016-05-15T00:20:00.00Z"]}],
+                      "dataformat":{"value":"count","bucket":"day"},
+                      "querySettings":{ "vasAccessTokens":["prosieben", "sat1"],
+                                        "publisher_id": "t-b603i6jm8v61",
+                                        "hostnames":["All"],
+                                        "technologyType":"All",
+                                        "from":"2016-05-10T00:20:00.00Z",
+                                        "to":"2016-05-15T00:20:00.00Z"}
+                    }
+
+
+  parameters:
+
+    cdnProviders:
+      name: cdnProviders
+      in: query
+      description: array of CDN providers
+      required: false
+      default: [ All ]
+      type: array
+      items:
+        type: string
+      collectionFormat: csv
+
+    accessTokens:
+      name: vasAccessTokens
+      in: query
+      description: array of VAS access keys, defines the customer, referred to as clientName in player logs.
+      required: false
+      default: [ All ]
+      type: array
+      items:
+        type: string
+      collectionFormat: csv
+
+    hostname:
+      name: hostnames
+      in: query
+      description: array of hostnames
+      required: false
+      default: [ All ]
+      type: array
+      items:
+        type: string
+      collectionFormat: csv
+
+    from:
+      name: from
+      in: query
+      description: Period start (date-time) e.g. 2016-01-03
+      required: true
+      type: string
+      format: date-time
+
+    to:
+      name: to
+      in: query
+      description: Period end (date-time) e.g. 2016-01-03
+      required: true
+      type: string
+      format: date-time
+
+    resolutionCdn:
+      name: resolution
+      in: query
+      description: time-axis resolution
+      required: false
+      type: string
+      enum: ["hour","day","week","month"]
+      default: "day"
+
+    resolutionPlayer:
+      name: resolution
+      in: query
+      description: time-axis resolution
+      required: false
+      type: string
+      enum: ["15m","day","week"]
+      default: "15m"
+
+    technologyType:
+      name: technologyType
+      in: query
+      description: Technology type (Flash, HTML5...)
+      required: false
+      type: string
+      enum: ["All","flash","html5"]
+      default: "All"
+
+    publisher:
+      name: publisherId
+      in: query
+      description: filter for a publisher who can own multiple vas access tokens
+      required: false
+      default: [ All ]
+      type: array
+      items:
+        type: string
+      collectionFormat: csv
+
+    product:
+      name: product
+      in: query
+      description: Which product to to metrics on
+      required: false
+      type: string
+      enum: ["Legacy","MES"]
+      default: "Legacy"
+

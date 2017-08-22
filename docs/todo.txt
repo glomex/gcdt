@@ -1,6 +1,0 @@
-# DOCU TODOs
-
-* japanese characters for latex
-* describe how to do PR (incl versions, details, etc.), describe releases process
-*
-

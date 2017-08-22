@@ -1,0 +1,2 @@
+glomex-credstash==1.11.15
+pycrypto==2.6.1
