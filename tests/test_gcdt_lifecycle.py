@@ -3,11 +3,11 @@ from __future__ import unicode_literals, print_function
 import os
 import textwrap
 
-import pytest
+#import pytest
 import mock
 
 from gcdt.gcdt_lifecycle import main, lifecycle, _load_hooks
-from gcdt.kumo_main import DOC
+#from gcdt.kumo_main import DOC
 from gcdt import gcdt_signals
 from gcdt_testtools.helpers import create_tempfile
 

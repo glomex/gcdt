@@ -67,6 +67,7 @@ def get_ssl_certificate(awsclient, domain):
     return arn
 
 
+'''
 def get_base_ami(awsclient, owners):
     """
     DEPRECATED!!!
@@ -104,3 +105,4 @@ def get_base_ami(awsclient, owners):
                 latest_version = version
 
     return latest_id
+'''

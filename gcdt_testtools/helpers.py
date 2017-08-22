@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-
+import os
 import io
+import json
 import shutil
 import subprocess
 import tarfile
 from tempfile import NamedTemporaryFile, mkdtemp
 from zipfile import ZipFile
 
-import os
 import pytest
 from testfixtures import LogCapture
 
@@ -177,3 +177,10 @@ def logcapture():
     # http://testfixtures.readthedocs.io/en/latest/logging.html
     with LogCapture() as l:
         yield l
+
+
+def read_json_config(config_file):
+    # currently this is only a helper for test
+    with open(config_file) as jfile:
+        data = json.load(jfile)
+    return data

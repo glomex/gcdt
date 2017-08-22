@@ -50,6 +50,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     """
     log.debug('### init')
     load_plugins()
+    load_plugins('gcdttool10')
     context = get_context(awsclient, env, tool, command, arguments)
     # every tool needs a awsclient so we provide this via the context
     context['_awsclient'] = awsclient

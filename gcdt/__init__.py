@@ -1,5 +1,6 @@
 __version__ = '0.1.434'
 
+
 class GcdtError(Exception):
     """
     The base exception class for gcdt exceptions.

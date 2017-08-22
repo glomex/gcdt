@@ -51,11 +51,7 @@ setup(
     author_email='Mark.Fink@glomex.com',
     entry_points={
         'console_scripts': [
-            'gcdt=gcdt.gcdt_main:main',
-            'kumo=gcdt.kumo_main:main',
-            'ramuda=gcdt.ramuda_main:main',
-            'yugen=gcdt.yugen_main:main',
-            'tenkai=gcdt.tenkai_main:main'
+            'gcdt=gcdt.gcdt_main:main'
         ]
     }
 )

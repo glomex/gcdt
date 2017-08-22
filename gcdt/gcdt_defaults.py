@@ -19,7 +19,11 @@ hardcoded values.
 '''
 
 # note: as a convention this does NOT go into config!
+# move to `setup` section in openapi
 DEFAULT_CONFIG = {
+    'kumo': {
+        'non_config_commands': ['list']  # this command does not require config
+    },
     'ramuda': {
         'settings_file': 'settings.json',
         'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],

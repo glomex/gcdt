@@ -365,3 +365,18 @@ def all_pages(method, request, accessor, cond=None):
         next_token = response['nextToken']
 
     return result
+
+
+def stack_exists(awsclient, stack_name):
+    # TODO handle failure based on API call limit
+    client = awsclient.get_client('cloudformation')
+    try:
+        response = client.describe_stacks(
+            StackName=stack_name
+        )
+    except GracefulExit:
+        raise
+    except Exception:
+        return False
+    else:
+        return True

@@ -3,7 +3,6 @@ from __future__ import unicode_literals, print_function
 from datetime import datetime
 
 from gcdt.servicediscovery import parse_ts
-import pytest
 
 
 def test_parse_ts():

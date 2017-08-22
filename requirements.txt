@@ -17,5 +17,10 @@ pyspin==1.0.2
 pip>=9.0.1
 funcsigs>=1.0.2
 maya==0.3.2
-testfixtures>=5.1.1
 bravado-core==4.8.0
+
+# gcdt_testtool dependencies
+pytest>=3.1.2
+pytest-cov>=2.5.1
+testfixtures>=5.1.1
+pytest-vts>=0.4.3
