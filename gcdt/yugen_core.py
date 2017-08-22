@@ -183,9 +183,9 @@ def list_api_keys(awsclient):
         print(json2table(item))
 
 
-def create_custom_domain(awsclient, api_name, api_target_stage,
+def deploy_custom_domain(awsclient, api_name, api_target_stage,
                          api_base_path, domain_name, route_53_record,
-                         ssl_cert, hosted_zone_id):
+                         cert_name, cert_arn, hosted_zone_id):
     """Add custom domain to your API.
 
     :param api_name:
@@ -194,6 +194,8 @@ def create_custom_domain(awsclient, api_name, api_target_stage,
     :param domain_name:
     :param route_53_record:
     :param ssl_cert:
+    :param cert_name:
+    :param cert_arn:
     :param hosted_zone_id:
     :return: exit_code
     """
@@ -208,11 +210,11 @@ def create_custom_domain(awsclient, api_name, api_target_stage,
     domain = _custom_domain_name_exists(awsclient, domain_name)
 
     if not domain:
-        response = _create_new_custom_domain(awsclient, domain_name,
-                                             ssl_cert)
+        response = _create_custom_domain(awsclient, domain_name, cert_name, cert_arn)
         cloudfront_distribution = response['distributionDomainName']
     else:
-        cloudfront_distribution = domain['distributionDomainName']
+        response = _update_custom_domain(awsclient, domain_name, cert_name, cert_arn)
+        cloudfront_distribution = response['distributionDomainName']
 
     if _base_path_mapping_exists(awsclient, domain_name, api_base_path):
         _ensure_correct_base_path_mapping(awsclient, domain_name,
@@ -547,14 +549,36 @@ def _record_exists_and_correct(awsclient, hosted_zone_id,
     return record_exists, record_correct
 
 
-def _create_new_custom_domain(awsclient, domain_name, ssl_cert):
+def _create_custom_domain(awsclient, domain_name, cert_name, cert_arn):
     client_api = awsclient.get_client('apigateway')
     response = client_api.create_domain_name(
         domainName=domain_name,
-        certificateName=ssl_cert['name'],
-        certificateBody=ssl_cert['body'],
-        certificatePrivateKey=ssl_cert['private_key'],
-        certificateChain=ssl_cert['chain']
+        #certificateName=ssl_cert['name'],
+        #certificateBody=ssl_cert['body'],
+        #certificatePrivateKey=ssl_cert['private_key'],
+        #certificateChain=ssl_cert['chain']
+        certificateName=cert_name,
+        certificateArn=cert_arn
+    )
+    return response
+
+
+def _update_custom_domain(awsclient, domain_name, cert_name, cert_arn):
+    client_api = awsclient.get_client('apigateway')
+    response = client_api.update_domain_name(
+        domainName=domain_name,
+        patchOperations=[
+            {
+                'op': 'replace',
+                'path': '/certificateName',
+                'value': cert_name
+            },
+            {
+                'op': 'replace',
+                'path': '/certificateArn',
+                'value': cert_arn
+            },
+        ]
     )
     return response
 

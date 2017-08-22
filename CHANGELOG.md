@@ -5,21 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.1.438] - 2017-08-22 
+## [0.1.438] - 2017-08-22
 ### Added
 - yugen: create / update custom domain cert using ACM lookup (#367)
 ### Removed
 - yugen: deprecated way of directly providing a cert with API Gateway
 
-## [0.1.437] - 2017-08-22 
+## [0.1.437] - 2017-08-22
 ### Added
 - multi-region support for AWSClient (#367)
 
-## [0.1.436] - 2017-08-17 
+## [0.1.436] - 2017-08-17
 ### Fixed
 - yugen: default value for cache size property (#328)
 
-## [0.1.435] - 2017-08-17 
+## [0.1.435] - 2017-08-17
 ### Added
 - yugen: add cache size property (#328)
 
