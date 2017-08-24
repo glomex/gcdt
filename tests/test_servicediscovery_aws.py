@@ -21,12 +21,15 @@ def test_get_outputs_for_stack(awsclient, simple_cloudformation_stack):
 '''
 
 
+# I do not think we support these DEPRECATED functionality any more
+'''
 @pytest.mark.aws
 @check_preconditions
 def test_get_ssl_certificate(awsclient):
     cert = get_ssl_certificate(awsclient, 'multidomain.glomex.cloud')
+    print(cert)
     assert cert.startswith('arn:aws:iam::420189626185:server-certificate/cloudfront/multidomain.glomex.cloud')
-
+'''
 
 # DEPRECATED
 '''
