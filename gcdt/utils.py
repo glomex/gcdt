@@ -293,26 +293,6 @@ def json2table(json):
         return json
 
 
-def fix_old_kumo_config(config, silent=False):
-    # DEPRECATED since 0.1.420
-    if config.get('kumo', {}).get('cloudformation', {}):
-        if not silent:
-            log.warn('kumo config contains a deprecated "cloudformation" section!')
-        cloudformation = config['kumo'].pop('cloudformation')
-        stack = {}
-        for key in cloudformation.keys():
-            if key in ['StackName', 'TemplateBody', 'artifactBucket', 'RoleARN']:
-                stack[key] = cloudformation.pop(key)
-        if stack:
-            config['kumo']['stack'] = stack
-        if cloudformation:
-            config['kumo']['parameters'] = cloudformation
-        if not silent:
-            log.warn('Your kumo config should look like this:')
-            log.warn(json.dumps(config['kumo']))
-    return config
-
-
 def random_string(length=6):
     """Create a random 6 character string.
 
@@ -380,3 +360,14 @@ def stack_exists(awsclient, stack_name):
         return False
     else:
         return True
+
+
+def get_plugin_defaults(config, plugin_name):
+    """Helper to extract plugin defaults from config.
+
+    :param config:
+    :param plugin_name:
+    :return: defaults or {}
+    """
+    defaults = config.get('plugins', {}).get(plugin_name, {}).get('defaults', {})
+    return defaults

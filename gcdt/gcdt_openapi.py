@@ -100,7 +100,7 @@ def validate_tool_config(raw_spec, config):
 # whole structure and can not reuse examples.
 
 
-def get_defaults(specification, def_name):
+def get_openapi_defaults(specification, def_name):
     """Get default configuration for the given definition.
 
     :param def_name: Name of the definition.
@@ -109,7 +109,7 @@ def get_defaults(specification, def_name):
     return _build_one_definition_example(specification, def_name, 'default')
 
 
-def get_scaffold_min(specification, def_name):
+def get_openapi_scaffold_min(specification, def_name):
     """Get minimal configuration for the given definition (required properties).
 
     :param def_name: Name of the definition.
@@ -118,7 +118,7 @@ def get_scaffold_min(specification, def_name):
     return _build_one_definition_example(specification, def_name, 'sample-min')
 
 
-def get_scaffold_max(specification, def_name):
+def get_openapi_scaffold_max(specification, def_name):
     """Get maximal configuration for the given definition (all properties).
 
     :param def_name: Name of the definition.

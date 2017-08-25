@@ -10,7 +10,7 @@ from logging.config import dictConfig
 import botocore.session
 from docopt import docopt
 
-from .utils import GracefulExit, signal_handler, fix_old_kumo_config
+from .utils import GracefulExit, signal_handler  #, fix_old_kumo_config
 from . import gcdt_signals
 from .gcdt_awsclient import AWSClient
 from .gcdt_cmd_dispatcher import cmd, get_command
@@ -20,7 +20,7 @@ from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
 from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
     get_env
-from .gcdt_defaults import DEFAULT_CONFIG
+#from .gcdt_defaults import DEFAULT_CONFIG
 
 log = logging.getLogger(__name__)
 
@@ -80,9 +80,9 @@ def lifecycle(awsclient, env, tool, command, arguments):
     if 'hookfile' in config:
         # load hooks from hookfile
         _load_hooks(config['hookfile'])
-    if 'kumo' in config:
-        # deprecated: this needs to be removed once all old-style "cloudformation" entries are gone
-        fix_old_kumo_config(config)
+    #if 'kumo' in config:
+    #    # deprecated: this needs to be removed once all old-style "cloudformation" entries are gone
+    #    fix_old_kumo_config(config)
 
     # check_credentials
     gcdt_signals.check_credentials_init.send((context, config))
@@ -106,14 +106,17 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.config_validation_init.send((context, config))
     log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
-    if context['command'] in \
-            DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
-        pass  # we do not require a config for this command
-    elif tool not in config and tool != 'gcdt':
-        context['error'] = 'Configuration missing for \'%s\'.' % tool
-        log.error(context['error'])
-        gcdt_signals.error.send((context, config))
-        return 1
+    if tool != 'gcdt':
+        #if context['command'] in \
+        #        DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
+        if context['command'] in config[tool].get('defaults', {}).get('non_config_commands', []):
+            pass  # we do not require a config for this command
+        elif tool not in config:
+            # TODO see if we still need this!
+            context['error'] = 'Configuration missing for \'%s\'.' % tool
+            log.error(context['error'])
+            gcdt_signals.error.send((context, config))
+            return 1
     log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)

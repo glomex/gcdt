@@ -8,7 +8,8 @@ import pytest
 from gcdt.gcdt_openapi import read_openapi_ordered, \
     _check_type, _get_example_from_prop_spec, _get_definition_name_from_ref, \
     _example_from_array_spec, _example_from_definition, _get_example_from_basic_type, \
-    _get_example_from_properties, get_defaults, get_scaffold_max, get_scaffold_min
+    _get_example_from_properties, get_openapi_defaults, get_openapi_scaffold_max, \
+    get_openapi_scaffold_min
 from . import here
 
 
@@ -38,7 +39,7 @@ def test_build_one_definition_example_sample_max(swagger_spec):
         ],
         'id': 42
     }
-    assert get_scaffold_max(swagger_spec, 'Pet') == pet_definition_example
+    assert get_openapi_scaffold_max(swagger_spec, 'Pet') == pet_definition_example
 
     # Test wrong definition
     swagger_spec['definitions']['Pet']['properties']['category']['$ref'] = '#/definitions/Error'
@@ -46,7 +47,7 @@ def test_build_one_definition_example_sample_max(swagger_spec):
     #assert not get_scaffold_max(swagger_spec, 'Pet')
 
     # Test wrong def name
-    assert not get_scaffold_max(swagger_spec, 'Error')
+    assert not get_openapi_scaffold_max(swagger_spec, 'Error')
 
 
 @pytest.fixture
@@ -57,15 +58,15 @@ def swagger_defaults_spec():
 
 def test_build_one_definition_example_default(swagger_defaults_spec):
     tag_defaults = {'id': 8}
-    assert get_defaults(swagger_defaults_spec, 'Tag') == tag_defaults
+    assert get_openapi_defaults(swagger_defaults_spec, 'Tag') == tag_defaults
 
     pet_defaults = {'name': 'bolt', 'tags': [{'id': 8}]}
-    assert get_defaults(swagger_defaults_spec, 'Pet') == pet_defaults
+    assert get_openapi_defaults(swagger_defaults_spec, 'Pet') == pet_defaults
 
 
 def test_build_one_definition_example_sample_min(swagger_defaults_spec):
     tag_defaults = {'id': 5}
-    assert get_scaffold_min(swagger_defaults_spec, 'Tag') == tag_defaults
+    assert get_openapi_scaffold_min(swagger_defaults_spec, 'Tag') == tag_defaults
 
 
 def test_check_type():
@@ -249,7 +250,7 @@ def test_get_example_from_prop_spec_default_ref(swagger_defaults_spec):
     # required but no default
     prop_spec = swagger_defaults_spec['definitions']['Tag']
     print(prop_spec)
-    example = get_defaults(swagger_defaults_spec, prop_spec)
+    example = get_openapi_defaults(swagger_defaults_spec, prop_spec)
     assert example is None
 
 
