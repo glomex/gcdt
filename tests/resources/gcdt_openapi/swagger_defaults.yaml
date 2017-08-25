@@ -115,22 +115,6 @@ definitions:
     - id
     additionalProperties: false
   Order:
+    description: "for testing purposes we removed all properties"
     type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      petId:
-        type: integer
-        format: int64
-      quantity:
-        type: integer
-        format: int32
-      shipDate:
-        type: string
-        format: string
-      status:
-        type: string
-        description: Order Status
-      complete:
-        type: boolean
+    additionalProperties: true

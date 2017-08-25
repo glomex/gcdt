@@ -5,10 +5,10 @@ from __future__ import unicode_literals, print_function
 
 import pytest
 
-from gcdt.gcdt_openapi import build_one_definition_example, read_openapi_ordered, \
+from gcdt.gcdt_openapi import read_openapi_ordered, \
     _check_type, _get_example_from_prop_spec, _get_definition_name_from_ref, \
     _example_from_array_spec, _example_from_definition, _get_example_from_basic_type, \
-    _get_example_from_properties
+    _get_example_from_properties, get_defaults, get_scaffold_max, get_scaffold_min
 from . import here
 
 
@@ -38,15 +38,15 @@ def test_build_one_definition_example_sample_max(swagger_spec):
         ],
         'id': 42
     }
-    assert build_one_definition_example(swagger_spec, 'Pet', 'sample-max') == pet_definition_example
+    assert get_scaffold_max(swagger_spec, 'Pet') == pet_definition_example
 
     # Test wrong definition
     swagger_spec['definitions']['Pet']['properties']['category']['$ref'] = '#/definitions/Error'
     # TODO
-    #assert not build_one_definition_example(swagger_spec, 'Pet', 'sample-max')
+    #assert not get_scaffold_max(swagger_spec, 'Pet')
 
     # Test wrong def name
-    assert not build_one_definition_example(swagger_spec, 'Error', 'sample-max')
+    assert not get_scaffold_max(swagger_spec, 'Error')
 
 
 @pytest.fixture
@@ -57,15 +57,15 @@ def swagger_defaults_spec():
 
 def test_build_one_definition_example_default(swagger_defaults_spec):
     tag_defaults = {'id': 8}
-    assert build_one_definition_example(swagger_defaults_spec, 'Tag', 'default') == tag_defaults
+    assert get_defaults(swagger_defaults_spec, 'Tag') == tag_defaults
 
     pet_defaults = {'name': 'bolt', 'tags': [{'id': 8}]}
-    assert build_one_definition_example(swagger_defaults_spec, 'Pet', 'default') == pet_defaults
+    assert get_defaults(swagger_defaults_spec, 'Pet') == pet_defaults
 
 
 def test_build_one_definition_example_sample_min(swagger_defaults_spec):
     tag_defaults = {'id': 5}
-    assert build_one_definition_example(swagger_defaults_spec, 'Tag', 'sample-min') == tag_defaults
+    assert get_scaffold_min(swagger_defaults_spec, 'Tag') == tag_defaults
 
 
 def test_check_type():
@@ -147,8 +147,9 @@ def test_get_example_from_prop_spec(swagger_spec):
         'required': ['error'],
     }
     example = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
-    assert example == [
-        {'error': {'code': 'string', 'detail': 'string', 'title': 'string'}}]
+    assert example == {
+        'error': {'code': 'string', 'detail': 'string', 'title': 'string'}
+    }
 
 
 def test_get_example_from_prop_spec_with_additional_properties(swagger_spec):
@@ -166,62 +167,17 @@ def test_get_example_from_prop_spec_with_additional_properties(swagger_spec):
             },
         },
         'required': ['error'],
+        'additionalProperties': True
     }
 
     # additionalProperties - $ref (complex prop_spec with required keys)
-    prop_spec['additionalProperties'] = {'$ref': '#/definitions/Category'}
+    # I do not think this is conformant with openapi:
+    #prop_spec['additionalProperties'] = {'$ref': '#/definitions/Category'}
     example = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
     assert example == {
-        'any_prop2': {'id': 42, 'name': 'string'},
-        'any_prop1': {'id': 42, 'name': 'string'},
-        'error': {'code': 'string', 'detail': 'string', 'title': 'string'},
-    }
-
-    # additionalProperties - string (with complex prop_spec without required keys)
-    del prop_spec['required']
-    prop_spec['additionalProperties'] = {'type': 'string'}
-    example = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
-    assert example == {
-        'any_prop2': 'string',
         'any_prop1': 'string',
-    }
-
-    # additionalProperties - integer (prop spec with only additional properties)
-    easy_prop_spec = {
-        'type': 'object',
-        'additionalProperties': {'type': 'integer', 'format': 'int64'},
-    }
-    example = _get_example_from_prop_spec(swagger_spec, easy_prop_spec, 'sample-max')
-    assert example == {'any_prop1': 42, 'any_prop2': 42}
-
-    # additionalProperties - dict not satisfying any definition
-    #  (with complex prop_spec without required keys)
-    prop_spec['additionalProperties'] = {
-        'type': 'object',
-        'properties': {
-            'food': {'type': 'string'},
-            'drink': {'type': 'number', 'format': 'double'},
-            'movies': {'type': 'boolean'},
-        }
-    }
-    example = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
-    assert example == {
-        'any_prop2': {'food': 'string', 'movies': False, 'drink': 5.5},
-        'any_prop1': {'food': 'string', 'movies': False, 'drink': 5.5},
-    }
-
-    # additionalProperties - dict satisfying the 'Category' definition
-    prop_spec['additionalProperties'] = {
-        'type': 'object',
-        'properties': {
-            'id': {'type': 'integer', 'format': 'int64'},
-            'name': {'type': 'string'},
-        }
-    }
-    example = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
-    assert example == {
-        'any_prop2': {'id': 42, 'name': 'string'},
-        'any_prop1': {'id': 42, 'name': 'string'},
+        'any_prop2': 42,
+        'error': {'code': 'string', 'detail': 'string', 'title': 'string'},
     }
 
 
@@ -246,13 +202,55 @@ def test_get_example_from_prop_spec_default():
     assert example is None
 
 
-'''
+def test_get_example_from_prop_spec_inner_spec_default():
+    # required but no default
+    inner_spec = {
+        'type': 'string',
+        'example': 'not to use!'
+    }
+    example = _get_example_from_prop_spec({}, inner_spec, 'default')
+    assert example is None
+
+
+def test_get_example_from_prop_spec_sample_max(swagger_spec):
+    prop_spec = {
+        'description': 'some item',
+        'type': 'object',
+        'properties': {
+            'name': {'type': 'string'},
+            'Tag': {
+                'description': 'the tag description to use',
+                '$ref': '#/definitions/Tag'
+            }
+        }
+    }
+    sample = _get_example_from_prop_spec(swagger_spec, prop_spec, 'sample-max')
+    assert sample == {'Tag': {'id': 42, 'name': u'string'}, u'name': u'string'}
+
+
+def test_get_example_from_prop_spec_additional_properties_sample_max(swagger_defaults_spec):
+    # different case since the Order has only additional properties
+    prop_spec = {
+        'description': 'some item',
+        'type': 'object',
+        'properties': {
+            'name': {'type': 'string'},
+            'Order': {
+                'description': 'the order description to use',
+                '$ref': '#/definitions/Order'
+            }
+        }
+    }
+    sample = _get_example_from_prop_spec(swagger_defaults_spec, prop_spec, 'sample-max')
+    assert sample == {'Order': {'any_prop1': 'string', 'any_prop2': 42}, 'name': 'string'}
+
+
 def test_get_example_from_prop_spec_default_ref(swagger_defaults_spec):
     # required but no default
-    prop_spec = swagger_array_spec['definitions']['Tag']
-    example = _get_example_from_prop_spec({}, prop_spec, 'default')
+    prop_spec = swagger_defaults_spec['definitions']['Tag']
+    print(prop_spec)
+    example = get_defaults(swagger_defaults_spec, prop_spec)
     assert example is None
-'''
 
 
 def test_get_example_from_properties():
@@ -267,12 +265,45 @@ def test_get_example_from_properties():
             'name': {
                 'type': 'string'
             }
-        }
-        #'additionalProperties': True
+        },
+        'additionalProperties': True
     }
-    example, additional_property = _get_example_from_properties({}, prop_spec, 'sample-max')
-    assert example == {u'id': 42, u'name': u'string'}
-    assert additional_property == False  # TODO ???
+    example = _get_example_from_properties({}, prop_spec, 'sample-max')
+    assert example == {
+        'id': 42, 'name': 'string',
+        'any_prop1': 'string',
+        'any_prop2': 42
+    }
+
+
+def test_get_example_from_properties_default():
+    # Object - read from properties, without references
+    prop_spec = {
+        'type': 'object',
+        'properties': {
+            'id': {
+                'type': 'integer',
+                'format': 'int64'
+            },
+            'name': {
+                'type': 'string'
+            }
+        },
+        'additionalProperties': True
+    }
+    example = _get_example_from_properties({}, prop_spec, 'default')
+    assert example == {}
+
+
+def test_get_example_from_properties_additional_properties():
+    # Object - read from properties, without references
+    prop_spec = {
+        'type': 'object',
+        'description': 'this one has only additional properties',
+        'additionalProperties': True
+    }
+    example = _get_example_from_properties({}, prop_spec, 'sample-max')
+    assert example == {u'any_prop1': u'string', u'any_prop2': 42}
 
 
 def test_get_example_from_basic_type():
@@ -348,7 +379,6 @@ def test_example_from_array_spec_widget_array(swagger_array_spec):
 def test_get_definition_name_from_ref(swagger_spec):
     assert _get_definition_name_from_ref(
         '#/definitions/Pet') == 'Pet'
-
 
 
 # TODO missing testcases

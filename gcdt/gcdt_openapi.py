@@ -83,59 +83,78 @@ def validate_tool_config(raw_spec, config):
 
 
 # tools to generate from openapi spec:
-# * default configuration
-# * min sample (only required properties)
-# * max sample (all properties)
+#  * default configuration (required properties that have defaults)
+#  * min sample (only required properties)
+#  * max sample (all properties)
 
 # implementation started with codebase from:
 # https://github.com/Trax-air/swagger-parser/blob/master/swagger_parser/swagger_parser.py
 # (MIT) version 11th Jun 2017, 8534150
 
-# why not keep the class structure which implemented caching to speed things up??
-# since we have different modes we can not have an example cache any more
-# meaning a referenced definition can have different examples and defaults on
-# different levels one time it is required and has a default another time this
-# is not the case. therefor we need to fully evaluate the whole structure and
-# can not reuse examples.
+# why not keep the class structure of swagger-parser which implemented caching
+# to speed things up??
+# since we have different modes for scaffolding we can not have an example
+# cache any more meaning a referenced definition can have different examples
+# and defaults on different levels (one time it is required and has a default,
+# another time this is not the case). therefor we need to fully evaluate the
+# whole structure and can not reuse examples.
 
 
-def build_one_definition_example(specification, def_name, mode):
-    """Build the example for the given definition.
+def get_defaults(specification, def_name):
+    """Get default configuration for the given definition.
 
     :param def_name: Name of the definition.
-    :param mode: sample-max, sample-min, default
-    :return: True if the example has been created, False if an error occured.
+    :return: default config
     """
-    #if def_name in _definitions_example.keys():  # Already processed
-    #    return True
-    if def_name not in specification['definitions'].keys():  # Def does not exist
-        return False  # TODO
+    return _build_one_definition_example(specification, def_name, 'default')
 
-    #_definitions_example[def_name] = {}
+
+def get_scaffold_min(specification, def_name):
+    """Get minimal configuration for the given definition (required properties).
+
+    :param def_name: Name of the definition.
+    :return: minimal config
+    """
+    return _build_one_definition_example(specification, def_name, 'sample-min')
+
+
+def get_scaffold_max(specification, def_name):
+    """Get maximal configuration for the given definition (all properties).
+
+    :param def_name: Name of the definition.
+    :return: maximal config
+    """
+    return _build_one_definition_example(specification, def_name, 'sample-max')
+
+
+def _build_one_definition_example(specification, def_name, mode):
+    # internal helper to create a sample from an openapi spec
+    assert mode in ['default', 'sample-min', 'sample-max']
+
+    if def_name not in specification['definitions'].keys():  # Def does not exist
+        return None
+
     definitions_example = {}
     def_spec = specification['definitions'][def_name]
 
     if def_spec.get('type') == 'array' and 'items' in def_spec:
-        item = _get_example_from_prop_spec(def_spec['items'], mode)
+        item = _get_example_from_prop_spec(specification, def_spec['items'], mode)
         definitions_example[def_name] = [item]
         return definitions_example
 
     if 'properties' not in def_spec:
-        definitions_example[def_name] = _get_example_from_prop_spec(def_spec, mode)
-        return definitions_example
+        example = _get_example_from_prop_spec(specification, def_spec, mode)
+        #definitions_example[def_name] = example
+        #return definitions_example
+        return example
 
     # Get properties example value
     for prop_name, prop_spec in def_spec['properties'].items():
         required = prop_name in def_spec.get('required', [])
-        #default = 'default' in prop_spec
-        #if mode == 'sample-max' or (required and default):
         if mode == 'sample-max' or required:
-            #print('default: %s' % default)
             example = _get_example_from_prop_spec(specification, prop_spec, mode)
             if example is None:
                 continue
-                #return False
-            #_definitions_example[def_name][prop_name] = example
             definitions_example[prop_name] = example
     return definitions_example
 
@@ -185,14 +204,6 @@ def _get_example_from_prop_spec(specification, prop_spec, mode):  # ='sample-max
     for key in easy_keys:
         if key in prop_spec.keys():  # and _use_example:
             return prop_spec[key]
-    # default mode
-    if mode == 'default':
-        # Array
-        if 'type' in prop_spec and (prop_spec['type'] == 'array' or (
-                'type' in prop_spec and isinstance(prop_spec['type'], list)
-                and prop_spec['type'][0] == 'array')):
-            return _example_from_array_spec(specification, prop_spec, mode)
-        return None
     # Enum
     if 'enum' in prop_spec.keys():
         return prop_spec['enum'][0]
@@ -205,11 +216,10 @@ def _get_example_from_prop_spec(specification, prop_spec, mode):  # ='sample-max
         #return _example_from_complex_def(specification, prop_spec, mode)
     # Object - read from properties, without references
     if prop_spec['type'] == 'object':
-        example, additional_properties = \
-            _get_example_from_properties(specification, prop_spec, mode)
-        if additional_properties:
+        example = _get_example_from_properties(specification, prop_spec, mode)
+        if example:
             return example
-        return [example]
+        return None
     # Array
     if prop_spec['type'] == 'array' or (isinstance(prop_spec['type'], list)
             and prop_spec['type'][0] == 'array'):
@@ -226,9 +236,9 @@ def _get_example_from_prop_spec(specification, prop_spec, mode):  # ='sample-max
 
     # Default - basic type
     logging.info("falling back to basic type, no other match found")
-    #if mode == 'default':
-    #    # there is no 'default' -> no value!
-    #    return []
+    if mode == 'default':
+        # there is no 'default' -> no value!
+        return None
     return _get_example_from_basic_type(prop_spec['type'], mode)[0]
 
 
@@ -240,26 +250,20 @@ def _get_example_from_properties(specification, spec, mode):
 
     Returns:
         An example for the given spec
-        A boolean, whether we had additionalProperties in the spec, or not
     """
     local_spec = deepcopy(spec)
 
     # Handle additionalProperties if they exist
     # we replace additionalProperties with two concrete
     # properties so that examples can be generated
-    additional_property = False
     if 'additionalProperties' in local_spec:
-        additional_property = True
         if 'properties' not in local_spec:
             local_spec['properties'] = {}
         local_spec['properties'].update({
-            'any_prop1': local_spec['additionalProperties'],
-            'any_prop2': local_spec['additionalProperties'],
+            'any_prop1': {'type': 'string'},
+            'any_prop2': {'type': 'integer'},
         })
-        del(local_spec['additionalProperties'])
-        required = local_spec.get('required', [])
-        required += ['any_prop1', 'any_prop2']
-        local_spec['required'] = required
+        local_spec.pop('additionalProperties', None)
 
     example = {}
     properties = local_spec.get('properties')
@@ -267,7 +271,9 @@ def _get_example_from_properties(specification, spec, mode):
         required = local_spec.get('required', properties.keys())
 
         for inner_name, inner_spec in properties.items():
-            if inner_name not in required:
+            if mode in ['default', 'sample-min'] and inner_name not in required:
+                continue
+            if mode == 'default' and 'default' not in inner_spec:
                 continue
             partial = _get_example_from_prop_spec(specification, inner_spec, mode)
             # While get_example_from_prop_spec is supposed to return a list,
@@ -277,7 +283,7 @@ def _get_example_from_properties(specification, spec, mode):
                 partial = partial[0]
             example[inner_name] = partial
 
-    return example, additional_property
+    return example
 
 
 def _get_example_from_basic_type(type, mode):
@@ -314,16 +320,10 @@ def _example_from_definition(specification, prop_spec, mode):
     """
     # Get value from definition
     definition_name = _get_definition_name_from_ref(prop_spec['$ref'])
-    print('definition name: %s' % definition_name)
 
-    #if _build_one_definition_example(definition_name, mode):
-    example_dict = build_one_definition_example(specification, definition_name, mode)
+    example_dict = _build_one_definition_example(specification, definition_name, mode)
     if example_dict:
-        #example_dict = _definitions_example[definition_name]
-        if not isinstance(example_dict, dict):
-            return example_dict
-        example = dict((example_name, example_value) for example_name, example_value in example_dict.items())
-        return example
+        return example_dict
 
 
 def _example_from_array_spec(specification, prop_spec, mode):
@@ -337,12 +337,10 @@ def _example_from_array_spec(specification, prop_spec, mode):
     """
     # if items is a list, then each item has its own spec
     if isinstance(prop_spec['items'], list):
-        #print('a')
         return [_get_example_from_prop_spec(specification, item_prop_spec, mode)
                 for item_prop_spec in prop_spec['items']]
     # Standard types in array
     elif 'type' in prop_spec['items'].keys():
-        #print('b')
         if 'format' in prop_spec['items'].keys() and prop_spec['items']['format'] == 'date-time':
             return _get_example_from_basic_type('datetime', mode)
         else:
@@ -353,32 +351,18 @@ def _example_from_array_spec(specification, prop_spec, mode):
     # Array with definition
     elif ('$ref' in prop_spec['items'].keys() or
               ('schema' in prop_spec and'$ref' in prop_spec['schema']['items'].keys())):
-        #print('c')
         # Get value from definition
         definition_name = _get_definition_name_from_ref(prop_spec['items']['$ref']) or \
                           _get_definition_name_from_ref(prop_spec['schema']['items']['$ref'])
-        #if _build_one_definition_example(definition_name, mode):
-        #    example_dict = _definitions_example[definition_name]
-        example_dict = build_one_definition_example(
+        example_dict = _build_one_definition_example(
             specification, definition_name, mode)
         if not isinstance(example_dict, dict):
             return [example_dict]
-        #if len(example_dict) == 1:
-        if False:
-            # we can not collapse the structure!
-            pass
-            #try:  # Python 2.7
-            #    res = example_dict[example_dict.keys()[0]]
-            #except TypeError:  # Python 3
-            #    res = example_dict[list(example_dict)[0]]
-            #return res
-        else:
-            return_value = {}
-            for example_name, example_value in example_dict.items():
-                return_value[example_name] = example_value
-            return [return_value]
+        return_value = {}
+        for example_name, example_value in example_dict.items():
+            return_value[example_name] = example_value
+        return [return_value]
     elif 'properties' in prop_spec['items']:
-        #print('d')
         prop_example = {}
         for prop_name, prop_spec in prop_spec['items']['properties'].items():
             example = _get_example_from_prop_spec(specification, prop_spec, mode)
