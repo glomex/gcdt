@@ -14,6 +14,7 @@ from gcdt_testtools.helpers import create_tempfile
 
 # cleanup of the log config does not yet work so we can not run
 # any tests that use realistic log configs
+# FIXME
 '''
 @mock.patch('gcdt.gcdt_lifecycle.AWSClient', return_value='my_awsclient')
 @mock.patch('gcdt.gcdt_lifecycle.docopt')
@@ -105,6 +106,7 @@ def test_lifecycle(mocked_load_plugins, mocked_check_gcdt_update,
     exp_signals = [
         'initialized',
         'config_read_init', 'config_read_finalized',
+        'check_credentials_init', 'check_credentials_finalized',
         'lookup_init', 'lookup_finalized',
         'config_validation_init', 'config_validation_finalized',
         'bundle_pre', 'bundle_init', 'bundle_finalized',
@@ -133,9 +135,9 @@ def test_lifecycle(mocked_load_plugins, mocked_check_gcdt_update,
     assert exit_code == 0
     assert exp_signals == []
 
-    mocked_load_plugins.assert_called_once()
+    mocked_load_plugins.assert_called()
     mocked_check_gcdt_update.assert_called_once()
-    mocked_are_credentials_still_valid.called_once_with('my_awsclient')
+    mocked_are_credentials_still_valid.called_with('my_awsclient')
     mocked_cmd_dispatch.called_once_with('my_awsclient')
 
 
@@ -158,6 +160,7 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
     exp_signals = [
         'initialized',
         'config_read_init', 'config_read_finalized',
+        'check_credentials_init', 'check_credentials_finalized',
         'lookup_init', 'lookup_finalized',
         'config_validation_init', 'config_validation_finalized',
         'bundle_pre', 'bundle_init', 'bundle_finalized',
@@ -189,7 +192,7 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
     assert exit_code == 1
     assert exp_signals == []
 
-    mocked_load_plugins.assert_called_once()
+    mocked_load_plugins.assert_called()
     mocked_check_gcdt_update.assert_called_once()
     mocked_are_credentials_still_valid.called_once_with('my_awsclient')
     mocked_cmd_dispatch.called_once_with('my_awsclient')
@@ -210,3 +213,5 @@ def test_load_hooks():
 
     assert module.COUNT['register'] == 1
     os.unlink(tfile)
+
+# TODO: add more tests!!!

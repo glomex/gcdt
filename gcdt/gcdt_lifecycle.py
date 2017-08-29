@@ -10,7 +10,7 @@ from logging.config import dictConfig
 import botocore.session
 from docopt import docopt
 
-from .utils import GracefulExit, signal_handler  #, fix_old_kumo_config
+from .utils import GracefulExit, signal_handler
 from . import gcdt_signals
 from .gcdt_awsclient import AWSClient
 from .gcdt_cmd_dispatcher import cmd, get_command
@@ -20,7 +20,6 @@ from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
 from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
     get_env
-#from .gcdt_defaults import DEFAULT_CONFIG
 
 log = logging.getLogger(__name__)
 
@@ -80,9 +79,6 @@ def lifecycle(awsclient, env, tool, command, arguments):
     if 'hookfile' in config:
         # load hooks from hookfile
         _load_hooks(config['hookfile'])
-    #if 'kumo' in config:
-    #    # deprecated: this needs to be removed once all old-style "cloudformation" entries are gone
-    #    fix_old_kumo_config(config)
 
     # check_credentials
     gcdt_signals.check_credentials_init.send((context, config))
@@ -122,7 +118,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)
-    # DEPRECATED, use gcdt-logon plugin instead
+    # DEPRECATED, use gcdt-awsume plugin instead
     if are_credentials_still_valid(awsclient):
         context['error'] = \
             'Your credentials have expired... Please renew and try again!'
@@ -145,7 +141,6 @@ def lifecycle(awsclient, env, tool, command, arguments):
     ## dispatch command providing context and config (= tooldata)
     gcdt_signals.command_init.send((context, config))
     log.debug('### command_init')
-    #print(config)
     try:
         if tool == 'gcdt':
             conf = config  # gcdt works on the whole config

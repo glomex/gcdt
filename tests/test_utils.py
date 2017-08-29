@@ -13,7 +13,7 @@ from nose.tools import assert_equal
 from gcdt import utils
 from gcdt.utils import retries, \
     get_command, dict_merge, get_env, get_context, flatten, json2table, \
-    fix_old_kumo_config, dict_selective_merge, all_pages
+    dict_selective_merge, all_pages
 from gcdt_testtools.helpers import create_tempfile, preserve_env  # fixtures!
 from gcdt_testtools.helpers import logcapture  # fixtures!
 
