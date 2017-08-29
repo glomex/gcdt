@@ -107,16 +107,18 @@ def lifecycle(awsclient, env, tool, command, arguments):
     log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
     if tool != 'gcdt':
+        pass
         #if context['command'] in \
         #        DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
-        if context['command'] in config[tool].get('defaults', {}).get('non_config_commands', []):
-            pass  # we do not require a config for this command
-        elif tool not in config:
-            # TODO see if we still need this!
-            context['error'] = 'Configuration missing for \'%s\'.' % tool
-            log.error(context['error'])
-            gcdt_signals.error.send((context, config))
-            return 1
+        #if context['command'] in config.get(tool, {}).get('defaults', {}).get(
+        #        'non_config_commands', []):
+        #    pass  # we do not require a config for this command
+        #elif tool not in config:
+        #    # TODO see if we still need this!
+        #    context['error'] = 'Configuration missing for \'%s\'.' % tool
+        #    log.error(context['error'])
+        #    gcdt_signals.error.send((context, config))
+        #    return 1
     log.debug('### config_validation_finalized')
 
     ## check credentials are valid (AWS services)
@@ -143,6 +145,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     ## dispatch command providing context and config (= tooldata)
     gcdt_signals.command_init.send((context, config))
     log.debug('### command_init')
+    #print(config)
     try:
         if tool == 'gcdt':
             conf = config  # gcdt works on the whole config

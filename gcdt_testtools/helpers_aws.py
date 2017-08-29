@@ -301,6 +301,8 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
     """
     from gcdt_lookups.lookups import _resolve_lookups
     from gcdt_kumo.kumo_util import fix_deprecated_kumo_config
+
+    # TODO call plugins to incept defaults!
     if config is None:
         if config_base_name is None:
             config_base_name = 'gcdt'

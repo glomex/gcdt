@@ -18,6 +18,7 @@ from jsonschema import _utils
 import pprint
 
 from .gcdt_logging import getLogger
+from .utils import dict_merge, get_plugin_defaults
 from . import GcdtError
 
 try:
@@ -82,7 +83,7 @@ def validate_tool_config(raw_spec, config):
         return e.message
 
 
-# tools to generate from openapi spec:
+# tools to generate data from openapi spec:
 #  * default configuration (required properties that have defaults)
 #  * min sample (only required properties)
 #  * max sample (all properties)
@@ -98,6 +99,71 @@ def validate_tool_config(raw_spec, config):
 # and defaults on different levels (one time it is required and has a default,
 # another time this is not the case). therefor we need to fully evaluate the
 # whole structure and can not reuse examples.
+
+# note: there is a little section in the developer docs on incepting and
+# validating config
+def incept_defaults_helper(params, openapi, tool, is_plugin=False):
+    """incept defaults where needed (after config is read from file).
+
+    :param params: context, config (context - the _awsclient, etc..
+                   config - The stack details, etc..)
+    :param openapi: openapi spec in dict form
+    :param tool: actual tool / plugin to incept defaults
+    :param is_plugin: False (by default)
+    :return:
+    """
+    log.debug('incepting defaults for \'%s\'.', tool)
+    context, config = params
+
+    if is_plugin:
+        defaults = get_openapi_defaults(openapi, tool)
+        if defaults:
+            config_from_reader = deepcopy(config)
+            dict_merge(config, {'plugins': {tool: defaults}})
+            dict_merge(config, config_from_reader)
+    else:
+        is_config_from_reader = tool in config
+        log.debug('config_from_reader: %s', is_config_from_reader)
+        defaults = get_openapi_defaults(openapi, tool)
+        #log.debug('defaults: %s', defaults)
+        #log.debug('non_config_command in defaults: %s', defaults.get('non_config_commands', []))
+        is_actual_non_config_command = (context['tool'] == tool and context['command'] in
+            defaults.get('defaults', {}).get('non_config_commands', [])
+        )
+        log.debug('actual_non_config_command: %s', is_actual_non_config_command)
+        if not is_config_from_reader and not is_actual_non_config_command:
+            return
+        if defaults:
+            config_read_from_reader = deepcopy(config)
+            if is_config_from_reader:
+                dict_merge(config, {tool: defaults})
+            elif is_actual_non_config_command:
+                defaults['defaults']['validate'] = False  # disable config validation
+                # incept only 'defaults' section
+                dict_merge(config, {tool: {'defaults': defaults['defaults']}})
+
+            dict_merge(config, config_read_from_reader)
+
+
+def validate_config_helper(params, openapi, tool, is_plugin=False):
+    """validate the config after lookups.
+    :param params: context, config (context - the _awsclient, etc..
+                   config - The stack details, etc..)
+    :param is_plugin: False (by default)
+    """
+    log.debug('validating config for \'%s\'.', tool)
+    context, config = params
+
+    if is_plugin:
+        defaults = get_plugin_defaults(config, tool)
+        validation_switched_on = defaults.get('validate', True)
+    else:
+        validation_switched_on = config.get(tool, {}).get('defaults', {}).get('validate', True)
+
+    if validation_switched_on:
+        error = validate_tool_config(openapi, config)
+        if error:
+            context['error'] = error
 
 
 def get_openapi_defaults(specification, def_name):
