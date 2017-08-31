@@ -7,7 +7,6 @@ from copy import deepcopy
 import logging
 import re
 import six
-import textwrap
 from collections import OrderedDict
 
 import ruamel.yaml as yaml
@@ -48,6 +47,27 @@ def read_openapi_ordered(openapi, Loader=yaml.Loader, object_pairs_hook=OrderedD
         return yaml.load(ofile, OrderedLoader)
 
 
+def validate_config_helper(params, openapi, tool, is_plugin=False):
+    """validate the config after lookups.
+    :param params: context, config (context - the _awsclient, etc..
+                   config - The stack details, etc..)
+    :param is_plugin: False (by default)
+    """
+    log.debug('validating config for \'%s\'.', tool)
+    context, config = params
+
+    if is_plugin:
+        defaults = get_plugin_defaults(config, tool)
+        validation_switched_on = defaults.get('validate', True)
+    else:
+        validation_switched_on = config.get(tool, {}).get('defaults', {}).get('validate', True)
+
+    if validation_switched_on:
+        error = validate_tool_config(openapi, config)
+        if error:
+            context['error'] = error
+
+
 def validate_tool_config(raw_spec, config):
     """Helper to validate
 
@@ -64,22 +84,12 @@ def validate_tool_config(raw_spec, config):
     except ValidationError as e:
         # details
         # http://python-jsonschema.readthedocs.io/en/latest/errors/
-        #log.error(e.message)
-        pschema = pprint.pformat(e.schema, width=72)
+        log.error('Config validation failed for %s',
+                  _utils.format_as_index(e.relative_path))
+        log.error(e.message)
         pinstance = pprint.pformat(e.instance, width=72)
-        log.error(textwrap.dedent("""
-            Failed validating %r in schema%s:
-            %s
-    
-            On instance%s:
-            %s
-            """.rstrip()) % (
-            e.validator,
-            _utils.format_as_index(list(e.relative_schema_path)[:-1]),
-            _utils.indent(pschema),
-            _utils.format_as_index(e.relative_path),
-            _utils.indent(pinstance),
-        ))
+        log.debug('relevant config section:')
+        log.debug(pinstance)
         return e.message
 
 
@@ -145,27 +155,6 @@ def incept_defaults_helper(params, openapi, tool, is_plugin=False):
             dict_merge(config, config_read_from_reader)
 
 
-def validate_config_helper(params, openapi, tool, is_plugin=False):
-    """validate the config after lookups.
-    :param params: context, config (context - the _awsclient, etc..
-                   config - The stack details, etc..)
-    :param is_plugin: False (by default)
-    """
-    log.debug('validating config for \'%s\'.', tool)
-    context, config = params
-
-    if is_plugin:
-        defaults = get_plugin_defaults(config, tool)
-        validation_switched_on = defaults.get('validate', True)
-    else:
-        validation_switched_on = config.get(tool, {}).get('defaults', {}).get('validate', True)
-
-    if validation_switched_on:
-        error = validate_tool_config(openapi, config)
-        if error:
-            context['error'] = error
-
-
 def get_openapi_defaults(specification, def_name):
     """Get default configuration for the given definition.
 
@@ -210,8 +199,6 @@ def _build_one_definition_example(specification, def_name, mode):
 
     if 'properties' not in def_spec:
         example = _get_example_from_prop_spec(specification, def_spec, mode)
-        #definitions_example[def_name] = example
-        #return definitions_example
         return example
 
     # Get properties example value

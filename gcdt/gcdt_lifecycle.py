@@ -47,6 +47,9 @@ def lifecycle(awsclient, env, tool, command, arguments):
     """Tool lifecycle which provides hooks into the different stages of the
     command execution. See signals for hook details.
     """
+    # TODO: remove all these lines
+    #         log.error(context['error'])
+
     log.debug('### init')
     load_plugins()
     load_plugins('gcdttool10')
@@ -115,9 +118,13 @@ def lifecycle(awsclient, env, tool, command, arguments):
         #    gcdt_signals.error.send((context, config))
         #    return 1
     log.debug('### config_validation_finalized')
+    if 'error' in context:
+        gcdt_signals.error.send((context, config))
+        return 1
 
     ## check credentials are valid (AWS services)
     # DEPRECATED, use gcdt-awsume plugin instead
+    # TODO use context expiration
     if are_credentials_still_valid(awsclient):
         context['error'] = \
             'Your credentials have expired... Please renew and try again!'
