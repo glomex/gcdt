@@ -5,6 +5,7 @@ import imp
 import logging
 import signal
 import sys
+import json
 from logging.config import dictConfig
 
 import botocore.session
@@ -99,7 +100,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.lookup_finalized.send((context, config))
     log.debug('### lookup_finalized')
     log.debug('### config after lookup:')
-    log.debug(config)
+    log.debug(json.dumps(config))
 
     ## config validation
     gcdt_signals.config_validation_init.send((context, config))
