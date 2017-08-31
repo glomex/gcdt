@@ -102,8 +102,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     gcdt_signals.config_validation_init.send((context, config))
     log.debug('### config_validation_init')
     gcdt_signals.config_validation_finalized.send((context, config))
-    if tool != 'gcdt':
-        pass
+    #if tool != 'gcdt':
         #if context['command'] in \
         #        DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
         #if context['command'] in config.get(tool, {}).get('defaults', {}).get(
