@@ -2,15 +2,11 @@
 from __future__ import unicode_literals, print_function
 import os
 
-#from nose.tools import assert_dict_contains_subset
-#from nose.tools import assert_equal, assert_is_not_none
-
 import pytest
 
 from gcdt.utils import get_context, execute_scripts
-
 from gcdt_testtools.helpers import assert_dict_contains_subset
-from gcdt_testtools.helpers_aws import awsclient
+from gcdt_testtools.helpers_aws import awsclient  # fixture!
 from . import here
 
 

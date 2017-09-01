@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 import os
 import sys
 import io
+import re
 import json
 import shutil
 import subprocess
@@ -189,18 +190,70 @@ def read_json_config(config_file):
     return data
 
 
-def assert_dict_contains_subset(first, second):
-    """Test if dict containes another dict (helper to replace nose asserts).
+def _safe_repr(obj, short=False):
+    _MAX_LENGTH = 80
+    try:
+        result = repr(obj)
+    except Exception:
+        result = object.__repr__(obj)
+    if not short or len(result) < _MAX_LENGTH:
+        return result
+    return result[:_MAX_LENGTH] + ' [truncated]...'
 
-    :param first: dict
-    :param second: dict
+
+def _formatMessage(msg, standardMsg):
+    return msg or standardMsg
+
+
+def assert_dict_contains_subset(expected, actual, msg=None):
+    """Checks whether actual is a superset of expected.
+
+    :param expected: dict
+    :param actual: dict
     :return: True only if `second` is a subset of `first`
     """
     # https://stackoverflow.com/questions/30818694/test-if-dict-contained-in-dict
 
-    if PY3:
-        # Python 3
-        return second.items() <= first.items()
-    else:
-        # Python 2
-        return second.viewitems() <= first.viewitems()
+    #if PY3:
+    #    # Python 3
+    #    assert second.items() <= first.items()
+    #else:
+    #    # Python 2
+    #    assert second.viewitems() <= first.viewitems()
+
+    missing = []
+    mismatched = []
+    for key, value in expected.iteritems():
+        if key not in actual:
+            missing.append(key)
+        elif value != actual[key]:
+            mismatched.append('%s, expected: %s, actual: %s' %
+                              (_safe_repr(key), _safe_repr(value),
+                               _safe_repr(actual[key])))
+
+    if not (missing or mismatched):
+        return
+
+    standardMsg = ''
+    if missing:
+        standardMsg = 'Missing: %s' % ','.join(_safe_repr(m) for m in
+                                               missing)
+    if mismatched:
+        if standardMsg:
+            standardMsg += '; '
+        standardMsg += 'Mismatched values: %s' % ','.join(mismatched)
+
+    pytest.fail(_formatMessage(msg, standardMsg))
+
+
+def assert_regexp_matches(text, expected_regexp, msg=None):
+    """Fail the test unless the text matches the regular expression.
+    helper to replace nose asserts (from unittest.TestCase.assertRegexpMatches).
+    """
+    if isinstance(expected_regexp, basestring):
+        expected_regexp = re.compile(expected_regexp)
+    if not expected_regexp.search(text):
+        msg = msg or "Regexp didn't match"
+        msg = '%s: %r not found in %r' % (msg, expected_regexp.pattern, text)
+        #raise self.failureException(msg)
+        pytest.fail(msg)
