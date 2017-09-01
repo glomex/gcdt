@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-
-import nose
 import os
 import sys
 import json
 from collections import OrderedDict
 
 import pytest
-from nose.tools import assert_equal
 
 from gcdt import utils
 from gcdt.utils import retries, \
@@ -219,15 +216,15 @@ def test_json2table_exception():
 def test_random_string():
     ts = utils.random_string()
     print(ts)
-    assert_equal(len(ts), 6)
-    nose.tools.assert_not_equal(ts, utils.random_string())
+    assert len(ts) == 6
+    assert ts != utils.random_string()
 
 
 def test_random_string_length10():
     ts = utils.random_string(10)
     print(ts)
-    assert_equal(len(ts), 10)
-    nose.tools.assert_not_equal(ts, utils.random_string())
+    assert len(ts) == 10
+    assert ts != utils.random_string()
 
 
 def test_all_pages():

@@ -88,7 +88,7 @@ def validate_tool_config(raw_spec, config):
                   _utils.format_as_index(e.relative_path))
         log.error(e.message)
         pinstance = pprint.pformat(e.instance, width=72)
-        log.debug('relevant config section:')
+        log.debug('affected config section:')
         log.debug(pinstance)
         return e.message
 

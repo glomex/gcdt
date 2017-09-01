@@ -2,13 +2,14 @@
 from __future__ import unicode_literals, print_function
 import os
 
-from nose.tools import assert_dict_contains_subset,assert_in
-from nose.tools import assert_equal, assert_is_not_none
+#from nose.tools import assert_dict_contains_subset
+#from nose.tools import assert_equal, assert_is_not_none
 
 import pytest
 
 from gcdt.utils import get_context, execute_scripts
 
+from gcdt_testtools.helpers import assert_dict_contains_subset
 from gcdt_testtools.helpers_aws import awsclient
 from . import here
 
@@ -24,8 +25,8 @@ def test_get_context(awsclient):
     assert_dict_contains_subset(expected_subset, actual)
     # the api_key is currently not rolled out see OPS-126
     # assert_in('_datadog_api_key', actual)
-    assert_in('user', actual)
-    assert_in('version', actual)
+    assert 'user' in actual
+    assert 'version' in actual
 
 
 @pytest.mark.aws
@@ -34,9 +35,9 @@ def test_execute_scripts(awsclient):
     codedeploy_dir = here('resources/sample_pre_bundle_script_codedeploy')
     os.chdir(codedeploy_dir)
     pre_bundle_scripts = ['pre_bundle_script/dummy_script.sh']
-    assert_is_not_none(pre_bundle_scripts)
+    assert pre_bundle_scripts is not None
     exit_code = execute_scripts(pre_bundle_scripts)
-    assert_equal(exit_code, 0)
+    assert exit_code == 0
     os.chdir(start_dir)
 
 

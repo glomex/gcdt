@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+import sys
 import io
 import json
 import shutil
@@ -13,6 +14,8 @@ import pytest
 from testfixtures import LogCapture
 
 from gcdt import utils
+
+PY3 = sys.version_info[0] >= 3
 
 
 # http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
@@ -184,3 +187,20 @@ def read_json_config(config_file):
     with open(config_file) as jfile:
         data = json.load(jfile)
     return data
+
+
+def assert_dict_contains_subset(first, second):
+    """Test if dict containes another dict (helper to replace nose asserts).
+
+    :param first: dict
+    :param second: dict
+    :return: True only if `second` is a subset of `first`
+    """
+    # https://stackoverflow.com/questions/30818694/test-if-dict-contained-in-dict
+
+    if PY3:
+        # Python 3
+        return second.items() <= first.items()
+    else:
+        # Python 2
+        return second.viewitems() <= first.viewitems()

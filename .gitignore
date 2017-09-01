@@ -163,3 +163,4 @@ node_modules
 *.zip
 nodeenv
 requirements_gcdt.txt
+tests/resources/glomex_config_samples/*
