@@ -186,7 +186,8 @@ def _build_one_definition_example(specification, def_name, mode):
     # internal helper to create a sample from an openapi spec
     assert mode in ['default', 'sample-min', 'sample-max']
 
-    if def_name not in specification['definitions'].keys():  # Def does not exist
+    if def_name not in list(specification['definitions'].keys()):
+        # Def does not exist
         return None
 
     definitions_example = {}

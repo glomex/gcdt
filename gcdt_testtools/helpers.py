@@ -18,6 +18,9 @@ from gcdt import utils
 
 PY3 = sys.version_info[0] >= 3
 
+if PY3:
+    basestring = str
+
 
 # http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
 class Bunch:
@@ -212,18 +215,9 @@ def assert_dict_contains_subset(expected, actual, msg=None):
     :param actual: dict
     :return: True only if `second` is a subset of `first`
     """
-    # https://stackoverflow.com/questions/30818694/test-if-dict-contained-in-dict
-
-    #if PY3:
-    #    # Python 3
-    #    assert second.items() <= first.items()
-    #else:
-    #    # Python 2
-    #    assert second.viewitems() <= first.viewitems()
-
     missing = []
     mismatched = []
-    for key, value in expected.iteritems():
+    for key, value in expected.items():
         if key not in actual:
             missing.append(key)
         elif value != actual[key]:
