@@ -65,7 +65,9 @@ def test_build_one_definition_example_default(swagger_defaults_spec):
 
 
 def test_build_one_definition_example_sample_min(swagger_defaults_spec):
-    tag_defaults = {'id': 5}
+    # tag_defaults = {'id': 5}
+    # no defaults in sample-min!
+    tag_defaults = {}
     assert get_openapi_scaffold_min(swagger_defaults_spec, 'Tag') == tag_defaults
 
 

@@ -95,7 +95,7 @@ def validate_tool_config(raw_spec, config):
 
 # tools to generate data from openapi spec:
 #  * default configuration (required properties that have defaults)
-#  * min sample (only required properties)
+#  * min sample (only required properties that have no defaults)
 #  * max sample (all properties)
 
 # implementation started with codebase from:
@@ -165,7 +165,8 @@ def get_openapi_defaults(specification, def_name):
 
 
 def get_openapi_scaffold_min(specification, def_name):
-    """Get minimal configuration for the given definition (required properties).
+    """Get minimal configuration for the given definition (required properties
+    that have no defaults).
 
     :param def_name: Name of the definition.
     :return: minimal config

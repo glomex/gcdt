@@ -23,3 +23,12 @@ class AWSClient(object):
             self._client_cache[(service_name, region_name)] = \
                 self._session.create_client(service_name, region_name, **kwargs)
         return self._client_cache[(service_name, region_name)]
+
+    def get_region(self):
+        """Get region from the session."""
+        return self._session.get_config_variable('region')
+
+    def get_account_id(self):
+        """Get account id using session."""
+        sts = self.get_client('sts')
+        return sts.get_caller_identity()["Account"]
