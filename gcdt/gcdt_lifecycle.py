@@ -20,6 +20,7 @@ from .gcdt_logging import logging_config
 from .gcdt_plugins import load_plugins
 from .gcdt_signals import check_hook_mechanism_is_intact, \
     check_register_present
+from .gcdt_exceptions import GcdtError, InvalidCredentialsError
 from .utils import get_context, check_gcdt_update, are_credentials_still_valid, \
     get_env
 
@@ -56,130 +57,94 @@ def lifecycle(awsclient, env, tool, command, arguments):
     load_plugins()
     load_plugins('gcdttool10')
     context = get_context(awsclient, env, tool, command, arguments)
+
     # every tool needs a awsclient so we provide this via the context
     context['_awsclient'] = awsclient
     log.debug('### context:')
     log.debug(context)
-    if 'error' in context:
-        # no need to send an 'error' signal here
-        return 1
-
-    ## initialized
-    gcdt_signals.initialized.send(context)
-    log.debug('### initialized')
-    if 'error' in context:
-        log.error(context['error'])
-        return 1
-    check_gcdt_update()
 
     # config is "assembled" by config_reader NOT here!
     config = {}
 
-    gcdt_signals.config_read_init.send((context, config))
-    log.debug('### config_read_init')
-    gcdt_signals.config_read_finalized.send((context, config))
-    log.debug('### config_read_finalized')
-    # TODO we might want to be able to override config via env variables?
-    # here would be the right place to do this
-
-    # register lifecycle hooks
-    if os.path.exists('cloudformation.py'):
-        # TODO tried to move this to gcdt-kumo but found no good solutino so far
-        # register cloudformation.py hooks
-        _load_hooks('cloudformation.py')
-    if 'hookfile' in config:
-        # load hooks from hookfile
-        _load_hooks(config['hookfile'])
-
-    # check_credentials
-    gcdt_signals.check_credentials_init.send((context, config))
-    log.debug('### check_credentials_init')
-    gcdt_signals.check_credentials_finalized.send((context, config))
-    log.debug('### check_credentials_finalized')
-    if 'error' in context:
-        log.error(context['error'])
-        gcdt_signals.error.send((context, config))
-        return 1
-
-    ## lookup
-    gcdt_signals.lookup_init.send((context, config))
-    log.debug('### lookup_init')
-    gcdt_signals.lookup_finalized.send((context, config))
-    log.debug('### lookup_finalized')
-    log.debug('### config after lookup:')
-    log.debug(json.dumps(config))
-
-    ## config validation
-    gcdt_signals.config_validation_init.send((context, config))
-    log.debug('### config_validation_init')
-    gcdt_signals.config_validation_finalized.send((context, config))
-    #if tool != 'gcdt':
-        #if context['command'] in \
-        #        DEFAULT_CONFIG.get(context['tool'], {}).get('non_config_commands', []):
-        #if context['command'] in config.get(tool, {}).get('defaults', {}).get(
-        #        'non_config_commands', []):
-        #    pass  # we do not require a config for this command
-        #elif tool not in config:
-        #    # TODO see if we still need this!
-        #    context['error'] = 'Configuration missing for \'%s\'.' % tool
-        #    log.error(context['error'])
-        #    gcdt_signals.error.send((context, config))
-        #    return 1
-    log.debug('### config_validation_finalized')
-    if 'error' in context:
-        gcdt_signals.error.send((context, config))
-        return 1
-
-    ## check credentials are valid (AWS services)
-    # DEPRECATED, use gcdt-awsume plugin instead
-    # TODO use context expiration
-    if are_credentials_still_valid(awsclient):
-        context['error'] = \
-            'Your credentials have expired... Please renew and try again!'
-        log.error(context['error'])
-        gcdt_signals.error.send((context, config))
-        return 1
-
-    ## bundle step
-    gcdt_signals.bundle_pre.send((context, config))
-    log.debug('### bundle_pre')
-    gcdt_signals.bundle_init.send((context, config))
-    log.debug('### bundle_init')
-    gcdt_signals.bundle_finalized.send((context, config))
-    log.debug('### bundle_finalized')
-    if 'error' in context:
-        log.error(context['error'])
-        gcdt_signals.error.send((context, config))
-        return 1
-
-    ## dispatch command providing context and config (= tooldata)
-    gcdt_signals.command_init.send((context, config))
-    log.debug('### command_init')
-    # TODO move the try up!!!
     try:
+        ## initialized
+        gcdt_signals.initialized.send(context)
+        log.debug('### initialized')
+        check_gcdt_update()
+
+        gcdt_signals.config_read_init.send((context, config))
+        log.debug('### config_read_init')
+        gcdt_signals.config_read_finalized.send((context, config))
+        log.debug('### config_read_finalized')
+
+        # register lifecycle hooks
+        if os.path.exists('cloudformation.py'):
+            # TODO tried to move this to gcdt-kumo but found no good solutino so far
+            _load_hooks('cloudformation.py')  # register cloudformation.py hooks
+        if 'hookfile' in config:
+            _load_hooks(config['hookfile'])  # load hooks from hookfile
+
+        # check_credentials
+        gcdt_signals.check_credentials_init.send((context, config))
+        log.debug('### check_credentials_init')
+        gcdt_signals.check_credentials_finalized.send((context, config))
+        log.debug('### check_credentials_finalized')
+
+        ## lookup
+        gcdt_signals.lookup_init.send((context, config))
+        log.debug('### lookup_init')
+        gcdt_signals.lookup_finalized.send((context, config))
+        log.debug('### lookup_finalized')
+        log.debug('### config after lookup:')
+        log.debug(json.dumps(config))
+
+        ## config validation
+        gcdt_signals.config_validation_init.send((context, config))
+        log.debug('### config_validation_init')
+        gcdt_signals.config_validation_finalized.send((context, config))
+        log.debug('### config_validation_finalized')
+
+        ## check credentials are valid (AWS services)
+        # DEPRECATED, use gcdt-awsume plugin instead
+        # TODO use context expiration
+        if are_credentials_still_valid(awsclient):
+            raise InvalidCredentialsError()
+
+        ## bundle step
+        gcdt_signals.bundle_pre.send((context, config))
+        log.debug('### bundle_pre')
+        gcdt_signals.bundle_init.send((context, config))
+        log.debug('### bundle_init')
+        gcdt_signals.bundle_finalized.send((context, config))
+        log.debug('### bundle_finalized')
+
+        ## dispatch command (providing context and config => tooldata )
+        gcdt_signals.command_init.send((context, config))
+        log.debug('### command_init')
+
         if tool == 'gcdt':
             conf = config  # gcdt works on the whole config
         else:
+            # other tools work on tool specific config
+            conf = config.get(tool, None)
+            if conf is None:
+                raise GcdtError('config missing for \'%s\', bailing out!' % tool)
             conf = config.get(tool, {})
-        exit_code = cmd.dispatch(arguments,
-                                 context=context,
-                                 config=conf)
+        exit_code = cmd.dispatch(arguments, context=context, config=conf)
+        if exit_code:
+            raise GcdtError('Error during execution of \'\' \'\'', tool, command)
+
+        gcdt_signals.command_finalized.send((context, config))
+        log.debug('### command_finalized')
     except GracefulExit:
         raise
     except Exception as e:
         log.exception(e)
         log.debug(str(e), exc_info=True)  # this adds the traceback
         context['error'] = str(e)
-        log.error(context['error'])
-        exit_code = 1
-    if exit_code:
-        if 'error' not in context or context['error'] == '':
-            context['error'] = '\'%s\' command failed with exit code 1' % command
         gcdt_signals.error.send((context, config))
+        log.debug('### error')
         return 1
-
-    gcdt_signals.command_finalized.send((context, config))
-    log.debug('### command_finalized')
 
     # TODO reporting (in case you want to get a summary / output to the user)
 
@@ -213,7 +178,7 @@ def main(doc, tool, dispatch_only=None):
 
         if dispatch_only is None:
             dispatch_only = ['version']
-        # we can not assert on tool any more!
+        # assert on tool does not make sense any more!
         #assert tool in ['gcdt', 'kumo', 'tenkai', 'ramuda', 'yugen']
 
         if command in dispatch_only:

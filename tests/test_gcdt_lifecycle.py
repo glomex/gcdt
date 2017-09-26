@@ -9,6 +9,7 @@ import mock
 from gcdt.gcdt_lifecycle import main, lifecycle, _load_hooks
 #from gcdt.kumo_main import DOC
 from gcdt import gcdt_signals
+from gcdt.gcdt_exceptions import GcdtError
 from gcdt_testtools.helpers import create_tempfile
 
 
@@ -141,7 +142,7 @@ def test_lifecycle(mocked_load_plugins, mocked_check_gcdt_update,
     mocked_cmd_dispatch.called_once_with('my_awsclient')
 
 
-@mock.patch('gcdt.gcdt_lifecycle.cmd.dispatch', side_effect=Exception)
+@mock.patch('gcdt.gcdt_lifecycle.cmd.dispatch', side_effect=GcdtError)
 @mock.patch('gcdt.gcdt_lifecycle.are_credentials_still_valid', return_value=False)
 @mock.patch('gcdt.gcdt_lifecycle.check_gcdt_update')
 @mock.patch('gcdt.gcdt_lifecycle.load_plugins')
@@ -153,7 +154,7 @@ def test_lifecycle_error(mocked_load_plugins, mocked_check_gcdt_update,
         # make sure lifecycle feeds back 'error' into context (https://github.com/glomex/gcdt/issues/348)
         context, config = params
         assert 'error' in context
-        assert context['error'] == '\'deploy\' command failed with exit code 1'
+        assert context['error'] == 'An unspecified error occurred'
         assert exp_signals.pop(0) == 'error'
 
     signal_handlers = []  # GC cleans them up if there is no ref

@@ -6,14 +6,15 @@ class GcdtError(Exception):
     """
     The base exception class for gcdt exceptions.
 
-    :ivar msg: The descriptive message associated with the error.
+    :param msg: The descriptive message associated with the error.
     """
-    fmt = 'An unspecified error occurred'
+    msg = 'An unspecified error occurred'
 
-    def __init__(self, **kwargs):
-        msg = self.fmt.format(**kwargs)
-        Exception.__init__(self, msg)
-        self.kwargs = kwargs
+    def __init__(self, *args, **kwargs):
+        #msg = self.fmt.format(**kwargs)
+        if not args:
+            args = [self.msg]
+        Exception.__init__(self, *args, **kwargs)
 
 
 class GracefulExit(Exception):
@@ -22,3 +23,10 @@ class GracefulExit(Exception):
     note: if you capture Exception you have to deal with this case, too
     """
     pass
+
+
+class InvalidCredentialsError(GcdtError):
+    """
+    Unusable credentials
+    """
+    msg = 'Your credentials have expired... Please renew and try again!'
