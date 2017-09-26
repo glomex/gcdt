@@ -11,7 +11,8 @@ from logging.config import dictConfig
 import botocore.session
 from docopt import docopt
 
-from .utils import GracefulExit, signal_handler
+from .utils import signal_handler
+from gcdt.gcdt_exceptions import GracefulExit
 from . import gcdt_signals
 from .gcdt_awsclient import AWSClient
 from .gcdt_cmd_dispatcher import cmd, get_command
@@ -80,6 +81,12 @@ def lifecycle(awsclient, env, tool, command, arguments):
     log.debug('### config_read_finalized')
     # TODO we might want to be able to override config via env variables?
     # here would be the right place to do this
+
+    # register lifecycle hooks
+    if os.path.exists('cloudformation.py'):
+        # TODO tried to move this to gcdt-kumo but found no good solutino so far
+        # register cloudformation.py hooks
+        _load_hooks('cloudformation.py')
     if 'hookfile' in config:
         # load hooks from hookfile
         _load_hooks(config['hookfile'])
@@ -148,6 +155,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     ## dispatch command providing context and config (= tooldata)
     gcdt_signals.command_init.send((context, config))
     log.debug('### command_init')
+    # TODO move the try up!!!
     try:
         if tool == 'gcdt':
             conf = config  # gcdt works on the whole config
@@ -205,7 +213,8 @@ def main(doc, tool, dispatch_only=None):
 
         if dispatch_only is None:
             dispatch_only = ['version']
-        assert tool in ['gcdt', 'kumo', 'tenkai', 'ramuda', 'yugen']
+        # we can not assert on tool any more!
+        #assert tool in ['gcdt', 'kumo', 'tenkai', 'ramuda', 'yugen']
 
         if command in dispatch_only:
             # handle commands that do not need a lifecycle

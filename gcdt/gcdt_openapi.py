@@ -18,7 +18,7 @@ import pprint
 
 from .gcdt_logging import getLogger
 from .utils import dict_merge, get_plugin_defaults
-from . import GcdtError
+from gcdt.gcdt_exceptions import GcdtError
 
 try:
     from StringIO import StringIO
@@ -254,6 +254,12 @@ def _get_example_from_prop_spec(specification, prop_spec, mode):  # ='sample-max
     # Read example directly from (X-)Example or Default value
     if mode == 'default':
         easy_keys = ['default']
+    elif mode == 'sample-min':
+        if 'default' in prop_spec.keys():
+            # there is a 'default' -> no value!
+            return None
+        else:
+            easy_keys = ['example', 'x-example']
     else:
         easy_keys = ['example', 'x-example', 'default']
     for key in easy_keys:
@@ -327,6 +333,8 @@ def _get_example_from_properties(specification, spec, mode):
 
         for inner_name, inner_spec in properties.items():
             if mode in ['default', 'sample-min'] and inner_name not in required:
+                continue
+            if mode == 'sample-min' and 'default' in inner_spec:
                 continue
             if mode == 'default' and 'default' not in inner_spec:
                 continue

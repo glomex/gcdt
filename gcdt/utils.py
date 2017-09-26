@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import collections
+import getpass
+import os
 import random
 import string
-import sys
-import getpass
 import subprocess
+import sys
 import time
 from time import sleep
-import collections
-import json
 
-import os
-from clint.textui import prompt, colored
 from tabulate import tabulate
 
+from gcdt.gcdt_exceptions import GracefulExit
 from . import __version__
-from .package_utils import get_package_versions
-from .gcdt_plugins import get_plugin_versions
 from .gcdt_logging import getLogger
+from .gcdt_plugins import get_plugin_versions
+from .package_utils import get_package_versions
 
 PY3 = sys.version_info[0] >= 3
 
@@ -247,14 +246,6 @@ def flatten(lis):
         else:
             new_lis.append(item)
     return new_lis
-
-
-class GracefulExit(Exception):
-    """
-    transport the signal information
-    note: if you capture Exception you have to deal with this case, too
-    """
-    pass
 
 
 def signal_handler(signum, frame):

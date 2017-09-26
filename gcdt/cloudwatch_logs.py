@@ -9,8 +9,7 @@ from __future__ import unicode_literals, print_function
 import maya
 from .gcdt_logging import getLogger
 
-from .utils import GracefulExit
-
+from gcdt.gcdt_exceptions import GracefulExit
 
 log = getLogger(__name__)
 
