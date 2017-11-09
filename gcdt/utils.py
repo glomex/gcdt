@@ -338,6 +338,8 @@ def all_pages(method, request, accessor, cond=None):
     note: `cond` is optional... you can use it to make filtering more explicit
     if you like. Alternatively you can do the filtering in the `accessor` which
     is perfectly fine, too
+    Note: lambda uses a slightly different mechanism so there is a specific version in
+    ramuda_utils.
 
     :param method: service method
     :param request: request dictionary for service call

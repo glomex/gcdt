@@ -1,0 +1,9 @@
+{
+  "name": "my-sample-lambda",
+  "version": "0.0.1",
+  "description": "A very simple lambda function",
+  "main": "index.js",
+  "dependencies": {
+    "1337": "^1.0.1"
+  }
+}
