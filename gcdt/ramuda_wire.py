@@ -88,7 +88,8 @@ def _get_event_source_obj(awsclient, evt_source):
         'kinesis': event_source.kinesis.KinesisEventSource,
         's3': event_source.s3.S3EventSource,
         'sns': event_source.sns.SNSEventSource,
-        'events': event_source.cloudwatch.CloudWatchEventSource
+        'events': event_source.cloudwatch.CloudWatchEventSource,
+        'cloudfront': event_source.cloudfront.CloudFrontEventSource
     }
 
     evt_type = _get_event_type(evt_source)
@@ -154,6 +155,7 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
                                          Name=alias_name)['AliasArn']
     log.info('UN-wiring lambda_arn %s ' % lambda_arn)
     # TODO why load the policies here?
+    '''
     policies = None
     try:
         result = client_lambda.get_policy(FunctionName=lambda_name,
@@ -164,6 +166,7 @@ def unwire(awsclient, events, lambda_name, alias_name=ALIAS_NAME):
             log.warn("Permission policies not found")
         else:
             raise e
+    '''
 
     if lambda_function is not None:
         #_unschedule_events(awsclient, events, lambda_arn)

@@ -7,3 +7,4 @@ from .dynamodb_stream import DynamoDBStreamEventSource
 from .kinesis import KinesisEventSource
 from .s3 import S3EventSource
 from .sns import SNSEventSource
+from .cloudfront import CloudFrontEventSource

@@ -244,3 +244,39 @@ def filter_bucket_notifications_with_arn(lambda_function_configurations,
         else:
             not_matching_notifications.append(notification)
     return matching_notifications, not_matching_notifications
+
+
+def all_pages(method, request, accessor, cond=None):
+    """Helper to process all pages using botocore service methods (exhausts NextToken).
+    note: `cond` is optional... you can use it to make filtering more explicit
+    if you like. Alternatively you can do the filtering in the `accessor` which
+    is perfectly fine, too
+    Note: there is a generic helper for this in utils but lambda uses a slightly
+    different mechanism so we need this here.
+
+    :param method: service method
+    :param request: request dictionary for service call
+    :param accessor: function to extract data from each response
+    :param cond: filter function to return True / False based on a response
+    :return: list of collected resources
+    """
+    if cond is None:
+        cond = lambda x: True
+    result = []
+    next_token = None
+    while True:
+        if next_token:
+            request['Marker'] = next_token
+        response = method(**request)
+        if cond(response):
+            data = accessor(response)
+            if data:
+                if isinstance(data, list):
+                    result.extend(data)
+                else:
+                    result.append(data)
+        if 'NextMarker' not in response:
+            break
+        next_token = response['NextMarker']
+
+    return result
