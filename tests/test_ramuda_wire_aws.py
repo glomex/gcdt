@@ -120,52 +120,6 @@ def test_wire_unwire_new_events_s3(
 @pytest.mark.aws
 @pytest.mark.slow
 @check_preconditions
-def test_wire_unwire_new_events_cloudwatch(
-        awsclient, vendored_folder, cleanup_lambdas, cleanup_roles):
-    log.info('running test_wire_unwire_new_events_cloudwatch')
-
-    # create a lambda function
-    temp_string = utils.random_string()
-    lambda_name = 'jenkins_test_%s' % temp_string
-    role_name = 'unittest_%s_lambda' % temp_string
-    role_arn = create_lambda_role_helper(awsclient, role_name)
-    cleanup_roles.append(role_name)
-    create_lambda_helper(awsclient, lambda_name, role_arn,
-                         './resources/sample_lambda/handler_counter.py',
-                         lambda_handler='handler_counter.handle')
-
-    # schedule expressions:
-    # http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
-    events = [
-        {
-            "event_source": {
-                "name": "execute_backup",
-                "schedule": "rate(1 minute)"
-            }
-        }
-    ]
-    cleanup_lambdas.append((lambda_name, events))
-
-    # wire the function with the bucket
-    exit_code = wire(awsclient, events, lambda_name)
-    assert exit_code == 0
-
-    assert int(_get_count(awsclient, lambda_name)) == 0
-
-    time.sleep(70)  # sleep till scheduled event
-    assert int(_get_count(awsclient, lambda_name)) == 1
-
-    # unwire the function
-    exit_code = unwire(awsclient, events, lambda_name)
-    assert exit_code == 0
-
-    time.sleep(70)
-    assert int(_get_count(awsclient, lambda_name)) == 1
-
-
-@pytest.mark.aws
-@pytest.mark.slow
-@check_preconditions
 def test_wire_unwire_new_events_sns(
         awsclient, vendored_folder, cleanup_lambdas, cleanup_roles, temp_sns_topic):
     log.info('running test_wire_unwire_new_events_sns')
@@ -236,33 +190,6 @@ def test_event_source_lifecycle_s3(awsclient, vendored_folder, temp_lambda, temp
     _add_event_source(awsclient, evt_source, lambda_arn)
     status = _get_event_source_status(awsclient, evt_source, lambda_arn)
     assert status['EventSourceArn']
-    _remove_event_source(awsclient, evt_source, lambda_arn)
-
-
-@pytest.mark.aws
-@check_preconditions
-def test_event_source_lifecycle_cloudwatch(awsclient, vendored_folder, temp_lambda):
-    log.info('running test_event_source_lifecycle_cloudwatch')
-
-    lambda_name = temp_lambda[0]
-
-    # lookup lambda arn
-    lambda_client = awsclient.get_client('lambda')
-    alias_name = 'ACTIVE'
-    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
-                                         Name=alias_name)['AliasArn']
-
-    # define event source
-    evt_source = {
-        "name": "execute_backup",
-        "schedule": "rate(1 minute)"
-    }
-
-    # event source lifecycle
-    _add_event_source(awsclient, evt_source, lambda_arn)
-    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
-    assert status['EventSourceArn']
-    assert status['State'] == 'ENABLED'
     _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
@@ -445,6 +372,78 @@ def test_event_source_lifecycle_cloudwatch_pattern(
     assert status['EventSourceArn']
     _remove_event_source(awsclient, evt_source, lambda_arn)
 
+
+@pytest.mark.aws
+@pytest.mark.slow
+@check_preconditions
+def test_wire_unwire_new_events_cloudwatch_schedule(
+        awsclient, vendored_folder, cleanup_lambdas, cleanup_roles):
+    log.info('running test_wire_unwire_new_events_cloudwatch_schedule')
+
+    # create a lambda function
+    temp_string = utils.random_string()
+    lambda_name = 'jenkins_test_%s' % temp_string
+    role_name = 'unittest_%s_lambda' % temp_string
+    role_arn = create_lambda_role_helper(awsclient, role_name)
+    cleanup_roles.append(role_name)
+    create_lambda_helper(awsclient, lambda_name, role_arn,
+                         './resources/sample_lambda/handler_counter.py',
+                         lambda_handler='handler_counter.handle')
+
+    # schedule expressions:
+    # http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
+    events = [
+        {
+            "event_source": {
+                "name": "execute_backup",
+                "schedule": "rate(1 minute)"
+            }
+        }
+    ]
+    cleanup_lambdas.append((lambda_name, events))
+
+    # wire the function with the bucket
+    exit_code = wire(awsclient, events, lambda_name)
+    assert exit_code == 0
+
+    assert int(_get_count(awsclient, lambda_name)) == 0
+
+    time.sleep(70)  # sleep till scheduled event
+    assert int(_get_count(awsclient, lambda_name)) == 1
+
+    # unwire the function
+    exit_code = unwire(awsclient, events, lambda_name)
+    assert exit_code == 0
+
+    time.sleep(70)
+    assert int(_get_count(awsclient, lambda_name)) == 1
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_event_source_lifecycle_cloudwatch_schedule(awsclient, vendored_folder, temp_lambda):
+    log.info('running test_event_source_lifecycle_cloudwatch_schedule')
+
+    lambda_name = temp_lambda[0]
+
+    # lookup lambda arn
+    lambda_client = awsclient.get_client('lambda')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+
+    # define event source
+    evt_source = {
+        "name": "unittest_execute_backup",
+        "schedule": "rate(1 minute)"
+    }
+
+    # event source lifecycle
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    assert status['State'] == 'ENABLED'
+    _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
 ################################################################################

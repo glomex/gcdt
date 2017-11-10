@@ -1,0 +1,17 @@
+{
+    "status_code": 200, 
+    "data": {
+        "RuleArn": "arn:aws:events:eu-west-1:420189626185:rule/execute_backup", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "fb74d5ea-c60a-11e7-9954-edd06adfeb1b", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "fb74d5ea-c60a-11e7-9954-edd06adfeb1b", 
+                "date": "Fri, 10 Nov 2017 11:33:32 GMT", 
+                "content-length": "71", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

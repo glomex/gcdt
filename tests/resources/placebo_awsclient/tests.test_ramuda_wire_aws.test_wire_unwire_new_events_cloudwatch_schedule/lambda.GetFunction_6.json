@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_paqzni-c4c7fe97-15e7-446b-936a-4b044331a22e?versionId=A8QWpTgCY2DZ9t7XSv1mTN7AsSd58bFl&X-Amz-Security-Token=FQoDYXdzENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDIUYFWauMyKevlD%2BOiK3A6MnzFzfKx%2BMzRC%2Fap8cLcs2q136z8Py4Y77O%2Bkmj9imrBdifa87lPWowCRIaiSYNmE4vsXaqJSfxfGjQZp4FezOAWGQNX7Wp0LoEY%2B72ex4%2BEgWJLcrtsD9SztQev4id7ISIwVWX7c4%2FVRbPwTILOssBHeU2bZJQ8jX5QN%2BbhcNvQAyg5z5Nc1DYbwVXDy%2BAebgeZ70xfVGBvm%2FM3VPn8sQyTfkfYCTcVqRpd4Y9xnSA5gA4O3zFnCP%2Bl3rn%2Fn5XULQjpCweB71SYOr2uwDjz25nXXzcHdchW8NaMix4fFxgem0JedMnfl80H%2FEnwmz7WVbiubKx7sfiKylKpdDUGFEI2zVAIGh5Pt7thB43di4VasmgblwUbjzHlRQXTMTdGGOQXCBnlRkKqCI3MJzR1Y3eCPfTpWxL1zWm1c99HQr2Q07V7cgJChTJqNBsssKDOu4Pi2Ubyd95%2BieLtVMJxKHrDf2cSxqv8xOswM4NAF4aBPCwbPGkaocqVHZIKyBgSTYRgrqXHWlTLTcysw5KGFk7Yk1B0yLQRN0kbZPtD9AlIS49M5miyFyOmib%2F4IUFvYg0IERpHUosIqW0AU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20171110T113557Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAIYVYHGFJZ6S65ZMA%2F20171110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=436fa7189e7dd9ca43bb721e5441c9e7f292a44e97edf72211d54ec96a881254"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "NLWfSxSUX6CjoWO6ZaeOPJ6ev+mhlIBX07mnb4Cqf7g=", 
+            "FunctionName": "jenkins_test_paqzni", 
+            "MemorySize": 128, 
+            "CodeSize": 3470995, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_paqzni", 
+            "Handler": "handler_counter.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_paqzni_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-11-10T11:33:20.609+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "51cf4f8d-c60b-11e7-ac97-b798ca79b1c5", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 11:35:57 GMT", 
+                "x-amzn-requestid": "51cf4f8d-c60b-11e7-ac97-b798ca79b1c5", 
+                "content-length": "1890", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

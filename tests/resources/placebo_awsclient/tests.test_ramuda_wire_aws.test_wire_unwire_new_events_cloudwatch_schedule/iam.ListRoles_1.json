@@ -4,13 +4,13 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "28d5b1f7-c548-11e7-bd19-f1ff2891a5fb", 
+            "RequestId": "d8f50c2e-c60a-11e7-8dbe-573d05ae7def", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "28d5b1f7-c548-11e7-bd19-f1ff2891a5fb", 
+                "x-amzn-requestid": "d8f50c2e-c60a-11e7-8dbe-573d05ae7def", 
                 "vary": "Accept-Encoding", 
-                "content-length": "36942", 
+                "content-length": "36394", 
                 "content-type": "text/xml", 
-                "date": "Thu, 09 Nov 2017 12:18:56 GMT"
+                "date": "Fri, 10 Nov 2017 11:32:34 GMT"
             }
         }, 
         "IsTruncated": false, 
@@ -238,7 +238,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/service-role/codebuild-ops-captain-crunch-slack-service-role"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22events.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%2C%22events.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJWCIYIV4LOLQOTAJI", 
                 "CreateDate": {
                     "hour": 16, 
@@ -255,7 +255,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/dev-event-zappa-test-app-dev-event-ZappaLambdaExecutionRole"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22events.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%2C%22events.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAIOL6ZEWBXUHM7FFSY", 
                 "CreateDate": {
                     "hour": 6, 
@@ -697,7 +697,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-TeamisFullaccess-MZSLXQ718GX6"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-central-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%2C%22codedeploy.eu-central-1.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJ7KBLKHZ2GVIJUNVG", 
                 "CreateDate": {
                     "hour": 14, 
@@ -916,23 +916,6 @@
                 "RoleName": "StatesExecutionRole-eu-west-1", 
                 "Path": "/service-role/", 
                 "Arn": "arn:aws:iam::420189626185:role/service-role/StatesExecutionRole-eu-west-1"
-            }, 
-            {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
-                "RoleId": "AROAI5YO4TGNMLTV7QOSY", 
-                "CreateDate": {
-                    "hour": 9, 
-                    "__class__": "datetime", 
-                    "month": 11, 
-                    "second": 6, 
-                    "microsecond": 0, 
-                    "year": 2017, 
-                    "day": 8, 
-                    "minute": 11
-                }, 
-                "RoleName": "unittest_ulnifw_lambda", 
-                "Path": "/", 
-                "Arn": "arn:aws:iam::420189626185:role/unittest_ulnifw_lambda"
             }
         ]
     }
