@@ -3,7 +3,7 @@
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3bd1ed20-785b-11e7-9052-50faea5d48d2", 
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/aeecd2c0-c60d-11e7-b7f4-500c4240649a", 
                 "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
                 "Parameters": [
                     {
@@ -16,19 +16,19 @@
                     {
                         "Description": "Name of S3 bucket", 
                         "OutputKey": "BucketName", 
-                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-7n7r7chx323g"
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-wrlmt1gum6zy"
                     }
                 ], 
-                "RoleARN": "arn:aws:iam::420189626185:role/unittest_nqcsew_kumo", 
+                "RoleARN": "arn:aws:iam::420189626185:role/unittest_ivppuu_kumo", 
                 "CreationTime": {
-                    "hour": 14, 
+                    "hour": 11, 
                     "__class__": "datetime", 
-                    "month": 8, 
-                    "second": 29, 
-                    "microsecond": 950000, 
+                    "month": 11, 
+                    "second": 53, 
+                    "microsecond": 21000, 
                     "year": 2017, 
-                    "day": 3, 
-                    "minute": 51
+                    "day": 10, 
+                    "minute": 52
                 }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
@@ -42,11 +42,11 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "51384a5c-785b-11e7-96dd-4f74eb973834", 
+            "RequestId": "c48aba74-c60d-11e7-9b4a-a15a34134bb2", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "51384a5c-785b-11e7-96dd-4f74eb973834", 
-                "date": "Thu, 03 Aug 2017 14:52:05 GMT", 
-                "content-length": "1508", 
+                "x-amzn-requestid": "c48aba74-c60d-11e7-9b4a-a15a34134bb2", 
+                "date": "Fri, 10 Nov 2017 11:53:28 GMT", 
+                "content-length": "1614", 
                 "content-type": "text/xml"
             }
         }
