@@ -4,13 +4,13 @@
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "431adb1a-c548-11e7-bd19-f1ff2891a5fb", 
+            "RequestId": "a4e65836-c5f8-11e7-bc32-b3f579be8142", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "431adb1a-c548-11e7-bd19-f1ff2891a5fb", 
+                "x-amzn-requestid": "a4e65836-c5f8-11e7-bc32-b3f579be8142", 
                 "vary": "Accept-Encoding", 
-                "content-length": "37494", 
+                "content-length": "39134", 
                 "content-type": "text/xml", 
-                "date": "Thu, 09 Nov 2017 12:19:40 GMT"
+                "date": "Fri, 10 Nov 2017 09:22:15 GMT"
             }
         }, 
         "IsTruncated": false, 
@@ -153,7 +153,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/aws-service-role/organizations.amazonaws.com/AWSServiceRoleForOrganizations"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22lambda.amazonaws.com%22%2C%22edgelambda.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22edgelambda.amazonaws.com%22%2C%22lambda.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJ3J2MKJW52JAFPN74", 
                 "CreateDate": {
                     "hour": 13, 
@@ -238,7 +238,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/service-role/codebuild-ops-captain-crunch-slack-service-role"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22events.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22apigateway.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22events.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJWCIYIV4LOLQOTAJI", 
                 "CreateDate": {
                     "hour": 16, 
@@ -255,7 +255,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/dev-event-zappa-test-app-dev-event-ZappaLambdaExecutionRole"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22events.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22apigateway.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Sid%22%3A%22%22%2C%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22apigateway.amazonaws.com%22%2C%22lambda.amazonaws.com%22%2C%22events.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAIOL6ZEWBXUHM7FFSY", 
                 "CreateDate": {
                     "hour": 6, 
@@ -544,7 +544,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-JenkinsInstance-E4W5GVQJ7LM"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22lambda.amazonaws.com%22%2C%22edgelambda.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22edgelambda.amazonaws.com%22%2C%22lambda.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAI4JGKMG3DCF6VO23G", 
                 "CreateDate": {
                     "hour": 11, 
@@ -697,7 +697,7 @@
                 "Arn": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-TeamisFullaccess-MZSLXQ718GX6"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.eu-central-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%5B%22codedeploy.eu-west-1.amazonaws.com%22%2C%22codedeploy.us-west-2.amazonaws.com%22%2C%22codedeploy.us-east-1.amazonaws.com%22%2C%22codedeploy.ap-southeast-2.amazonaws.com%22%2C%22codedeploy.eu-central-1.amazonaws.com%22%5D%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
                 "RoleId": "AROAJ7KBLKHZ2GVIJUNVG", 
                 "CreateDate": {
                     "hour": 14, 
@@ -918,21 +918,72 @@
                 "Arn": "arn:aws:iam::420189626185:role/service-role/StatesExecutionRole-eu-west-1"
             }, 
             {
-                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22cloudformation.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
-                "RoleId": "AROAJRKZF2WOA5ZRJOJ4G", 
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "RoleId": "AROAIY7CMFAVCRMYD5IOS", 
                 "CreateDate": {
-                    "hour": 12, 
+                    "hour": 7, 
                     "__class__": "datetime", 
                     "month": 11, 
-                    "second": 57, 
+                    "second": 15, 
                     "microsecond": 0, 
                     "year": 2017, 
-                    "day": 9, 
-                    "minute": 18
+                    "day": 10, 
+                    "minute": 44
                 }, 
-                "RoleName": "unittest_rrchza_kumo", 
+                "RoleName": "unittest_ddxuei_lambda", 
                 "Path": "/", 
-                "Arn": "arn:aws:iam::420189626185:role/unittest_rrchza_kumo"
+                "Arn": "arn:aws:iam::420189626185:role/unittest_ddxuei_lambda"
+            }, 
+            {
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "RoleId": "AROAJIEOMHSSGVZJU3I7G", 
+                "CreateDate": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 11, 
+                    "second": 8, 
+                    "microsecond": 0, 
+                    "year": 2017, 
+                    "day": 10, 
+                    "minute": 59
+                }, 
+                "RoleName": "unittest_jcvfba_lambda", 
+                "Path": "/", 
+                "Arn": "arn:aws:iam::420189626185:role/unittest_jcvfba_lambda"
+            }, 
+            {
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "RoleId": "AROAJP2XTOHY7ZINHX2VQ", 
+                "CreateDate": {
+                    "hour": 7, 
+                    "__class__": "datetime", 
+                    "month": 11, 
+                    "second": 52, 
+                    "microsecond": 0, 
+                    "year": 2017, 
+                    "day": 10, 
+                    "minute": 44
+                }, 
+                "RoleName": "unittest_jesokf_lambda", 
+                "Path": "/", 
+                "Arn": "arn:aws:iam::420189626185:role/unittest_jesokf_lambda"
+            }, 
+            {
+                "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 
+                "RoleId": "AROAJNE7YGBL56O7KJOUA", 
+                "CreateDate": {
+                    "hour": 9, 
+                    "__class__": "datetime", 
+                    "month": 11, 
+                    "second": 23, 
+                    "microsecond": 0, 
+                    "year": 2017, 
+                    "day": 10, 
+                    "minute": 1
+                }, 
+                "RoleName": "unittest_obqlki_lambda", 
+                "Path": "/", 
+                "Arn": "arn:aws:iam::420189626185:role/unittest_obqlki_lambda"
             }, 
             {
                 "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22Service%22%3A%22lambda.amazonaws.com%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D", 

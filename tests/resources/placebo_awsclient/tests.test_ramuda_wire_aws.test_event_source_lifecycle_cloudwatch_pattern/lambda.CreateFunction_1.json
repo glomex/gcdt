@@ -1,0 +1,35 @@
+{
+    "status_code": 201, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "O/E4Q7xhlPMz+/Jf/QwYj00V6LqaNYuOdq32jm3K44k=", 
+        "FunctionName": "jenkins_test_sample-lambda-event-pattern_ttfdoe", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "b20a7305-c5f8-11e7-a57d-6d880f09e067", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 09:22:48 GMT", 
+                "x-amzn-requestid": "b20a7305-c5f8-11e7-a57d-6d880f09e067", 
+                "content-length": "701", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3471606, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-event-pattern_ttfdoe", 
+        "Environment": {
+            "Variables": {}
+        }, 
+        "Version": "1", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_ttfdoe_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-11-10T09:22:47.308+0000", 
+        "Handler": "handler.handler", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

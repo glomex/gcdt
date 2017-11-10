@@ -1,0 +1,21 @@
+{
+    "status_code": 400, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "c843ff50-c5f8-11e7-8790-f5ce1ffb1388", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c843ff50-c5f8-11e7-8790-f5ce1ffb1388", 
+                "date": "Fri, 10 Nov 2017 09:23:15 GMT", 
+                "content-length": "88", 
+                "content-type": "application/x-amz-json-1.1", 
+                "connection": "close"
+            }
+        }, 
+        "Error": {
+            "Message": "Rule can't be deleted since it has targets.", 
+            "Code": "ValidationException"
+        }
+    }
+}

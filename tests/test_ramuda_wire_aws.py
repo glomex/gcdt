@@ -19,6 +19,7 @@ from gcdt_testtools.helpers_aws import temp_bucket, awsclient, \
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from .test_ramuda_aws import vendored_folder, temp_lambda  # fixtures!
 from .test_ramuda_aws import cleanup_lambdas, cleanup_lambdas_deprecated  # fixtures!
+from . import here
 
 
 log = logging.getLogger(__name__)
@@ -345,10 +346,111 @@ def test_event_source_lifecycle_kinesis(awsclient, vendored_folder, temp_lambda,
     _remove_event_source(awsclient, evt_source, lambda_arn)
 
 
+# gcdt tests do not yet support multi-region lambda deployments
+'''
+@pytest.mark.aws
+@check_preconditions
+def test_event_source_lifecycle_cloudfront(
+        awsclient, vendored_folder, cleanup_lambdas_deprecated, cleanup_roles):
+    log.info('running test_event_source_lifecycle_cloudfront')
+
+    lambda_folder = './resources/sample_lambda_edge/'
+
+    temp_string = utils.random_string()
+    lambda_name = 'jenkins_test_sample-lambda-edge_' + temp_string
+    role_name = 'unittest_%s_lambda' % temp_string
+    role_arn = create_lambda_role_helper(awsclient, role_name)
+
+    # create the function
+    create_lambda_helper(awsclient, lambda_name, role_arn,
+                         here(lambda_folder + 'index.js'),
+                         lambda_handler='index.handler',
+                         folders_from_file=[],
+                         runtime='nodejs6.10'
+                         )
+
+    cleanup_roles.append(role_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
+
+    # lookup lambda arn
+    # us-east-1 is the only region that implements lambda@edge
+    lambda_client = awsclient.get_client('lambda', region='us-east-1')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+
+    # define event source
+    evt_source = {
+        "arn": "arn:aws:cloudfront::420189626185:distribution/E1V934UN4EJGJA",
+        "cache_behavior": "*",
+        "cloudfront_event": "origin-request"
+    }
+
+    # event source lifecycle
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    _remove_event_source(awsclient, evt_source, lambda_arn)
+'''
+
+
+@pytest.mark.aws
+@check_preconditions
+def test_event_source_lifecycle_cloudwatch_pattern(
+        awsclient, vendored_folder, cleanup_lambdas_deprecated, cleanup_roles):
+    log.info('running test_event_source_lifecycle_cloudwatch_pattern')
+
+    lambda_folder = './resources/sample_lambda_event_pattern/'
+
+    temp_string = utils.random_string()
+    lambda_name = 'jenkins_test_sample-lambda-event-pattern_' + temp_string
+    role_name = 'unittest_%s_lambda' % temp_string
+    role_arn = create_lambda_role_helper(awsclient, role_name)
+
+    # create the function
+    create_lambda_helper(awsclient, lambda_name, role_arn,
+                         here(lambda_folder + 'handler.py'),
+                         lambda_handler='handler.handler',
+                         folders_from_file=[],
+                         runtime='python2.7'
+                         )
+
+    cleanup_roles.append(role_name)
+    cleanup_lambdas_deprecated.append(lambda_name)
+
+    # lookup lambda arn
+    # us-east-1 is the only region that implements lambda@edge
+    lambda_client = awsclient.get_client('lambda')
+    alias_name = 'ACTIVE'
+    lambda_arn = lambda_client.get_alias(FunctionName=lambda_name,
+                                         Name=alias_name)['AliasArn']
+
+    # define event source
+    evt_source = {
+        "name": "ssm_parameter_changed",
+        "input_path": "$.detail",
+        "pattern": {
+            "source": [
+                "aws.ssm"
+            ],
+            "detail-type": [
+                "Parameter Store Change"
+            ]
+        }
+    }
+
+    # event source lifecycle
+    _add_event_source(awsclient, evt_source, lambda_arn)
+    status = _get_event_source_status(awsclient, evt_source, lambda_arn)
+    assert status['EventSourceArn']
+    _remove_event_source(awsclient, evt_source, lambda_arn)
+
+
+
 ################################################################################
 ### DEPRECATED
 ################################################################################
-# all test code below is deprectated (related to old wire implementation)
+# all test code below is deprecated (related to old ramuda wire implementation)
 # DEPRECATED!!
 @pytest.mark.aws
 @check_preconditions

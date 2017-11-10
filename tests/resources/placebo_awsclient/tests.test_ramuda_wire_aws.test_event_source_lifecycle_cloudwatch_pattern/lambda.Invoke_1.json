@@ -1,0 +1,27 @@
+{
+    "status_code": 200, 
+    "data": {
+        "FunctionError": "Unhandled", 
+        "Payload": {
+            "body": "{\"errorMessage\": \"Handler 'handler' missing on module 'handler'\"}", 
+            "__module__": "botocore.response", 
+            "__class__": "StreamingBody"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c0c7cc28-c5f8-11e7-99ac-dd5b72fa9fea", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c0c7cc28-c5f8-11e7-99ac-dd5b72fa9fea", 
+                "content-length": "65", 
+                "x-amzn-remapped-content-length": "0", 
+                "x-amzn-trace-id": "root=1-5a056ff7-184eda196fe28f8d2865a188;sampled=0", 
+                "x-amz-function-error": "Unhandled", 
+                "connection": "keep-alive", 
+                "date": "Fri, 10 Nov 2017 09:23:03 GMT", 
+                "content-type": "application/json"
+            }
+        }, 
+        "StatusCode": 200
+    }
+}
