@@ -33,6 +33,8 @@ def _get_event_type(evt_source):
     """
     if 'schedule' in evt_source:
         return 'events'
+    elif 'pattern' in evt_source:
+        return 'events'
     else:
         arn = evt_source['arn']
         _, _, svc, _ = arn.split(':', 3)

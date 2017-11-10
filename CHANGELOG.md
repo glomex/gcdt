@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.440] - 2017-11-10
+### Fixed
+- ramuda: CloudWatch event source pattern (#383)
+
+## [0.1.439] - 2017-11-09
+### Added
+- ramuda: AWS Lambda@Edge support (#381)
+
 ## [0.1.438] - 2017-08-22
 ### Added
 - yugen: create / update custom domain cert using ACM lookup (#367)

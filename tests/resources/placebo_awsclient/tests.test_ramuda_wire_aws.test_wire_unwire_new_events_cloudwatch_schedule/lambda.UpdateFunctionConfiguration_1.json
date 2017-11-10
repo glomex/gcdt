@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "NLWfSxSUX6CjoWO6ZaeOPJ6ev+mhlIBX07mnb4Cqf7g=", 
+        "FunctionName": "jenkins_test_paqzni", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "f423f8b6-c60a-11e7-94b8-b340707d6ef9", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 11:33:20 GMT", 
+                "x-amzn-requestid": "f423f8b6-c60a-11e7-94b8-b340707d6ef9", 
+                "content-length": "633", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3470995, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_paqzni", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_paqzni_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-11-10T11:33:20.609+0000", 
+        "Handler": "handler_counter.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

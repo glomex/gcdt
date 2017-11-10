@@ -3,28 +3,28 @@
     "data": {
         "Role": {
             "AssumeRolePolicyDocument": "%7B%22Version%22%3A%20%222012-10-17%22%2C%20%22Statement%22%3A%20%5B%7B%22Action%22%3A%20%5B%22sts%3AAssumeRole%22%5D%2C%20%22Effect%22%3A%20%22Allow%22%2C%20%22Principal%22%3A%20%7B%22Service%22%3A%20%5B%22cloudformation.amazonaws.com%22%5D%7D%7D%5D%7D", 
-            "RoleId": "AROAJHZPYOE3TYIRUFIRY", 
+            "RoleId": "AROAJG3LHIKRZCZ4WVI2G", 
             "CreateDate": {
-                "hour": 14, 
+                "hour": 11, 
                 "__class__": "datetime", 
-                "month": 8, 
-                "second": 13, 
-                "microsecond": 926000, 
+                "month": 11, 
+                "second": 35, 
+                "microsecond": 959000, 
                 "year": 2017, 
-                "day": 3, 
-                "minute": 51
+                "day": 10, 
+                "minute": 52
             }, 
-            "RoleName": "unittest_nqcsew_kumo", 
+            "RoleName": "unittest_ivppuu_kumo", 
             "Path": "/", 
-            "Arn": "arn:aws:iam::420189626185:role/unittest_nqcsew_kumo"
+            "Arn": "arn:aws:iam::420189626185:role/unittest_ivppuu_kumo"
         }, 
         "ResponseMetadata": {
             "RetryAttempts": 0, 
             "HTTPStatusCode": 200, 
-            "RequestId": "32463c1a-785b-11e7-b403-4b7ba584d044", 
+            "RequestId": "a4c5cb4b-c60d-11e7-b6f5-856e2c483855", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "32463c1a-785b-11e7-b403-4b7ba584d044", 
-                "date": "Thu, 03 Aug 2017 14:51:13 GMT", 
+                "x-amzn-requestid": "a4c5cb4b-c60d-11e7-b6f5-856e2c483855", 
+                "date": "Fri, 10 Nov 2017 11:52:35 GMT", 
                 "content-length": "818", 
                 "content-type": "text/xml"
             }

@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import unicode_literals, print_function
-
-from . import base
 import logging
 import uuid
+import json
+
+from . import base
+
 
 LOG = logging.getLogger(__name__)
 
@@ -29,6 +31,8 @@ class CloudWatchEventSource(base.EventSource):
         self._lambda = awsclient.get_client('lambda')
         if 'name' in config:
             self._name = config['name']
+        else:
+            raise ValueError('\'name\' attribute missing from event_source')
 
     def exists(self, lambda_arn):
         return self.get_rule()
@@ -52,12 +56,13 @@ class CloudWatchEventSource(base.EventSource):
         if 'schedule' in self._config:
             kwargs['ScheduleExpression'] = self._config['schedule']
         if 'pattern' in self._config:
-            kwargs['EventPattern'] = self._config['pattern']
+            kwargs['EventPattern'] = json.dumps(self._config['pattern'])
         if 'description' in self._config:
             kwargs['Description'] = self._config['description']
         if 'role_arn' in self._config:
             kwargs['RoleArn'] = self._config['role_arn']
         try:
+            LOG.debug(kwargs)
             response = self._events.put_rule(**kwargs)
             LOG.debug(response)
             self._config['arn'] = response['RuleArn']
@@ -86,16 +91,20 @@ class CloudWatchEventSource(base.EventSource):
             else:
                 LOG.debug('CloudWatch event source permission already exists')
 
+            target = {
+                'Id': lambda_name,
+                'Arn': lambda_arn
+            }
+            if 'input_path' in self._config:
+                target['InputPath'] = self._config['input_path']
+
             response = self._events.put_targets(
                  Rule=self._name,
-                 Targets=[{
-                     'Id': lambda_name,
-                     'Arn': lambda_arn
-                 }]
+                 Targets=[target]
             )
             LOG.debug(response)
-        except Exception:
-            LOG.exception('Unable to put CloudWatch event source')
+        except Exception as e:
+            LOG.exception('Unable to put CloudWatch event source: %s' % e.message)
 
     def update(self, lambda_arn):
         self.add(lambda_arn)

@@ -1,0 +1,23 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Targets": [
+            {
+                "InputPath": "$.detail", 
+                "Id": "infra-dev-sample-lambda-event-pattern-unittest", 
+                "Arn": "arn:aws:lambda:eu-west-1:420189626185:function:infra-dev-sample-lambda-event-pattern-unittest:ACTIVE"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c966acdf-c5f8-11e7-8790-f5ce1ffb1388", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c966acdf-c5f8-11e7-8790-f5ce1ffb1388", 
+                "date": "Fri, 10 Nov 2017 09:23:17 GMT", 
+                "content-length": "201", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

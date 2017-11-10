@@ -1,0 +1,21 @@
+{
+    "status_code": 200, 
+    "data": {
+        "AliasArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-event-pattern_ttfdoe:ACTIVE", 
+        "FunctionVersion": "1", 
+        "Name": "ACTIVE", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c92dc329-c5f8-11e7-8e5b-33423cefe012", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 09:23:17 GMT", 
+                "x-amzn-requestid": "c92dc329-c5f8-11e7-8e5b-33423cefe012", 
+                "content-length": "244", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "Description": ""
+    }
+}
