@@ -95,16 +95,17 @@ def test_basic_lifecycle_cmds(awsclient, simple_cloudformation_stack_folder):
     # note this only covers parts of the lifecycle
     # a more sorrow lifecycle test using `gcdt-sample-stack` is contained
     # in the gcdt PR builder lifecycle
+    stack_name = 'infra-dev-kumo-sample-stack'
     tooldata = get_tooldata(awsclient, 'kumo', 'deploy')
     assert deploy_cmd(False, **tooldata) == 0
     assert _get_stack_state(awsclient.get_client('cloudformation'),
-                            'infra-dev-kumo-sample-stack') in ['CREATE_COMPLETE']
+                            stack_name) in ['CREATE_COMPLETE']
 
     tooldata['context']['command'] = 'stop'
-    assert stop_cmd(**tooldata) == 0
+    assert stop_cmd(stack_name, **tooldata) == 0
 
     tooldata['context']['command'] = 'start'
-    assert start_cmd(**tooldata) == 0
+    assert start_cmd(stack_name, **tooldata) == 0
 
     tooldata['context']['command'] = 'delete'
     assert delete_cmd(True, **tooldata) == 0

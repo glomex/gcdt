@@ -13,7 +13,8 @@ from gcdt.kumo_core import load_cloudformation_template, \
     delete_stack, create_change_set, _get_stack_name, describe_change_set, \
     _get_artifact_bucket, _s3_upload, _get_stack_state, delete_change_set, \
     generate_template, wait_for_stack_delete_complete, wait_for_stack_create_complete, \
-    wait_for_stack_update_complete, get_stack_id, stop_stack, start_stack, \
+    wait_for_stack_update_complete, get_stack_id
+from gcdt.kumo_start_stop import stop_stack, start_stack, \
     _stop_ec2_instances, _start_ec2_instances
 from gcdt.kumo_util import ensure_ebs_volume_tags_ec2_instance, \
     ensure_ebs_volume_tags_autoscaling_group

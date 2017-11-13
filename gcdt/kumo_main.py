@@ -20,7 +20,8 @@ from . import utils
 from .kumo_core import get_parameter_diff, delete_stack, \
     deploy_stack, write_template_to_file, list_stacks, create_change_set, \
     describe_change_set, load_cloudformation_template, call_pre_hook, \
-    generate_template, stop_stack, start_stack
+    generate_template
+from .kumo_start_stop import stop_stack, start_stack
 from .kumo_viz import cfn_viz, svg_output
 from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
@@ -34,8 +35,8 @@ DOC = '''Usage:
         kumo generate [-v]
         kumo preview [-v]
         kumo dot [-v]
-        kumo stop [-v]
-        kumo start [-v]
+        kumo stop <stack_name> [-v]
+        kumo start <stack_name> [-v]
         kumo version
 
 -h --help           show this
@@ -146,27 +147,23 @@ def preview_cmd(**tooldata):
         delete_stack(awsclient, conf, feedback=False)
 
 
-@cmd(spec=['stop'])
-def stop_cmd(**tooldata):
+@cmd(spec=['stop', '<stack_name>'])
+def stop_cmd(stack_name, **tooldata):
     context = tooldata.get('context')
-    conf = tooldata.get('config')
+    #conf = tooldata.get('config')
     awsclient = context.get('_awsclient')
 
-    #cloudformation = load_template()
-
-    exit_code = stop_stack(awsclient, conf)
+    exit_code = stop_stack(awsclient, stack_name)
     return exit_code
 
 
-@cmd(spec=['start'])
-def start_cmd(**tooldata):
+@cmd(spec=['start', '<stack_name>'])
+def start_cmd(stack_name, **tooldata):
     context = tooldata.get('context')
-    conf = tooldata.get('config')
+    #conf = tooldata.get('config')
     awsclient = context.get('_awsclient')
 
-    #cloudformation = load_template()
-
-    exit_code = start_stack(awsclient, conf)
+    exit_code = start_stack(awsclient, stack_name)
     return exit_code
 
 

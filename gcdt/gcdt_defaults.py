@@ -31,6 +31,9 @@ DEFAULT_CONFIG = {
         'settings_file': 'settings.json',
         'stack_output_file': 'stack_output.yml',
         'log_group': '/var/log/messages'  # conf from baseami (glomex specific)
+    },
+    'kumo': {
+        'non_config_commands': ['start', 'stop']  # this command does not require config
     }
 }
 
