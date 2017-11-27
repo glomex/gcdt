@@ -25,7 +25,7 @@ DEFAULT_CONFIG = {
         'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],
         'python_bundle_venv_dir': '.gcdt/venv',
         'keep': False,
-        'non_config_commands': ['logs', 'invoke']  # this command does not require config
+        'non_config_commands': ['logs', 'invoke']  # this commands do not require config
     },
     'tenkai': {
         'settings_file': 'settings.json',
@@ -33,7 +33,7 @@ DEFAULT_CONFIG = {
         'log_group': '/var/log/messages'  # conf from baseami (glomex specific)
     },
     'kumo': {
-        'non_config_commands': ['start', 'stop']  # this command does not require config
+        'non_config_commands': ['start', 'stop', 'list']  # this commands do not require config
     }
 }
 

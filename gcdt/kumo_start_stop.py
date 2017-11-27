@@ -255,7 +255,7 @@ def stop_stack(awsclient, stack_name, use_suspend=False):
 
         # setting ECS desiredCount to zero
         services = [
-            r['PhysicalResourceId'] for r in resources
+            r for r in resources
             if r['ResourceType'] == 'AWS::ECS::Service'
         ]
         if services:
