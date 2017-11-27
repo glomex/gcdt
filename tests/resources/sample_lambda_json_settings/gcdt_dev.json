@@ -1,0 +1,44 @@
+{
+  "ramuda": {
+    "lambda": {
+      "runtime": "nodejs4.3",
+      "name": "infra-dev-sample-lambda",
+      "description": "experiment using nodejs lambda functions with ramuda",
+      "role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX",
+      "handlerFunction": "index.handler",
+      "handlerFile": "index.js",
+      "timeout": 300,
+      "memorySize": 256,
+      "vpc": {
+        "subnetIds": [
+          "subnet-d5ffb0b1",
+          "subnet-d5ffb0b1",
+          "subnet-d5ffb0b1",
+          "subnet-e9db9f9f"
+        ],
+        "securityGroups": [
+          "sg-660dd700"
+        ]
+      }
+    },
+
+    "bundling": {
+      "zip": "bundle.zip",
+      "folders": [
+        {
+          "source": "./node_modules",
+          "target": "node_modules"
+        }
+      ]
+    },
+
+    "deployment": {
+      "region": "eu-west-1",
+      "artifactBucket": "7finity-infra-dev-deployment"
+    },
+
+    "settings": {
+      "artifactBucket": "lookup:stack:infra-dev:s3DeploymentBucket"
+    }
+  }
+}

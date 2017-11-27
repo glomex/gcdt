@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.441] - 2017-11-13 
+### Fixed
+- kumo: fixed start/stop issues (#376)
+### Added
+- kumo: start/stop support for ECS services (#376)
+
 ## [0.1.440] - 2017-11-10
 ### Fixed
 - ramuda: CloudWatch event source pattern (#383)

@@ -11,8 +11,8 @@ import pytest
 from gcdt.kumo_core import _generate_parameters, \
     load_cloudformation_template, write_template_to_file, _get_stack_name, \
     _get_stack_policy, _get_stack_policy_during_update, _get_conf_value, \
-    _generate_parameter_entry, _call_hook, generate_template, \
-    _get_autoscaling_min_max
+    _generate_parameter_entry, _call_hook, generate_template
+from gcdt.kumo_start_stop import _get_autoscaling_min_max
 from gcdt.utils import fix_old_kumo_config
 from gcdt.gcdt_config_reader import read_json_config
 

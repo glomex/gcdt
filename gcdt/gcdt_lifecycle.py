@@ -6,6 +6,7 @@ import logging
 import signal
 import sys
 from logging.config import dictConfig
+import traceback
 
 import botocore.session
 from docopt import docopt
@@ -150,8 +151,7 @@ def lifecycle(awsclient, env, tool, command, arguments):
     except GracefulExit:
         raise
     except Exception as e:
-        log.exception(e)
-        log.debug(str(e), exc_info=True)  # this adds the traceback
+        log.debug(traceback.format_exc())
         context['error'] = str(e)
         log.error(context['error'])
         exit_code = 1
