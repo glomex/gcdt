@@ -15,7 +15,7 @@ pep8>=1.7.0
 pylint>=1.7.1
 bumpversion>=0.5.3
 aws-mfa>=0.0.8
-awscli>=1.11.113
+awscli>=1.14.1
 pypandoc>=1.4
 
 # misc

@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.442] - 2017-11-30 
+### Added
+- gcdt: set user agent (#379)
+### Fixed
+- gcdt: regression from kumo start & stop optimization (#376)
+
 ## [0.1.441] - 2017-11-13 
 ### Fixed
 - kumo: fixed start/stop issues (#376)
