@@ -65,10 +65,10 @@ curl --fail http://autotest:tsetotua@supercars-eu-west-1.dev.infra.glomex.cloud/
 cd ./infrastructure
 
 ## stop the stack
-kumo stop
+kumo stop gcdt-sample-stack
 
 ## start the stack
-kumo start
+kumo start gcdt-sample-stack
 
 ## check if the application works (after health checks are green)
 sleep 180
