@@ -6,6 +6,8 @@ to provide a simpler interface.
 from __future__ import unicode_literals, print_function
 from botocore.exceptions import ClientError  # used in plugins -> keep!!
 
+from . import __version__
+
 
 class AWSClient(object):
     # note this is heavily inspired by TypedAWSClient:
@@ -13,6 +15,7 @@ class AWSClient(object):
     def __init__(self, session):
         self._session = session
         self._client_cache = {}
+        _set_user_agent_for_session(self._session)
 
     def get_client(self, service_name, region_name=None, **kwargs):
         if region_name is None:
@@ -32,3 +35,8 @@ class AWSClient(object):
         """Get account id using session."""
         sts = self.get_client('sts')
         return sts.get_caller_identity()["Account"]
+
+
+def _set_user_agent_for_session(session):
+    session.user_agent_name = 'gcdt'
+    session.user_agent_version = __version__
