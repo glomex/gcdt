@@ -20,7 +20,7 @@ from . import utils
 from .kumo_core import get_parameter_diff, delete_stack, \
     deploy_stack, write_template_to_file, list_stacks, create_change_set, \
     describe_change_set, load_cloudformation_template, call_pre_hook, \
-    generate_template
+    generate_template, info
 from .kumo_start_stop import stop_stack, start_stack
 from .kumo_viz import cfn_viz, svg_output
 from .gcdt_cmd_dispatcher import cmd
@@ -37,10 +37,12 @@ DOC = '''Usage:
         kumo dot [-v]
         kumo stop <stack_name> [-v]
         kumo start <stack_name> [-v]
+        kumo info [-v] [--json]
         kumo version
 
 -h --help           show this
 -v --verbose        show debug messages
+--json              use json format
 '''
 
 
@@ -164,6 +166,20 @@ def start_cmd(stack_name, **tooldata):
     awsclient = context.get('_awsclient')
 
     exit_code = start_stack(awsclient, stack_name)
+    return exit_code
+
+
+@cmd(spec=['info', '--json'])
+def info_cmd(json, **tooldata):
+    context = tooldata.get('context')
+    if json:
+        context['format'] = 'json'
+    else:
+        context['format'] = 'tabular'
+    conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    exit_code = info(awsclient, conf, format=context['format'])
     return exit_code
 
 
