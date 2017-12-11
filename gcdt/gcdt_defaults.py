@@ -44,9 +44,6 @@ CONFIG_READER_CONFIG = {
     # TODO remove baseami
     'lookups': ['secret', 'ssl', 'stack', 'baseami', 'acm'],
     'plugins': {
-        'gcdt_datadog_integration': {
-            'datadog_api_key': 'lookup:secret:datadog.api_key'
-        },
         'gcdt_slack_integration': {
             'slack_webhook': 'lookup:secret:slack.webhook:CONTINUE_IF_NOT_FOUND'
         },
