@@ -51,9 +51,9 @@ class CloudFrontEventSource(base.EventSource):
             LOG.exception('Unable to read distribution config')
 
     def _is_same_lambda_association(self, association_1, association_2):
-        lambda_name_1 = base.get_lambda_name(association_1['LambdaFunctionARN'])
-        lambda_name_2 = base.get_lambda_name(association_2['LambdaFunctionARN'])
-        return lambda_name_1 == lambda_name_2 and association_1['EventType'] == association_2['EventType']
+        base_lambda_arn_1 = base.get_lambda_basearn(association_1['LambdaFunctionARN'])
+        base_lambda_arn_2 = base.get_lambda_basearn(association_2['LambdaFunctionARN'])
+        return base_lambda_arn_1 == base_lambda_arn_2 and association_1['EventType'] == association_2['EventType']
 
     def add(self, lambda_arn):
         distribution_config, etag = self._get_distribution_config()
