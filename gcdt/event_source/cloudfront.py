@@ -50,6 +50,11 @@ class CloudFrontEventSource(base.EventSource):
             LOG.exception(exc)
             LOG.exception('Unable to read distribution config')
 
+    def _is_same_lambda_association(self, association_1, association_2):
+        lambda_name_1 = base.get_lambda_name(association_1['LambdaFunctionARN'])
+        lambda_name_2 = base.get_lambda_name(association_2['LambdaFunctionARN'])
+        return lambda_name_1 == lambda_name_2 and association_1['EventType'] == association_2['EventType']
+
     def add(self, lambda_arn):
         distribution_config, etag = self._get_distribution_config()
         request = {
@@ -57,16 +62,22 @@ class CloudFrontEventSource(base.EventSource):
             'Id': self._get_distribution_id(),
             'IfMatch': etag
         }
-        # add lambda trigger to DistributionConfig
+
+        new_lambda_association = {
+            'LambdaFunctionARN': self._get_last_published_lambda_version(lambda_arn),
+            'EventType': self._config['cloudfront_event']
+        }
+
+        new_lambda_associations = []
+        current_lambda_associations = request['DistributionConfig']['DefaultCacheBehavior']['LambdaFunctionAssociations']['Items']
+        for lambda_association in current_lambda_associations:
+            if not self._is_same_lambda_association(lambda_association, new_lambda_association):
+                new_lambda_associations.append(lambda_association)
+        new_lambda_associations.append(new_lambda_association)
+
         request['DistributionConfig']['DefaultCacheBehavior']['LambdaFunctionAssociations'] = {
-            'Quantity': 1,
-            'Items': [
-                {
-                    'LambdaFunctionARN':
-                        self._get_last_published_lambda_version(lambda_arn),
-                    'EventType': self._config['cloudfront_event']
-                }
-            ]
+            'Quantity': len(new_lambda_associations),
+            'Items': new_lambda_associations
         }
 
         try:
