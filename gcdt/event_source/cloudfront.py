@@ -50,10 +50,10 @@ class CloudFrontEventSource(base.EventSource):
             LOG.exception(exc)
             LOG.exception('Unable to read distribution config')
 
-    def _is_same_lambda_association(self, association_1, association_2):
-        base_lambda_arn_1 = base.get_lambda_basearn(association_1['LambdaFunctionARN'])
-        base_lambda_arn_2 = base.get_lambda_basearn(association_2['LambdaFunctionARN'])
-        return base_lambda_arn_1 == base_lambda_arn_2 and association_1['EventType'] == association_2['EventType']
+    def _is_same_trigger(self, trigger_1, trigger_2):
+        base_lambda_arn_1 = base.get_lambda_basearn(trigger_1['LambdaFunctionARN'])
+        base_lambda_arn_2 = base.get_lambda_basearn(trigger_2['LambdaFunctionARN'])
+        return base_lambda_arn_1 == base_lambda_arn_2 and trigger_1['EventType'] == trigger_2['EventType']
 
     def add(self, lambda_arn):
         distribution_config, etag = self._get_distribution_config()
@@ -63,21 +63,25 @@ class CloudFrontEventSource(base.EventSource):
             'IfMatch': etag
         }
 
-        new_lambda_association = {
+        new_trigger = {
             'LambdaFunctionARN': self._get_last_published_lambda_version(lambda_arn),
             'EventType': self._config['cloudfront_event']
         }
 
-        new_lambda_associations = []
-        current_lambda_associations = request['DistributionConfig']['DefaultCacheBehavior']['LambdaFunctionAssociations']['Items']
-        for lambda_association in current_lambda_associations:
-            if not self._is_same_lambda_association(lambda_association, new_lambda_association):
-                new_lambda_associations.append(lambda_association)
-        new_lambda_associations.append(new_lambda_association)
+        new_triggers = []
+        current_triggers_object = request['DistributionConfig']['DefaultCacheBehavior']['LambdaFunctionAssociations']
+        if 'Items' in current_triggers_object:
+            current_triggers = current_triggers_object['Items']
+        else:
+            current_triggers = []
+        for trigger in current_triggers:
+            if not self._is_same_trigger(trigger, new_trigger):
+                new_triggers.append(trigger)
+        new_triggers.append(new_trigger)
 
         request['DistributionConfig']['DefaultCacheBehavior']['LambdaFunctionAssociations'] = {
-            'Quantity': len(new_lambda_associations),
-            'Items': new_lambda_associations
+            'Quantity': len(new_triggers),
+            'Items': new_triggers
         }
 
         try:
