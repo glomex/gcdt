@@ -20,7 +20,7 @@ class CloudWatchLogsEventSource(base.EventSource):
         self._filter_name = config['filter_name']
 
     def exists(self, _lambda_arn):
-        return False
+        return True
 
     def add(self, lambda_arn):
         current_lambda_log_group_name = {"/aws/lambda/%s" % base.get_lambda_name(lambda_arn)}
