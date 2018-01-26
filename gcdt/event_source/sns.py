@@ -64,7 +64,7 @@ class SNSEventSource(base.EventSource):
                 'SourceArn': self.arn
             }
             if alias_name:
-                request['Qualifer'] = alias_name
+                request['Qualifier'] = alias_name
             response = self._lambda.add_permission(**request)
             LOG.debug(response)
         except ClientError as e:
@@ -99,7 +99,7 @@ class SNSEventSource(base.EventSource):
                 'StatementId': self.arn.split(":")[-1]
             }
             if alias_name:
-                request['Qualifer'] = alias_name
+                request['Qualifier'] = alias_name
             response = self._lambda.remove_permission(**request)
             LOG.debug(response)
         except Exception:

@@ -86,7 +86,7 @@ class S3EventSource(base.EventSource):
         try:
             request = {'FunctionName': lambda_arn}
             if alias_name:
-                request['Qualifer'] = alias_name
+                request['Qualifier'] = alias_name
             response = self._lambda.get_policy(**request)
             existingPermission = self.arn in str(response['Policy'])
         except Exception:
@@ -101,7 +101,7 @@ class S3EventSource(base.EventSource):
                 'SourceArn': self.arn
             }
             if alias_name:
-                request['Qualifer'] = alias_name
+                request['Qualifier'] = alias_name
             response = self._lambda.add_permission(**request)
             LOG.debug(response)
         else:

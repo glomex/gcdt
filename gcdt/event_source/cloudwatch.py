@@ -70,7 +70,7 @@ class CloudWatchEventSource(base.EventSource):
             try:
                 request = {'FunctionName': lambda_arn}
                 if alias_name:
-                    request['Qualifer'] = alias_name
+                    request['Qualifier'] = alias_name
                 response = self._lambda.get_policy(**request)
                 existingPermission = self._config['arn'] in str(response['Policy'])
             except Exception:
@@ -85,7 +85,7 @@ class CloudWatchEventSource(base.EventSource):
                     'SourceArn': self.arn
                 }
                 if alias_name:
-                    request['Qualifer'] = alias_name
+                    request['Qualifier'] = alias_name
                 response = self._lambda.add_permission(**request)
                 LOG.debug(response)
             else:
