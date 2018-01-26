@@ -8,3 +8,4 @@ from .kinesis import KinesisEventSource
 from .s3 import S3EventSource
 from .sns import SNSEventSource
 from .cloudfront import CloudFrontEventSource
+from .cloudwatch_logs import CloudWatchLogsEventSource

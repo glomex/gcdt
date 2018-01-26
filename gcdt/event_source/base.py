@@ -25,7 +25,7 @@ def get_lambda_name(lambda_arn):
 def get_lambda_alias(lambda_arn):
     # in case we need the lambda name, we use this helper function
     parts = lambda_arn.split(':')
-    if len(parts) == 7:
+    if len(parts) == 8:
         return parts[7]
     else:
         return None
