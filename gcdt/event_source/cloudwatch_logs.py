@@ -1,5 +1,8 @@
 from __future__ import unicode_literals, print_function
 
+import os
+from time import sleep
+
 import logging
 
 from botocore.exceptions import ClientError
@@ -54,6 +57,7 @@ class CloudWatchLogsEventSource(base.EventSource):
         alias_name = base.get_lambda_alias(lambda_arn)
 
         LOG.debug("removing lambda policy")
+        self._sleep()
         self._lambda.remove_permission(FunctionName=lambda_name,
                                        Qualifier=alias_name,
                                        StatementId=self._filter_name)
@@ -70,21 +74,25 @@ class CloudWatchLogsEventSource(base.EventSource):
         if prefix:
             kwargs = {"logGroupNamePrefix": prefix}
 
+        self._sleep()
         log_groups = self._logs.describe_log_groups(**kwargs)
         log_group_names = _extract_names_from_log_groups(log_groups)
 
         while 'nextToken' in log_groups:
+            self._sleep()
             log_groups = self._logs.describe_log_groups(nextToken=log_groups['nextToken'], **kwargs)
             log_group_names |= _extract_names_from_log_groups(log_groups)
 
         return log_group_names
 
     def _log_group_subscribed_to_lambda(self, lambda_arn, log_group_name):
+        self._sleep()
         subscription_filters = self._logs.describe_subscription_filters(logGroupName=log_group_name)
         return any(map(lambda e: e['filterName'] == self._filter_name,
                        subscription_filters['subscriptionFilters']))
 
     def _subscribe_log_group_to_lambda(self, lambda_arn, log_group_name):
+        self._sleep()
         LOG.debug("adding subscription for %s" % log_group_name)
         return self._logs.put_subscription_filter(logGroupName=log_group_name,
                                                   destinationArn=lambda_arn,
@@ -93,6 +101,7 @@ class CloudWatchLogsEventSource(base.EventSource):
                                                   distribution="ByLogStream")
 
     def _remove_log_group_subscription_to_lambda(self, lambda_arn, log_group_name):
+        self._sleep()
         LOG.debug("removing subscription for %s" % log_group_name)
         return self._logs.delete_subscription_filter(logGroupName=log_group_name,
                                                      filterName=self._filter_name)
@@ -105,6 +114,7 @@ class CloudWatchLogsEventSource(base.EventSource):
         arn_like = "arn:aws:logs:eu-west-1:%s:log-group:%s*:*" % (account_id, self._log_group_name_prefix)
 
         try:
+            self._sleep()
             self._lambda.remove_permission(FunctionName=lambda_name,
                                            Qualifier=alias_name,
                                            StatementId=self._filter_name)
@@ -112,12 +122,17 @@ class CloudWatchLogsEventSource(base.EventSource):
             pass
 
         LOG.debug("updating lambda policy allowing access for %s" % arn_like)
+        self._sleep()
         self._lambda.add_permission(FunctionName=lambda_name,
                                     Qualifier=alias_name,
                                     StatementId=self._filter_name,
                                     Action="lambda:InvokeFunction",
                                     Principal="logs.eu-west-1.amazonaws.com",
                                     SourceArn=arn_like)
+
+    def _sleep(self):
+        aws_requests_sleep = float(os.environ.get('AWS_REQUESTS_SLEEP', '0'))
+        sleep(aws_requests_sleep)
 
 
 def _extract_names_from_log_groups(log_groups):
