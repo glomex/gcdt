@@ -82,6 +82,7 @@ def deploy_cmd(**tooldata):
         cert_arn = config['customDomain'].get('certificateArn')
         hosted_zone_id = config['customDomain'].get('hostedDomainZoneId')
         api_base_path = config['customDomain'].get('basePath')
+        ensure_cname = config['customDomain'].get('ensureCname', True)
         deploy_custom_domain(
             awsclient=awsclient,
             api_name=api_name,
@@ -91,7 +92,8 @@ def deploy_cmd(**tooldata):
             route_53_record=route_53_record,
             cert_name=cert_name,
             cert_arn=cert_arn,
-            hosted_zone_id=hosted_zone_id
+            hosted_zone_id=hosted_zone_id,
+            ensure_cname=ensure_cname,
         )
     return exit_code
 
@@ -177,6 +179,7 @@ def custom_domain_create_cmd(**tooldata):
     cert_name = config['customDomain'].get('certificateName')
     cert_arn = config['customDomain'].get('certificateArn')
     hosted_zone_id = config['customDomain'].get('hostedDomainZoneId')
+    ensure_cname = config['customDomain'].get('ensureCname', True)
 
     return deploy_custom_domain(
         awsclient=awsclient,
@@ -187,7 +190,8 @@ def custom_domain_create_cmd(**tooldata):
         route_53_record=route_53_record,
         cert_name=cert_name,
         cert_arn=cert_arn,
-        hosted_zone_id=hosted_zone_id
+        hosted_zone_id=hosted_zone_id,
+        ensure_cname=ensure_cname,
     )
 
 
