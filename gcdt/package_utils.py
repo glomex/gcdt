@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 from pip._vendor import pkg_resources
-import pip.commands.list
+from pip._internal.commands.list import ListCommand
 
 
 def get_dist(dist_name, lookup_dirs=None):
@@ -32,7 +32,7 @@ def get_package_versions(package):
     :param package: name of the package
     :return: installed version, latest available version
     """
-    list_command = pip.commands.list.ListCommand()
+    list_command = ListCommand()
     options, args = list_command.parse_args([])
     packages = [get_dist(package)]
     dists = list_command.iter_packages_latest_infos(packages, options)

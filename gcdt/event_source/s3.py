@@ -84,10 +84,8 @@ class S3EventSource(base.EventSource):
         alias_name = base.get_lambda_alias(lambda_arn)
         existingPermission = {}
         try:
-            request = {'FunctionName': lambda_arn}
-            if alias_name:
-                request['Qualifer'] = alias_name
-            response = self._lambda.get_policy(**request)
+            lambda_name = base.get_lambda_name(lambda_arn)
+            response = self._lambda.get_policy(FunctionName=lambda_name, Qualifier=alias_name)
             existingPermission = self.arn in str(response['Policy'])
         except Exception:
             LOG.debug('S3 event source permission not available')
@@ -98,10 +96,9 @@ class S3EventSource(base.EventSource):
                 'StatementId': str(uuid.uuid4()),
                 'Action': 'lambda:InvokeFunction',
                 'Principal': 's3.amazonaws.com',
-                'SourceArn': self.arn
+                'SourceArn': self.arn,
+                'Qualifier': alias_name,
             }
-            if alias_name:
-                request['Qualifer'] = alias_name
             response = self._lambda.add_permission(**request)
             LOG.debug(response)
         else:

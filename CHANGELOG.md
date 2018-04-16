@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.1.449] - 2018-04-16
+### Fixed
+- gcdt: update pip version
+- gcdt: unpin dependencies
+- ramuda: fix wiring
+
+## [0.1.448] - 2018-03-27
+### Added
+- yugen: Allow skipping of creating DNS record
+
+## [0.1.447] - 2018-02-16
+### Added
+- ramuda: Add optional sleeps between AWS api requests
+
+## [0.1.446] - 2018-01-26
+### Fixed
+- ramuda: Fix cloudwatch unwire
+
 ## [0.1.445] - 2018-01-26
 ### Added
 - ramuda: Cloudwatch Logs event source

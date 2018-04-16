@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 
 import mock
 from pip._vendor import pkg_resources
-from pip.commands.list import ListCommand
+from pip._internal.commands.list import ListCommand
 
 from gcdt.package_utils import get_dist, get_package_versions
 

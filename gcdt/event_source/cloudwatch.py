@@ -68,24 +68,21 @@ class CloudWatchEventSource(base.EventSource):
             self._config['arn'] = response['RuleArn']
             existingPermission={}
             try:
-                request = {'FunctionName': lambda_arn}
-                if alias_name:
-                    request['Qualifer'] = alias_name
-                response = self._lambda.get_policy(**request)
+                lambda_name = base.get_lambda_name(lambda_arn)
+                response = self._lambda.get_policy(FunctionName=lambda_name, Qualifier=alias_name)
                 existingPermission = self._config['arn'] in str(response['Policy'])
             except Exception:
                 LOG.debug('CloudWatch event source permission not available')
 
             if not existingPermission:
                 request = {
-                    'FunctionName': lambda_arn,
+                    'FunctionName': base.get_lambda_name(lambda_arn),
                     'StatementId': str(uuid.uuid4()),
                     'Action': 'lambda:InvokeFunction',
                     'Principal': 'events.amazonaws.com',
-                    'SourceArn': self.arn
+                    'SourceArn': self.arn,
+                    'Qualifier': alias_name
                 }
-                if alias_name:
-                    request['Qualifer'] = alias_name
                 response = self._lambda.add_permission(**request)
                 LOG.debug(response)
             else:

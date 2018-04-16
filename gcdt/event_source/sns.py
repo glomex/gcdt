@@ -61,10 +61,9 @@ class SNSEventSource(base.EventSource):
                 'StatementId': self.arn.split(":")[-1],
                 'Action': 'lambda:InvokeFunction',
                 'Principal': 'sns.amazonaws.com',
-                'SourceArn': self.arn
+                'SourceArn': self.arn,
+                'Qualifier': alias_name,
             }
-            if alias_name:
-                request['Qualifer'] = alias_name
             response = self._lambda.add_permission(**request)
             LOG.debug(response)
         except ClientError as e:
@@ -96,10 +95,9 @@ class SNSEventSource(base.EventSource):
         try:
             request = {
                 'FunctionName': lambda_name,
-                'StatementId': self.arn.split(":")[-1]
+                'StatementId': self.arn.split(":")[-1],
+                'Qualifier': alias_name,
             }
-            if alias_name:
-                request['Qualifer'] = alias_name
             response = self._lambda.remove_permission(**request)
             LOG.debug(response)
         except Exception:

@@ -1,0 +1,22 @@
+# Dependencies have to be in sync with other packages (gcdt, glomex-credstash, gcdt plugins)
+botocore>=1.10.4
+s3transfer
+pybars3
+blinker
+regex
+ba
+
+# Other dependencies
+clint
+docopt
+pathspec
+awacs
+troposphere
+tabulate
+pyspin
+pip>=10.0.0
+funcsigs
+maya
+testfixtures
+bravado-core
+pyhocon
