@@ -4,8 +4,6 @@
 #
 #    pip-compile --output-file requirements_frozen.txt requirements.txt
 #
---extra-index-url https://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/packages
---trusted-host reposerver-prod-eu-west-1.infra.glomex.cloud
 
 args==0.1.0               # via clint
 awacs==0.7.2
