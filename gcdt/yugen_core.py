@@ -8,6 +8,7 @@ import uuid
 from botocore.exceptions import ClientError
 from pybars import Compiler
 from tabulate import tabulate
+from time import sleep
 
 from gcdt.utils import GracefulExit, json2table
 
@@ -117,6 +118,7 @@ def delete_api(awsclient, api_name):
 
     :param api_name:
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
 
     print('deleting api: %s' % api_name)
@@ -141,6 +143,7 @@ def create_api_key(awsclient, api_name, api_key_name):
     :param api_key_name:
     :return: api_key
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('create api key: %s' % api_key_name)
 
@@ -161,6 +164,7 @@ def delete_api_key(awsclient, api_key):
 
     :param api_key:
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('delete api key: %s' % api_key)
 
@@ -174,6 +178,7 @@ def delete_api_key(awsclient, api_key):
 def list_api_keys(awsclient):
     """Print the defined API keys.
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('listing api keys')
 
@@ -262,6 +267,7 @@ def get_lambdas(awsclient, config, add_arn=False):
                 'swagger_ref': lambda_entry.get('swaggerRef', None)
             }
             if add_arn:
+                _sleep()
                 response_lambda = client_lambda.get_function(
                     FunctionName=lmbda['name'])
                 lmbda['arn'] = response_lambda['Configuration']['FunctionArn']
@@ -290,6 +296,7 @@ def _import_from_swagger(awsclient, api_name, api_description, stage_name,
             lambdas)
         swagger_body = _compile_template(SWAGGER_FILE,
                                          template_variables)
+        _sleep()
         response_swagger = client_api.import_rest_api(
             failOnWarnings=True,
             body=swagger_body
@@ -319,6 +326,7 @@ def _update_from_swagger(awsclient, api_name, api_description, stage_name,
         filled_swagger_file = _compile_template(SWAGGER_FILE,
                                                 template_variables)
 
+        _sleep()
         response_swagger = client_api.put_rest_api(
             restApiId=api['id'],
             mode='overwrite',
@@ -351,7 +359,7 @@ def _wire_api_key(awsclient, api_name, api_key, stage_name):
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
-
+        _sleep()
         response = client_api.update_api_key(
             apiKey=api_key,
             patchOperations=[
@@ -388,6 +396,7 @@ def _create_deployment(awsclient, api_name, stage_name,
         }
         if cache_cluster_enabled:
             request['cacheClusterSize'] = cache_cluster_size
+        _sleep()
         response = client_api.create_deployment(**request)
 
         print(json2table(response))
@@ -398,6 +407,7 @@ def _create_deployment(awsclient, api_name, stage_name,
 def _ensure_correct_route_53_record(awsclient, hosted_zone_id, record_name,
                                     record_value, record_type='CNAME'):
     client_route53 = awsclient.get_client('route53')
+    _sleep()
     response = client_route53.change_resource_record_sets(
         HostedZoneId=hosted_zone_id,
         ChangeBatch={
@@ -424,6 +434,7 @@ def _ensure_correct_base_path_mapping(awsclient, domain_name, base_path,
                                       api_id,
                                       target_stage):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     mapping = client_api.get_base_path_mapping(domainName=domain_name,
                                                basePath=base_path)
     operations = []
@@ -440,6 +451,7 @@ def _ensure_correct_base_path_mapping(awsclient, domain_name, base_path,
             'value': api_id
         })
     if operations:
+        _sleep()
         response = client_api.update_base_path_mapping(
             domainName=domain_name,
             basePath='(none)',
@@ -460,6 +472,7 @@ def _update_stage(awsclient, api_id, stage_name, method_settings):
     operations = _convert_method_settings_into_operations(method_settings)
     if operations:
         print('update method settings for stage')
+        _sleep()
         response = client_api.update_stage(
             restApiId=api_id,
             stageName=stage_name,
@@ -513,6 +526,7 @@ def _convert_method_settings_into_operations(method_settings=None):
 
 def _base_path_mapping_exists(awsclient, domain_name, base_path):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     base_path_mappings = client_api.get_base_path_mappings(
         domainName=domain_name)
     mapping_exists = False
@@ -526,6 +540,7 @@ def _base_path_mapping_exists(awsclient, domain_name, base_path):
 def _create_base_path_mapping(awsclient, domain_name, base_path, stage,
                               api_id):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     base_path_respone = client_api.create_base_path_mapping(
         domainName=domain_name,
         basePath=base_path,
@@ -538,6 +553,7 @@ def _record_exists_and_correct(awsclient, hosted_zone_id,
                                target_route_53_record_name,
                                cloudfront_distribution):
     client_route53 = awsclient.get_client('route53')
+    _sleep()
     response = client_route53.list_resource_record_sets(
         HostedZoneId=hosted_zone_id
     )
@@ -555,6 +571,7 @@ def _record_exists_and_correct(awsclient, hosted_zone_id,
 
 def _create_custom_domain(awsclient, domain_name, cert_name, cert_arn):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     response = client_api.create_domain_name(
         domainName=domain_name,
         #certificateName=ssl_cert['name'],
@@ -569,6 +586,7 @@ def _create_custom_domain(awsclient, domain_name, cert_name, cert_arn):
 
 def _update_custom_domain(awsclient, domain_name, cert_name, cert_arn):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     response = client_api.update_domain_name(
         domainName=domain_name,
         patchOperations=[
@@ -658,6 +676,7 @@ def _ensure_lambda_permissions(client_lambda, lmbda, api):
 
     print('Adding lambda permission for API Gateway for lambda {}'.format(
         lambda_name))
+    _sleep()
     response = client_lambda.add_permission(
         FunctionName=lambda_name,
         StatementId=str(uuid.uuid1()),
@@ -673,6 +692,7 @@ def _ensure_lambda_permissions(client_lambda, lmbda, api):
 def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
     policy_resource_arn = lambda_arn + ':ACTIVE'
     try:
+        _sleep()
         response = client_lambda.get_policy(FunctionName=policy_resource_arn)
     except ClientError:
         return False
@@ -691,6 +711,7 @@ def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
 def _custom_domain_name_exists(awsclient, domain_name):
     client_api = awsclient.get_client('apigateway')
     try:
+        _sleep()
         domain = client_api.get_domain_name(domainName=domain_name)
     except ClientError as e:
         domain = None
@@ -712,6 +733,7 @@ def _api_exists(awsclient, api_name):
 
 def _api_by_name(awsclient, api_name):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     filtered_rest_apis = \
         list(filter(lambda api: True if api['name'] == api_name else False,
                client_api.get_rest_apis()['items']))
@@ -753,3 +775,8 @@ def _arn_to_uri(lambda_arn, lambda_alias):
                  ':lambda:path/2015-03-31/functions/'
     arn_suffix = '/invocations'
     return arn_prefix + lambda_arn + ':' + lambda_alias + arn_suffix
+
+
+def _sleep():
+    aws_requests_sleep = float(os.environ.get('AWS_REQUESTS_SLEEP', '0'))
+    sleep(aws_requests_sleep)
