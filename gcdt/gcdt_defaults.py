@@ -22,7 +22,7 @@ hardcoded values.
 DEFAULT_CONFIG = {
     'ramuda': {
         'settings_file': 'settings.json',
-        'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10'],
+        'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10', 'nodejs8.10'],
         'python_bundle_venv_dir': '.gcdt/venv',
         'keep': False,
         'non_config_commands': ['logs', 'invoke']  # this commands do not require config
