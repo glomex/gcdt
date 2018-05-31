@@ -206,7 +206,7 @@ def test_create_lambda(awsclient, vendored_folder, cleanup_lambdas_deprecated,
 
 @pytest.mark.aws
 @check_preconditions
-@pytest.mark.parametrize('runtime', ['nodejs4.3', 'nodejs6.10'])
+@pytest.mark.parametrize('runtime', ['nodejs4.3', 'nodejs6.10', 'nodejs8.10'])
 def test_create_lambda_nodejs(runtime, awsclient, temp_folder, cleanup_lambdas_deprecated,
                               cleanup_roles):
     log.info('running test_create_lambda_nodejs')
