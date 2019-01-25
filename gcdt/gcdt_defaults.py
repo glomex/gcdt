@@ -36,7 +36,7 @@ CONFIG_READER_CONFIG = {
             'datadog_api_key': 'lookup:secret:datadog.api_key'
         },
         'slack_integration': {
-            'slack_webhook': 'lookup:secret:slack.webhook:CONTINUE_IF_NOT_FOUND'
+            'slack_webhook': 'http://localhost/'
         },
         'glomex_lookups': {
             'ami_accountid': '569909643510'
