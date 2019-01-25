@@ -44,8 +44,8 @@ CONFIG_READER_CONFIG = {
     # TODO remove baseami
     'lookups': ['secret', 'ssl', 'stack', 'baseami', 'acm'],
     'plugins': {
-        'gcdt_slack_integration': {
-            'slack_webhook': 'lookup:secret:slack.webhook:CONTINUE_IF_NOT_FOUND'
+        'slack_integration': {
+            'slack_webhook': 'http://localhost'
         },
         'gcdt_lookups': {
             'ami_accountid': '569909643510'
