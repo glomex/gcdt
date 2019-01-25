@@ -1,0 +1,25 @@
+{
+    "status_code": 200, 
+    "data": {
+        "MaxKeys": 1000, 
+        "Prefix": "", 
+        "Name": "unittest-lambda-s3-event-source-pycybo", 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "8O6UE1PRpN9ZgLwu1Gg02jRM7bC4O90LnQMieLpnfQ33fijjA64Er/WnVzE20OA1qpp6I9w+Iws=", 
+            "RequestId": "E81456B184060250", 
+            "HTTPHeaders": {
+                "x-amz-bucket-region": "eu-west-1", 
+                "x-amz-id-2": "8O6UE1PRpN9ZgLwu1Gg02jRM7bC4O90LnQMieLpnfQ33fijjA64Er/WnVzE20OA1qpp6I9w+Iws=", 
+                "server": "AmazonS3", 
+                "transfer-encoding": "chunked", 
+                "x-amz-request-id": "E81456B184060250", 
+                "date": "Mon, 31 Jul 2017 13:48:07 GMT", 
+                "content-type": "application/xml"
+            }
+        }, 
+        "KeyCount": 0, 
+        "IsTruncated": false
+    }
+}

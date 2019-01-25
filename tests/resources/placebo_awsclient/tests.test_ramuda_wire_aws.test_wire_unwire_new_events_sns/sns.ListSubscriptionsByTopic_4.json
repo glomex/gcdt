@@ -1,0 +1,21 @@
+{
+    "status_code": 404, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 404, 
+            "RequestId": "45c2d3fd-f01d-5c23-968a-8207d1019c86", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "45c2d3fd-f01d-5c23-968a-8207d1019c86", 
+                "date": "Tue, 01 Aug 2017 06:25:31 GMT", 
+                "content-length": "259", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "Error": {
+            "Message": "Topic does not exist", 
+            "Code": "NotFound", 
+            "Type": "Sender"
+        }
+    }
+}

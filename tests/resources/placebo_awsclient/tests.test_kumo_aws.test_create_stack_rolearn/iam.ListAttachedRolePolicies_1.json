@@ -1,0 +1,27 @@
+{
+    "status_code": 200, 
+    "data": {
+        "AttachedPolicies": [
+            {
+                "PolicyName": "AmazonS3FullAccess", 
+                "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+            }, 
+            {
+                "PolicyName": "unittest_yefyuf_cloudformation_policy", 
+                "PolicyArn": "arn:aws:iam::420189626185:policy/unittest_yefyuf_cloudformation_policy"
+            }
+        ], 
+        "IsTruncated": false, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c4df1cd9-c60d-11e7-b6f5-856e2c483855", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c4df1cd9-c60d-11e7-b6f5-856e2c483855", 
+                "date": "Fri, 10 Nov 2017 11:53:29 GMT", 
+                "content-length": "744", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

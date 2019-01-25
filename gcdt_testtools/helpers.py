@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import os
-import subprocess
-import random
-import shutil
-import string
-from tempfile import NamedTemporaryFile, mkdtemp
 
+import io
+import shutil
+import subprocess
+import tarfile
+from tempfile import NamedTemporaryFile, mkdtemp
+from zipfile import ZipFile
+
+import os
 import pytest
+from testfixtures import LogCapture
+
+from gcdt import utils
 
 
 # http://code.activestate.com/recipes/52308-the-simple-but-handy-collector-of-a-bunch-of-named/?in=user-97991
@@ -16,16 +21,18 @@ class Bunch:
         self.__dict__.update(kwds)
 
 
-def create_tempfile(contents):
+def create_tempfile(contents, dir=None, suffix=""):
     """Helper to create a named temporary file with contents.
     Note: caller has responsibility to clean up the temp file!
 
     :param contents: define the contents of the temporary file
+    :param dir: as for mkstemp
+    :param suffix: as for mkstemp
     :return: filename of the temporary file
     """
 
     # helper to create a named temp file
-    tf = NamedTemporaryFile(delete=False)
+    tf = NamedTemporaryFile(delete=False, dir=dir, suffix=suffix)
     with open(tf.name, 'w') as tfile:
         tfile.write(contents)
 
@@ -46,19 +53,7 @@ def get_size(start_path='.'):
     return total_size
 
 
-def random_string():
-    """Create a random 6 character string.
-
-    note: in case you use this function in a test during test together with
-    an awsclient then this function is altered so you get reproducible results
-    that will work with your recorded placebo json files (see helpers_aws.py).
-    """
-    return ''.join([random.choice(string.ascii_lowercase) for i in xrange(6)])
-
-
 # TODO find out how to automatically load the gcdt_testtools fixtures
-
-
 @pytest.fixture(scope='module')  # 'function' or 'module'
 def cleanup_tempfiles():
     items = []
@@ -85,31 +80,10 @@ def temp_folder():
 def random_file():
     # provide a named file with some random content
     # we use random_string so it is reproducible
-    filename = create_tempfile(random_string())
+    filename = create_tempfile(utils.random_string())
     yield filename
     # cleanup
     os.unlink(filename)
-
-
-def _npm_check():
-    # Make sure the npm tool is installed.
-    # returns false if missing
-    try:
-        subprocess.call(["npm", "--version"])
-    except OSError as e:
-        if e.errno == os.errno.ENOENT:
-            return True
-        else:
-            # Something else went wrong while trying to run `npm`
-            raise
-    return False
-
-
-# skipif helper check_npm
-check_npm_precondition = pytest.mark.skipif(
-    _npm_check(),
-    reason="You need to install npm (see gcdt docs)."
-)
 
 
 def _dot_check():
@@ -164,3 +138,42 @@ def vts(request, vts_recorder):
     vts_recorder.setup(**param)
     request.addfinalizer(vts_recorder.teardown)
     return vts_recorder
+
+
+def list_zip(input_zip):
+    """list zip_bytes content."""
+    # use string as buffer
+    input_zip = ZipFile(io.BytesIO(input_zip))
+    for name in input_zip.namelist():
+        yield name
+
+
+def read_file_from_zip(input_zip, name):
+    """Read file contents of a single file from zip_bytes content."""
+    # use string as buffer
+    input_zip = ZipFile(io.BytesIO(input_zip))
+    if name in input_zip.namelist():
+        with input_zip.open(name) as zfile:
+            return zfile.read()
+
+
+def list_tarfile(tarfile_name):
+    """list tarfile content."""
+    tfile = tarfile.open(tarfile_name)
+    return [t.name for t in tfile.getmembers()]
+
+
+def read_file_from_tarfile(tarfile_name, name):
+    """Read file contents of a single file from tarfile."""
+    tfile = tarfile.open(tarfile_name)
+    if name in [t.name for t in tfile.getmembers()]:
+        return tfile.extractfile(name).read()
+
+
+@pytest.fixture(scope='function')
+def logcapture():
+    """Access and control log capturing.
+    """
+    # http://testfixtures.readthedocs.io/en/latest/logging.html
+    with LogCapture() as l:
+        yield l

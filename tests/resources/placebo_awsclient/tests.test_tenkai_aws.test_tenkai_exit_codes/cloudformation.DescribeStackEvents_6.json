@@ -1,201 +1,37 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "StackEvents": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "CodedeployCodedeploytrustrole-CREATE_COMPLETE-2017-02-14T16:05:50.675Z",
-                "ResourceStatus": "CREATE_COMPLETE",
-                "ResourceType": "AWS::IAM::Role",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/ddc26b40-785c-11e7-bf1c-500c3cb898d2", 
+                "EventId": "ddc355a0-785c-11e7-bf1c-500c3cb898d2", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
                 "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 50,
-                    "microsecond": 675000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{\"Path\":\"/\",\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"codedeploy.us-east-1.amazonaws.com\",\"codedeploy.us-west-2.amazonaws.com\",\"codedeploy.eu-west-1.amazonaws.com\",\"codedeploy.ap-southeast-2.amazonaws.com\"]}}]}}\n",
-                "PhysicalResourceId": "gcdt-test-tenkai-deploy-CodedeployCodedeploytrustr-KFPZA01QD2RN",
-                "LogicalResourceId": "CodedeployCodedeploytrustrole"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "gcdtTenkaiTestingApp-CREATE_COMPLETE-2017-02-14T16:05:30.184Z",
-                "ResourceStatus": "CREATE_COMPLETE",
-                "ResourceType": "AWS::CodeDeploy::Application",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 30,
-                    "microsecond": 184000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{}\n",
-                "PhysicalResourceId": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-AWHMZL5G2U88",
-                "LogicalResourceId": "gcdtTenkaiTestingApp"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "CodedeployCodedeploytrustrole-CREATE_IN_PROGRESS-2017-02-14T16:05:29.980Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::IAM::Role",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 980000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "ResourceStatusReason": "Resource creation Initiated",
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{\"Path\":\"/\",\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"codedeploy.us-east-1.amazonaws.com\",\"codedeploy.us-west-2.amazonaws.com\",\"codedeploy.eu-west-1.amazonaws.com\",\"codedeploy.ap-southeast-2.amazonaws.com\"]}}]}}\n",
-                "PhysicalResourceId": "gcdt-test-tenkai-deploy-CodedeployCodedeploytrustr-KFPZA01QD2RN",
-                "LogicalResourceId": "CodedeployCodedeploytrustrole"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "InstanceRoleTenkaitest-CREATE_IN_PROGRESS-2017-02-14T16:05:29.977Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::IAM::Role",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 977000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "ResourceStatusReason": "Resource creation Initiated",
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{\"Path\":\"/ec2/\",\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n",
-                "PhysicalResourceId": "gcdt-test-tenkai-deploy-InstanceRoleTenkaitest-1EJMGK76QTJ16",
-                "LogicalResourceId": "InstanceRoleTenkaitest"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "gcdtTenkaiTestingApp-CREATE_IN_PROGRESS-2017-02-14T16:05:29.940Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::CodeDeploy::Application",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 940000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "ResourceStatusReason": "Resource creation Initiated",
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{}\n",
-                "PhysicalResourceId": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-AWHMZL5G2U88",
-                "LogicalResourceId": "gcdtTenkaiTestingApp"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "InstanceRoleTenkaitest-CREATE_IN_PROGRESS-2017-02-14T16:05:29.361Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::IAM::Role",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 361000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{\"Path\":\"/ec2/\",\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n",
-                "PhysicalResourceId": "",
-                "LogicalResourceId": "InstanceRoleTenkaitest"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "CodedeployCodedeploytrustrole-CREATE_IN_PROGRESS-2017-02-14T16:05:29.318Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::IAM::Role",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 318000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{\"Path\":\"/\",\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"codedeploy.us-east-1.amazonaws.com\",\"codedeploy.us-west-2.amazonaws.com\",\"codedeploy.eu-west-1.amazonaws.com\",\"codedeploy.ap-southeast-2.amazonaws.com\"]}}]}}\n",
-                "PhysicalResourceId": "",
-                "LogicalResourceId": "CodedeployCodedeploytrustrole"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "gcdtTenkaiTestingApp-CREATE_IN_PROGRESS-2017-02-14T16:05:29.241Z",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::CodeDeploy::Application",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 29,
-                    "microsecond": 241000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "StackName": "gcdt-test-tenkai-deploy",
-                "ResourceProperties": "{}\n",
-                "PhysicalResourceId": "",
-                "LogicalResourceId": "gcdtTenkaiTestingApp"
-            },
-            {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
-                "EventId": "659ed940-f2cf-11e6-9dac-500c426596d2",
-                "ResourceStatus": "CREATE_IN_PROGRESS",
-                "ResourceType": "AWS::CloudFormation::Stack",
-                "Timestamp": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 25,
-                    "microsecond": 845000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 5
-                },
-                "ResourceStatusReason": "User Initiated",
-                "StackName": "gcdt-test-tenkai-deploy",
-                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/659deee0-f2cf-11e6-9dac-500c426596d2",
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 11, 
+                    "microsecond": 104000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 3
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "gcdt-test-tenkai-deploy", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/ddc26b40-785c-11e7-bf1c-500c3cb898d2", 
                 "LogicalResourceId": "gcdt-test-tenkai-deploy"
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "75115160-f2cf-11e6-8504-ef6e4309cf25",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "ed74ab2b-785c-11e7-a8e1-07f3b6507a3c", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "75115160-f2cf-11e6-8504-ef6e4309cf25",
-                "vary": "Accept-Encoding",
-                "content-length": "8920",
-                "content-type": "text/xml",
-                "date": "Tue, 14 Feb 2017 16:05:51 GMT"
+                "x-amzn-requestid": "ed74ab2b-785c-11e7-a8e1-07f3b6507a3c", 
+                "date": "Thu, 03 Aug 2017 15:03:36 GMT", 
+                "content-length": "1097", 
+                "content-type": "text/xml"
             }
         }
     }

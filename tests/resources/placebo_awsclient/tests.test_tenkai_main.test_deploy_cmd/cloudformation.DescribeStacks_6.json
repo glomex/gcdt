@@ -1,0 +1,61 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/e7645260-785e-11e7-b012-500c3d7df6d2", 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "InstanceId of the newly created EC2 instance", 
+                        "OutputKey": "InstanceName", 
+                        "OutputValue": "gcdt-test-tenkai-deployment_HKVQPSE"
+                    }, 
+                    {
+                        "Description": "Name of the App", 
+                        "OutputKey": "ApplicationName", 
+                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-143YUEXCXJQQ2"
+                    }, 
+                    {
+                        "Description": "InstanceId of the newly created EC2 instance", 
+                        "OutputKey": "InstanceId", 
+                        "OutputValue": "i-09d7eab579dcdcd6f"
+                    }, 
+                    {
+                        "Description": "Name of the DeploymentGroup", 
+                        "OutputKey": "DeploymentGroupName", 
+                        "OutputValue": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-18CQG7HXOYUNN"
+                    }
+                ], 
+                "CreationTime": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 46, 
+                    "microsecond": 257000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 17
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "gcdt-test-tenkai-deploy", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "52f34460-785f-11e7-a8e1-07f3b6507a3c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "52f34460-785f-11e7-a8e1-07f3b6507a3c", 
+                "date": "Thu, 03 Aug 2017 15:20:46 GMT", 
+                "content-length": "1833", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+  "ramuda": {
+    "bundling": {
+      "folders": [
+        {
+          "source": "./vendored",
+          "target": "."
+        },
+        {
+          "source": "./impl",
+          "target": "impl"
+        }
+      ],
+      "zip": "bundle.zip"
+    },
+    "deployment": {
+      "artifactBucket": "7finity-infra-dev-deployment",
+      "region": "eu-west-1"
+    },
+    "lambda": {
+      "description": "lambda test for ramuda",
+      "events": [
+        {
+          "event_source": {
+            "name": "ssm_parameter_changed",
+            "input_path": "$.detail",
+            "pattern": {
+              "source": [
+                "aws.ssm"
+              ],
+              "detail-type": [
+                "Parameter Store Change"
+              ]
+            }
+          }
+        }
+      ],
+      "handlerFile": "handler.py",
+      "handlerFunction": "handler.handle",
+      "memorySize": 256,
+      "name": "infra-dev-sample-lambda-event-pattern-unittest",
+      "role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX",
+      "timeout": 300,
+      "vpc": {
+        "securityGroups": [
+          "sg-660dd700"
+        ],
+        "subnetIds": [
+          "subnet-d5ffb0b1",
+          "subnet-d5ffb0b1",
+          "subnet-d5ffb0b1",
+          "subnet-e9db9f9f"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_ttmtxe-90a255e1-d86f-4988-9191-ab290d0fac53?X-Amz-Security-Token=FQoDYXdzELb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDGkrC1rByDilsru5myK3AwN4tOuAofblwxRaItMXOd%2Bm6kqrQoUUG%2BAU6fOedePrgsGNgwRIj48tONzY7rLFBSPHzwbOL%2BMjpmBhENc450w9UqbohrfFSLARH84zpgHaMu2BdIctuX%2FAh7SYsAFgeLoQHbWmM0ChJzp8fYx4p7cuqie%2Bj%2F%2FDLk9mTNbAUfbQn5mUDE3TX4TeflbiOIQns7PVJRFQCGCooqKgUn5rpsy4L3AWSjr7Au7hktXrsBN6cAVn2AJ4CkU%2FFHyW7jxB6op3uC3mwt3dOU8vhTq9OlNsxpXyudqderxVa8Z5H4iY%2B7OxeyJ3OaSRjzjg0SZQ3sKRui4aX9ZoF5hM%2FQqEE7J5i1QFVDxLOsRQqtNxLqpFnOxoLK5nZ4PNzO%2BDvGFvW8nvsKLbHUybPn5%2FQzS62WgRSuvjpseSscKMf23u4hlzkBMy03zucvNoL5rqSdk6m96aX193S7wN1anvMPWwwnmb8hvYuDADf35jvYis4qPlx25rVQwF6dNsa%2Bf1PSin3lbTnD0H2T%2BAuwTyLKR%2FmkXzw%2Fx%2FEZ%2Fbt5q5QFxuAls1cQmKjTGJyMxvOtpPJGlvdUYnk%2Fbiw8coo5SAzAU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170801T062516Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAIQEDA53I5TX3R27A%2F20170801%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=e2d9e4971cfd9856193485c9766f81f0cfec44febd3726eafafc766e65b74a7d"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "mmHcKhYsFVca3KQq6GPUSgNaSzVpjwr3O4Nen9svMxg=", 
+            "FunctionName": "jenkins_test_ttmtxe", 
+            "MemorySize": 128, 
+            "CodeSize": 3494823, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_ttmtxe", 
+            "Handler": "handler_counter.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_ttmtxe_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-08-01T06:25:05.499+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "2ee49df0-7682-11e7-96d5-c16888bfc91f", 
+            "HTTPHeaders": {
+                "date": "Tue, 01 Aug 2017 06:25:16 GMT", 
+                "x-amzn-requestid": "2ee49df0-7682-11e7-96d5-c16888bfc91f", 
+                "content-length": "1838", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

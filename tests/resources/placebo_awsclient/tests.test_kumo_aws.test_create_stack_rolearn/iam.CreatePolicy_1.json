@@ -1,0 +1,45 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Policy": {
+            "PolicyName": "unittest_yefyuf_cloudformation_policy", 
+            "CreateDate": {
+                "hour": 11, 
+                "__class__": "datetime", 
+                "month": 11, 
+                "second": 35, 
+                "microsecond": 469000, 
+                "year": 2017, 
+                "day": 10, 
+                "minute": 52
+            }, 
+            "AttachmentCount": 0, 
+            "IsAttachable": true, 
+            "PolicyId": "ANPAIUKRK6TN3IGICUJXE", 
+            "DefaultVersionId": "v1", 
+            "Path": "/", 
+            "Arn": "arn:aws:iam::420189626185:policy/unittest_yefyuf_cloudformation_policy", 
+            "UpdateDate": {
+                "hour": 11, 
+                "__class__": "datetime", 
+                "month": 11, 
+                "second": 35, 
+                "microsecond": 469000, 
+                "year": 2017, 
+                "day": 10, 
+                "minute": 52
+            }
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "a47b069b-c60d-11e7-b6f5-856e2c483855", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "a47b069b-c60d-11e7-b6f5-856e2c483855", 
+                "date": "Fri, 10 Nov 2017 11:52:35 GMT", 
+                "content-length": "746", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

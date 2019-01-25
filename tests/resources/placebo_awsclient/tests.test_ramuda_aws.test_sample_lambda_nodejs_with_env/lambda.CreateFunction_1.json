@@ -1,0 +1,37 @@
+{
+    "status_code": 201, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "Zlv+YR6/UncLetDHZW33lDWBOdySnjSy49YA3jGxMsM=", 
+        "FunctionName": "jenkins_test_sample-lambda-nodejs6_10_bblfvw", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "df201f18-60b9-11e7-a9fc-4150fdb498d3", 
+            "HTTPHeaders": {
+                "date": "Tue, 04 Jul 2017 13:08:36 GMT", 
+                "x-amzn-requestid": "df201f18-60b9-11e7-a9fc-4150fdb498d3", 
+                "content-length": "691", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3665704, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sample-lambda-nodejs6_10_bblfvw", 
+        "Environment": {
+            "Variables": {
+                "MYVALUE": "FOO"
+            }
+        }, 
+        "Version": "1", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_bblfvw_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T13:08:37.003+0000", 
+        "Handler": "index.handler", 
+        "Runtime": "nodejs6.10", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

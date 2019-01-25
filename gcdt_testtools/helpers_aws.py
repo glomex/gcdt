@@ -8,17 +8,16 @@ import logging
 
 import botocore.session
 import pytest
-from gcdt_plugins.bundler.bundler import _get_zipped_file
-from gcdt_plugins.glomex_lookups.lookups import _resolve_lookups
+from awacs.aws import Action, Allow, Policy, Principal, Statement
 
+from gcdt import utils
 from gcdt.ramuda_core import deploy_lambda
 from gcdt.s3 import create_bucket, delete_bucket
 from gcdt_testtools import helpers
 from .placebo_awsclient import PlaceboAWSClient
 from gcdt import __version__
 from gcdt.gcdt_config_reader import read_json_config
-from gcdt.utils import get_env
-
+from gcdt.utils import get_env, fix_old_kumo_config
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ log = logging.getLogger(__name__)
 @pytest.fixture(scope='function')  # 'function' or 'module'
 def temp_bucket(awsclient):
     # create a bucket
-    temp_string = helpers.random_string()
+    temp_string = utils.random_string()
     bucket_name = 'unittest-lambda-s3-event-source-%s' % temp_string
     create_bucket(awsclient, bucket_name)
     yield bucket_name
@@ -50,7 +49,9 @@ def create_lambda_role_helper(awsclient, role_name):
         awsclient, role_name,
         policies=[
             'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole',
-            'arn:aws:iam::aws:policy/AWSLambdaExecute']
+            'arn:aws:iam::aws:policy/AWSLambdaExecute',
+            'arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole'
+        ]
     )
     return role['Arn']
 
@@ -73,40 +74,40 @@ def settings_requirements():
 
 
 def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
-                         lambda_handler='handler.handle'):
-    # caller needs to clean up both lambda!
-    '''
-    role = _create_role(
-        role_name,
-        policies=[
-            'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole',
-            'arn:aws:iam::aws:policy/AWSLambdaExecute']
-    )
+                         lambda_handler='handler.handle',
+                         folders_from_file=None,
+                         **kwargs):
+    """
+    NOTE: caller needs to clean up both lambda!
 
-    role_arn = role['Arn']
-    '''
-    # prepare ./vendored folder and settings file
+    :param awsclient:
+    :param lambda_name:
+    :param role_arn:
+    :param handler_filename:
+    :param lambda_handler:
+    :param folders_from_file:
+    :param kwargs: additional kwargs are used in deploy_lambda
+    :return:
+    """
+    from gcdt_bundler.bundler import get_zipped_file
     settings_requirements()
 
     lambda_description = 'lambda created for unittesting ramuda deployment'
-    # lambda_handler = 'handler.handle'
     timeout = 300
     memory_size = 128
-    folders_from_file = [
-        {'source': './vendored', 'target': '.'},
-        {'source': './resources/sample_lambda/impl', 'target': 'impl'}
-    ]
+    if not folders_from_file:
+        folders_from_file = [
+            {'source': './vendored', 'target': '.'},
+            {'source': './resources/sample_lambda/impl', 'target': 'impl'}
+        ]
     artifact_bucket = None
 
-    zipfile = _get_zipped_file(#awsclient,
+    zipfile = get_zipped_file(
         handler_filename,
         folders_from_file,
-        #runtime=runtime,
-        #settings=settings
     )
 
-
-    # create the function
+    # create the AWS Lambda function
     deploy_lambda(
         awsclient=awsclient,
         function_name=lambda_name,
@@ -118,8 +119,11 @@ def create_lambda_helper(awsclient, lambda_name, role_arn, handler_filename,
         timeout=timeout,
         memory=memory_size,
         artifact_bucket=artifact_bucket,
-        zipfile=zipfile
+        zipfile=zipfile,
+        **kwargs
     )
+
+    # TODO better use waiter for that!
     time.sleep(10)
 
 
@@ -146,7 +150,7 @@ def delete_role_helper(awsclient, role_name):
         response = iam.delete_role(RoleName=role_name)
 
 
-def create_role_helper(awsclient, name, policies=None):
+def create_role_helper(awsclient, name, policies=None, principal_service=None):
     """Create a role with an optional inline policy """
     iam = awsclient.get_client('iam')
     policy_doc = {
@@ -159,6 +163,8 @@ def create_role_helper(awsclient, name, policies=None):
             },
         ]
     }
+    if principal_service:
+        policy_doc['Statement'][0]['Principal']['Service'] = principal_service
     roles = [r['RoleName'] for r in iam.list_roles()['Roles']]
     if name in roles:
         print('IAM role %s exists' % name)
@@ -213,18 +219,35 @@ check_preconditions = pytest.mark.skipif(
 )
 
 
-def _playback_mode_check():
-    """Make sure the default AWS profile is set so the test can run on AWS."""
+def is_playback_mode():
+    """Make sure the placebo mode is 'playback'."""
     if os.getenv('PLACEBO_MODE', '').lower() in ['record', 'normal']:
+        return False
+    else:
+        return True
+
+
+# skipif helper aswclient_placebo mode
+# not this needs to invert the check
+check_playback_mode = pytest.mark.skipif(
+    not is_playback_mode(),
+    reason="Test runs only in playback mode (not normal or record)."
+)
+
+
+def is_normal_mode():
+    """Make sure the placebo mode is 'playback'."""
+    if os.getenv('PLACEBO_MODE', '').lower() == 'normal':
         return True
     else:
         return False
 
 
 # skipif helper aswclient_placebo mode
-check_playback_mode = pytest.mark.skipif(
-    _playback_mode_check(),
-    reason="Test runs only in playback mode (not normal or record)."
+# not this needs to invert the check
+check_normal_mode = pytest.mark.skipif(
+    not is_normal_mode(),
+    reason="Test runs only in normal mode (not record or playback)."
 )
 
 
@@ -235,11 +258,12 @@ def awsclient(request):
         return os.path.abspath(os.path.join(
             os.path.dirname(request.module.__file__), p))
 
-    random_string_orig = helpers.random_string
+    random_string_orig = utils.random_string
+    time_now_orig = utils.time_now
     sleep_orig = time.sleep
     random_string_filename = 'random_string.txt'
+    time_now_filename = 'time_now.txt'
     prefix = request.module.__name__ + '.' + request.function.__name__
-    #record_dir = os.path.join(here('./resources/placebo_awsclient'), prefix)
     record_dir = os.path.join(there('./resources/placebo_awsclient'), prefix)
 
     client = PlaceboAWSClient(botocore.session.Session(), data_path=record_dir)
@@ -247,16 +271,30 @@ def awsclient(request):
         if not os.path.exists(record_dir):
             os.makedirs(record_dir)
         client.record()
-        helpers.random_string = recorder(record_dir, random_string_orig,
-                                         filename=random_string_filename)
+        utils.random_string = recorder(record_dir, random_string_orig,
+                                            filename=random_string_filename)
+        utils.time_now = recorder(record_dir, time_now_orig,
+                                       filename=time_now_filename)
     elif os.getenv('PLACEBO_MODE', '').lower() == 'normal':
         # neither record nor playback, just run the tests against AWS services
         pass
     else:
+        if not os.path.exists(record_dir):
+            raise Exception('placebo playback for \'%s\' missing' % prefix)
         def fake_sleep(seconds):
             pass
-        helpers.random_string = file_reader(record_dir,
-                                            random_string_filename)
+
+        #utils.random_string = file_reader(record_dir,
+        #                                  random_string_filename)
+        # implementing a wrapper for length validation
+        _file_reader = file_reader(record_dir, random_string_filename)
+        def _random_string(length=6):
+            s = _file_reader()
+            assert len(s) == length
+            print(s)
+            return s
+        utils.random_string = _random_string
+        utils.time_now = file_reader(record_dir, time_now_filename, 'int')
         time.sleep = fake_sleep
         client.playback()
 
@@ -265,7 +303,8 @@ def awsclient(request):
     # cleanup
     client.stop()
     # restore original functionality
-    helpers.random_string = random_string_orig
+    utils.random_string = random_string_orig
+    helpers.recordable_now = time_now_orig
     time.sleep = sleep_orig
 
 
@@ -293,7 +332,7 @@ def recorder(record_dir, function, filename=None):
     return wrapper
 
 
-def file_reader(record_dir, filename):
+def file_reader(record_dir, filename, datatype=None):
     """helper to read a file line by line
     basically same as dfile.next but strips whitespace
 
@@ -309,6 +348,8 @@ def file_reader(record_dir, filename):
 
             def f():
                 line = next(idata).strip()
+                if datatype and datatype == 'int':
+                    return int(line)
                 return line
     else:
         # if file does not exist
@@ -321,6 +362,7 @@ def file_reader(record_dir, filename):
 def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
                  location=None):
     """Helper for main tests to assemble tool data.
+    used in testing to read from 'gcdt_<env>.json' files
 
     :param awsclient:
     :param tool:
@@ -330,7 +372,7 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
     :param location:
     :return:
     """
-    # for testing to read from 'gcdt_<env>.json' files
+    from gcdt_lookups.lookups import _resolve_lookups
     if config is None:
         if config_base_name is None:
             config_base_name = 'gcdt'
@@ -340,9 +382,10 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
         gcdt_config_file = os.path.join(location,
                                         '%s_%s.json' % (config_base_name, env))
         context = {'_awsclient': awsclient, 'tool': tool, 'command': command}
-        config = read_json_config(gcdt_config_file)[tool]
+        config = fix_old_kumo_config(read_json_config(gcdt_config_file))[tool]
         _resolve_lookups(context, config, config.get('lookups',
-            ['secret', 'ssl', 'stack', 'baseami']))
+                                                     ['secret', 'ssl', 'stack',
+                                                      'baseami']))
 
     tooldata = {
         'context': {
@@ -355,3 +398,57 @@ def get_tooldata(awsclient, tool, command, config=None, config_base_name=None,
         'config': config
     }
     return tooldata
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def cleanup_roles(awsclient):
+    items = []
+    yield items
+    # cleanup
+    for i in items:
+        delete_role_helper(awsclient, i)
+
+
+@pytest.fixture(scope='function')  # 'function' or 'module'
+def temp_cloudformation_policy(awsclient):
+    # policy: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-template.html
+    '''
+    {
+        "Version":"2012-10-17",
+        "Statement":[{
+            "Effect":"Allow",
+            "Action":[
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStacks",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:GetTemplate",
+                "cloudformation:ValidateTemplate"
+            ],
+            "Resource":"*"
+        }]
+    }
+    '''
+    client_iam = awsclient.get_client('iam')
+    name = 'unittest_%s_cloudformation_policy' % utils.random_string()
+    pd = Policy(
+        Version="2012-10-17",
+        Id=name,
+        Statement=[
+            Statement(
+                Effect=Allow,
+                Action=[Action('cloudformation', '*')],
+                Resource=['*']
+            ),
+        ],
+    )
+
+    response = client_iam.create_policy(
+        PolicyName=name,
+        PolicyDocument=pd.to_json()
+    )
+
+    yield response['Policy']['Arn']
+
+    # cleanup
+    client_iam.delete_policy(PolicyArn=response['Policy']['Arn'])

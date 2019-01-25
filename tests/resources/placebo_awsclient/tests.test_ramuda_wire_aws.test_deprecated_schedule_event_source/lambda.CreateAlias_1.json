@@ -1,0 +1,21 @@
+{
+    "status_code": 201, 
+    "data": {
+        "AliasArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_fpwxgl:ACTIVE", 
+        "FunctionVersion": "1", 
+        "Name": "ACTIVE", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "17069681-7451-11e7-b646-1d94ae78fec4", 
+            "HTTPHeaders": {
+                "date": "Sat, 29 Jul 2017 11:28:48 GMT", 
+                "x-amzn-requestid": "17069681-7451-11e7-b646-1d94ae78fec4", 
+                "content-length": "143", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "Description": ""
+    }
+}

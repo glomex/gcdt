@@ -1,0 +1,74 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "dev.infra.glomex.cloud", 
+                        "ParameterKey": "HostedZone"
+                    }, 
+                    {
+                        "ParameterValue": "subnet-7ed09408", 
+                        "ParameterKey": "EC2SubnetId"
+                    }, 
+                    {
+                        "ParameterValue": "ami-b2b243cb", 
+                        "ParameterKey": "BaseAMIID"
+                    }, 
+                    {
+                        "ParameterValue": "vpc-88d2a7ec", 
+                        "ParameterKey": "VPCId"
+                    }, 
+                    {
+                        "ParameterValue": "arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O", 
+                        "ParameterKey": "DefaultInstancePolicyARN"
+                    }, 
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "ami ID of the given base image", 
+                        "OutputKey": "UsedBaseAMI", 
+                        "OutputValue": "ami-b2b243cb"
+                    }
+                ], 
+                "CreationTime": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 36, 
+                    "microsecond": 3000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "7dc712b1-825c-11e7-ab3f-45babf76fba2", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "7dc712b1-825c-11e7-ab3f-45babf76fba2", 
+                "vary": "Accept-Encoding", 
+                "content-length": "2273", 
+                "content-type": "text/xml", 
+                "date": "Wed, 16 Aug 2017 08:25:40 GMT"
+            }
+        }
+    }
+}

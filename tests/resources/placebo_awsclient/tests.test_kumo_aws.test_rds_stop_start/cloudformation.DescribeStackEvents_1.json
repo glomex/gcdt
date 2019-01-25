@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackEvents": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-rds/3ba99030-8104-11e7-b8b6-503ac9eaaa99", 
+                "EventId": "3baa7a90-8104-11e7-b8b6-503ac9eaaa99", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 23, 
+                    "microsecond": 898000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 21
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-rds", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-rds/3ba99030-8104-11e7-b8b6-503ac9eaaa99", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack-with-rds"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "3c1571bd-8104-11e7-9fc0-97a9db68e8d9", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "3c1571bd-8104-11e7-9fc0-97a9db68e8d9", 
+                "date": "Mon, 14 Aug 2017 15:21:24 GMT", 
+                "content-length": "1149", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

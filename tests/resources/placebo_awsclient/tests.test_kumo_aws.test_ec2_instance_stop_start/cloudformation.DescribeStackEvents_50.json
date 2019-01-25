@@ -1,0 +1,342 @@
+{
+    "status_code": 200, 
+    "data": {
+        "StackEvents": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "EC2Instance-DELETE_IN_PROGRESS-2017-08-16T08:25:44.736Z", 
+                "ResourceStatus": "DELETE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::Instance", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 44, 
+                    "microsecond": 736000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 25
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"BlockDeviceMappings\":[{\"Ebs\":{\"VolumeType\":\"gp2\",\"VolumeSize\":\"16\",\"DeleteOnTermination\":\"true\"},\"DeviceName\":\"/dev/xvda\"}],\"ImageId\":\"ami-b2b243cb\",\"AvailabilityZone\":\"eu-west-1b\",\"IamInstanceProfile\":\"infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ\",\"SubnetId\":\"subnet-7ed09408\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-d246dcaa\"],\"Tags\":[{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"DeploymentGroup\"},{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"Name\"}]}\n", 
+                "PhysicalResourceId": "i-0050336b8ae66cd23", 
+                "LogicalResourceId": "EC2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "7dfdda00-825c-11e7-b25e-50faeb59c0d2", 
+                "ResourceStatus": "DELETE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 42, 
+                    "microsecond": 15000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 25
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack-with-ec2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "ca30a570-825b-11e7-8770-500c4266c6d2", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 40, 
+                    "microsecond": 350000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack-with-ec2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "EC2Instance-CREATE_COMPLETE-2017-08-16T08:20:38.004Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::EC2::Instance", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 38, 
+                    "microsecond": 4000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"BlockDeviceMappings\":[{\"Ebs\":{\"VolumeType\":\"gp2\",\"VolumeSize\":\"16\",\"DeleteOnTermination\":\"true\"},\"DeviceName\":\"/dev/xvda\"}],\"ImageId\":\"ami-b2b243cb\",\"AvailabilityZone\":\"eu-west-1b\",\"IamInstanceProfile\":\"infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ\",\"SubnetId\":\"subnet-7ed09408\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-d246dcaa\"],\"Tags\":[{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"DeploymentGroup\"},{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"Name\"}]}\n", 
+                "PhysicalResourceId": "i-0050336b8ae66cd23", 
+                "LogicalResourceId": "EC2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "EC2Instance-CREATE_IN_PROGRESS-2017-08-16T08:20:21.993Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::Instance", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 21, 
+                    "microsecond": 993000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"BlockDeviceMappings\":[{\"Ebs\":{\"VolumeType\":\"gp2\",\"VolumeSize\":\"16\",\"DeleteOnTermination\":\"true\"},\"DeviceName\":\"/dev/xvda\"}],\"ImageId\":\"ami-b2b243cb\",\"AvailabilityZone\":\"eu-west-1b\",\"IamInstanceProfile\":\"infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ\",\"SubnetId\":\"subnet-7ed09408\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-d246dcaa\"],\"Tags\":[{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"DeploymentGroup\"},{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"Name\"}]}\n", 
+                "PhysicalResourceId": "i-0050336b8ae66cd23", 
+                "LogicalResourceId": "EC2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "EC2Instance-CREATE_IN_PROGRESS-2017-08-16T08:20:20.849Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::Instance", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 20, 
+                    "microsecond": 849000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"BlockDeviceMappings\":[{\"Ebs\":{\"VolumeType\":\"gp2\",\"VolumeSize\":\"16\",\"DeleteOnTermination\":\"true\"},\"DeviceName\":\"/dev/xvda\"}],\"ImageId\":\"ami-b2b243cb\",\"AvailabilityZone\":\"eu-west-1b\",\"IamInstanceProfile\":\"infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ\",\"SubnetId\":\"subnet-7ed09408\",\"InstanceType\":\"t2.micro\",\"SecurityGroupIds\":[\"sg-d246dcaa\"],\"Tags\":[{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"DeploymentGroup\"},{\"Value\":\"gcdtSampleStackWithEc2Instance\",\"Key\":\"Name\"}]}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "EC2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-CREATE_COMPLETE-2017-08-16T08:20:18.277Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::IAM::InstanceProfile", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 18, 
+                    "microsecond": 277000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 20
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Roles\":[\"infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO\"]}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ", 
+                "LogicalResourceId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-CREATE_IN_PROGRESS-2017-08-16T08:18:17.589Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::InstanceProfile", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 17, 
+                    "microsecond": 589000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 18
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Roles\":[\"infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO\"]}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-stack-with-ec2-InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-F7JXPQK7JATZ", 
+                "LogicalResourceId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance-CREATE_IN_PROGRESS-2017-08-16T08:18:16.503Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::InstanceProfile", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 16, 
+                    "microsecond": 503000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 18
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Roles\":[\"infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO\"]}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "InstanceRoleinfraCmsgcdtSampleStackWithEc2Instance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance-CREATE_COMPLETE-2017-08-16T08:18:11.665Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::IAM::Role", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 11, 
+                    "microsecond": 665000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 18
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Path\":\"/ec2/\",\"ManagedPolicyArns\":[\"arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O\"],\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_COMPLETE-2017-08-16T08:17:43.859Z", 
+                "ResourceStatus": "CREATE_COMPLETE", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 43, 
+                    "microsecond": 859000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "sg-d246dcaa", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_IN_PROGRESS-2017-08-16T08:17:42.577Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 42, 
+                    "microsecond": 577000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "sg-d246dcaa", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance-CREATE_IN_PROGRESS-2017-08-16T08:17:41.713Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::Role", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 41, 
+                    "microsecond": 713000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "Resource creation Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Path\":\"/ec2/\",\"ManagedPolicyArns\":[\"arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O\"],\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n", 
+                "PhysicalResourceId": "infra-dev-kumo-sample-sta-InstanceRoleInfraGcdtsam-CBO71EIC1LCO", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance-CREATE_IN_PROGRESS-2017-08-16T08:17:41.125Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::IAM::Role", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 41, 
+                    "microsecond": 125000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"Path\":\"/ec2/\",\"ManagedPolicyArns\":[\"arn:aws:iam::420189626185:policy/7f-managed/infra-dev-Defaultmanagedinstancepolicy-9G6XX1YXZI5O\"],\"AssumeRolePolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Effect\":\"Allow\",\"Principal\":{\"Service\":[\"ec2.amazonaws.com\"]}}]}}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "InstanceRoleInfraGcdtsamplestackwithec2InstanceInstance"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "gcdtSampleStackWithEc2InstanceFrontendEC2-CREATE_IN_PROGRESS-2017-08-16T08:17:40.742Z", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::EC2::SecurityGroup", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 40, 
+                    "microsecond": 742000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "ResourceProperties": "{\"GroupDescription\":\"gcdtSampleStackWithEc2InstanceEC2SecurityGroup\",\"VpcId\":\"vpc-88d2a7ec\",\"SecurityGroupIngress\":[{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"80\",\"ToPort\":\"80\",\"IpProtocol\":\"tcp\"},{\"CidrIp\":\"192.168.225.0/24\",\"FromPort\":\"443\",\"ToPort\":\"443\",\"IpProtocol\":\"tcp\"}]}\n", 
+                "PhysicalResourceId": "", 
+                "LogicalResourceId": "gcdtSampleStackWithEc2InstanceFrontendEC2"
+            }, 
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "EventId": "5c4881e0-825b-11e7-a5a4-50a6863366c5", 
+                "ResourceStatus": "CREATE_IN_PROGRESS", 
+                "ResourceType": "AWS::CloudFormation::Stack", 
+                "Timestamp": {
+                    "hour": 8, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 36, 
+                    "microsecond": 3000, 
+                    "year": 2017, 
+                    "day": 16, 
+                    "minute": 17
+                }, 
+                "ResourceStatusReason": "User Initiated", 
+                "StackName": "infra-dev-kumo-sample-stack-with-ec2", 
+                "PhysicalResourceId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-ec2/5c479780-825b-11e7-a5a4-50a6863366c5", 
+                "LogicalResourceId": "infra-dev-kumo-sample-stack-with-ec2"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "9cb096c9-825c-11e7-ab3f-45babf76fba2", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "9cb096c9-825c-11e7-ab3f-45babf76fba2", 
+                "vary": "Accept-Encoding", 
+                "content-length": "19165", 
+                "content-type": "text/xml", 
+                "date": "Wed, 16 Aug 2017 08:26:33 GMT"
+            }
+        }
+    }
+}

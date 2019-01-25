@@ -1,0 +1,25 @@
+{
+  "ramuda": {
+    "bundling": {
+      "folders": [],
+      "zip": "bundle.zip"
+    },
+    "lambda": {
+      "description": "experiment using nodejs lambda edge with ramuda",
+      "events": [{
+        "event_source": {
+          "arn": "arn:aws:cloudfront::420189626185:distribution/E1V934UN4EJGJA",
+          "cache_behavior": "*",
+          "cloudfront_event": "origin-request"
+        }
+      }],
+      "handlerFile": "index.js",
+      "handlerFunction": "index.handler",
+      "memorySize": 128,
+      "name": "infra-dev-sample-lambda-edge",
+      "role": "arn:aws:iam::420189626185:role/infra-dev-lambda-edge-execution-role",
+      "runtime": "nodejs6.10",
+      "timeout": 3
+    }
+  }
+}

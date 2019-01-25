@@ -8,7 +8,6 @@ import json
 
 from troposphere import Output, Ref, Template
 from troposphere.s3 import Bucket, PublicRead
-from pyhocon import ConfigTree
 
 # TODO
 # add resources folder to kumo for post_hook stuff
@@ -48,7 +47,16 @@ def post_hook(awsclient, config, parameters, stack_outputs, stack_state):
     assert awsclient is not None
     #assert type(awsclient) in [AWSClient, PlaceboAWSClient] is not None
 
-    assert config == ConfigTree([('cloudformation', ConfigTree([('StackName', 'infra-dev-kumo-sample-stack-with-hooks'), ('InstanceType', 't2.medium')]))])
+    #assert config == ConfigTree([('cloudformation', ConfigTree([('StackName', 'infra-dev-kumo-sample-stack-with-hooks'), ('InstanceType', 't2.medium')]))])
+    exp_config = {
+        'stack': {
+            'StackName': 'infra-dev-kumo-sample-stack-with-hooks'
+        },
+        'parameters': {
+            'InstanceType': 't2.medium'
+        }
+    }
+    assert config == exp_config
     assert parameters == [{'ParameterKey': 'InstanceType', 'ParameterValue': 't2.medium', 'UsePreviousValue': False}]
 
     assert stack_outputs[0]['OutputKey'] == 'BucketName'

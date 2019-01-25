@@ -1,0 +1,22 @@
+{
+    "status_code": 400, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "5c2060a6-825b-11e7-9fda-11f9e8520ff5", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "5c2060a6-825b-11e7-9fda-11f9e8520ff5", 
+                "date": "Wed, 16 Aug 2017 08:17:35 GMT", 
+                "content-length": "322", 
+                "content-type": "text/xml", 
+                "connection": "close"
+            }
+        }, 
+        "Error": {
+            "Message": "Stack with id infra-dev-kumo-sample-stack-with-ec2 does not exist", 
+            "Code": "ValidationError", 
+            "Type": "Sender"
+        }
+    }
+}

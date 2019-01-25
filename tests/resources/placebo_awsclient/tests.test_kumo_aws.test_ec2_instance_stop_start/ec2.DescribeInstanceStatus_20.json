@@ -1,0 +1,45 @@
+{
+    "status_code": 200, 
+    "data": {
+        "InstanceStatuses": [
+            {
+                "InstanceId": "i-0050336b8ae66cd23", 
+                "InstanceState": {
+                    "Code": 16, 
+                    "Name": "running"
+                }, 
+                "AvailabilityZone": "eu-west-1b", 
+                "SystemStatus": {
+                    "Status": "ok", 
+                    "Details": [
+                        {
+                            "Status": "passed", 
+                            "Name": "reachability"
+                        }
+                    ]
+                }, 
+                "InstanceStatus": {
+                    "Status": "ok", 
+                    "Details": [
+                        {
+                            "Status": "passed", 
+                            "Name": "reachability"
+                        }
+                    ]
+                }
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "cf73b69d-0374-49b2-9a1a-f3cb2c36c58f", 
+            "HTTPHeaders": {
+                "transfer-encoding": "chunked", 
+                "vary": "Accept-Encoding", 
+                "server": "AmazonEC2", 
+                "content-type": "text/xml;charset=UTF-8", 
+                "date": "Wed, 16 Aug 2017 08:25:41 GMT"
+            }
+        }
+    }
+}

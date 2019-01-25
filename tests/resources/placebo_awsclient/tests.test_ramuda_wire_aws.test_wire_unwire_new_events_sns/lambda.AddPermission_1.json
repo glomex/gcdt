@@ -1,0 +1,18 @@
+{
+    "status_code": 201, 
+    "data": {
+        "Statement": "{\"Sid\":\"dvwgzz\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_ttmtxe:ACTIVE\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"sns.amazonaws.com\"},\"Action\":[\"lambda:InvokeFunction\"],\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:sns:eu-west-1:420189626185:dvwgzz\"}}}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "2fee458a-7682-11e7-a968-dd68926059e3", 
+            "HTTPHeaders": {
+                "date": "Tue, 01 Aug 2017 06:25:17 GMT", 
+                "x-amzn-requestid": "2fee458a-7682-11e7-a968-dd68926059e3", 
+                "content-length": "331", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import os
+import logging
 
 import pytest
 
 from gcdt.tenkai_main import version_cmd, deploy_cmd, bundle_cmd
-from gcdt_plugins.bundler.bundler import bundle_revision
+from gcdt_bundler.bundler import bundle_revision
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
 from gcdt_testtools.helpers_aws import awsclient  # fixtures !
 from .test_tenkai_aws import sample_codedeploy_app  # fixtures !
+from gcdt_testtools.helpers import logcapture  # fixtures!
 from . import here
 
 
@@ -37,10 +39,15 @@ def sample_codedeploy_app_working_folder():
     os.chdir(cwd)  # cd back to original folder
 
 
-def test_version_cmd(capsys):
+def test_version_cmd(logcapture):
     version_cmd()
-    out, err = capsys.readouterr()
-    assert out.startswith('gcdt version')
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert (records[1][2].startswith('gcdt plugins:') or
+            records[1][2].startswith('gcdt tools:'))
 
 
 @pytest.mark.aws
@@ -50,14 +57,16 @@ def test_deploy_cmd(awsclient, sample_codedeploy_app,
     tooldata = get_tooldata(awsclient, 'tenkai', 'deploy')
     # gcdt-plugins are installed anyway so this is ok
     # TODO alternatively prepare a stock bundle.zip!
-    tooldata['context']['_bundle_file'] = bundle_revision()
+    folders = [{'source': 'codedeploy', 'target': ''}]
+    tooldata['context']['_bundle_file'] = bundle_revision(folders)
     deploy_cmd(**tooldata)
 
 
-def test_bundle_cmd(capsys):
+def test_bundle_cmd(logcapture):
     tooldata = {
-        'context': {'_bundle_file': 'some_file'}
+        'context': {'_bundle_file': 'test_file'}
     }
     bundle_cmd(**tooldata)
-    out, err = capsys.readouterr()
-    assert out == 'created bundle at some_file\n'
+    records = list(logcapture.actual())
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('created bundle at test_file')

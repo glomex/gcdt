@@ -8,12 +8,23 @@ from six import StringIO
 import glob
 import re
 from io import BytesIO
-from requests.structures import CaseInsensitiveDict
+from botocore.vendored.requests.structures import CaseInsensitiveDict
 
 from botocore.response import StreamingBody
 
 from gcdt.gcdt_awsclient import AWSClient
-from gcdt.servicediscovery import UTC
+ZERO = datetime.timedelta(0)
+
+
+class UTC(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return ZERO
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return ZERO
 
 
 LOG_ALL_TRAFFIC = True  # False means do not log successful requests

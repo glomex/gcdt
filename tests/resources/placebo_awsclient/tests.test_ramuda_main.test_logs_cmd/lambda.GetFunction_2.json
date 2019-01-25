@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_wnhvjq-30db4cf5-c4f5-4fbe-8e49-f3d5bf8011cd?X-Amz-Security-Token=FQoDYXdzEEMaDDp0aMcApp%2FsO4Re7iK3A8DZcl5sZ3GTslEhVbBdUuQPdcbfm0UQtbddS%2B8wqQOFZWXyxbOfeCxmrTQagM9i8o6M8C0neV8cU8IkV5DbQZ%2FtdqSWK44BQWTiXPtvszHuq%2B2V4QIIHFnkabiC6wbx5evJ4BqtX%2B7k54mSlf3h81Pwci%2BggD5weIRoBi0oAoiXNiNosCc1ushIWeWQX%2BguyjvV6z9Ai7GTfmG2XyQJIc8VOfWx%2BUf9m1TJNckoF6N2YIF4Ylzzz3mkdV%2FjQGGHz100xdm3Pcnh%2Be2p6ihoeTNRp%2FAneUytkxuTU9VdfZ%2FiEbFXjbSBW68yMJbAFLdYUnNEgTMKL5TjWS7SJa37Xfyz651QVG%2B68pZIWwbI5J8UlcdWvrMsaLVsI6P8bGMEcXMIfg7cIMbm9yPpTZLwqYkhSZKrVuRBMJOVk9p8NWSniI0I1ENbgLoDAF%2Bmjln7Tz%2Fduy8UQrqBiP12Y6bKF6KRhj0rkoxs2T2PP2kzHlrKDBIn0y7gSllm84VlXLQVi3QLxgUsZCj7SBjnqx47Ge88DDlT63CbiPKtw1khIe3tP40aKtcJstnwNHnh7%2FPaQzcnHWaMzl0oo7b9ygU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170707T111204Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJNSJVMKXKD55MP6A%2F20170707%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=649a996982530a1fc01f6c84b5a20c3f4c2488064f1f42612cdcbb07af674da3"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "/fagdIah7SaRPIRM4oTP0qxYexTOLDXwFVK2TvDNzUE=", 
+            "FunctionName": "jenkins_test_wnhvjq", 
+            "MemorySize": 128, 
+            "CodeSize": 3665299, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_wnhvjq", 
+            "Handler": "handler.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_wnhvjq_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-07-07T11:11:39.479+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1b5968ce-6305-11e7-a7d6-99e5c9562dbe", 
+            "HTTPHeaders": {
+                "date": "Fri, 07 Jul 2017 11:12:03 GMT", 
+                "x-amzn-requestid": "1b5968ce-6305-11e7-a7d6-99e5c9562dbe", 
+                "content-length": "1772", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

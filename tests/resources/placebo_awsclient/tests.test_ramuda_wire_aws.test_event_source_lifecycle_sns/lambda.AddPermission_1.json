@@ -1,0 +1,18 @@
+{
+    "status_code": 201, 
+    "data": {
+        "Statement": "{\"Sid\":\"yrlkap\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_usmayi\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"sns.amazonaws.com\"},\"Action\":[\"lambda:InvokeFunction\"],\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:sns:eu-west-1:420189626185:yrlkap\"}}}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "b3149bf3-744f-11e7-ac9a-3fa280f2c73d", 
+            "HTTPHeaders": {
+                "date": "Sat, 29 Jul 2017 11:18:50 GMT", 
+                "x-amzn-requestid": "b3149bf3-744f-11e7-ac9a-3fa280f2c73d", 
+                "content-length": "324", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

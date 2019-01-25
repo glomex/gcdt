@@ -1,21 +1,21 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "VersionId": "BVa8ChkAwgBlU6VkWJY4ZoNilqyGdJnB",
-        "ETag": "\"078cb139b093bd14f353bfd313418aa8\"",
+        "VersionId": "QxtC540OoNznYqEeeqKhCfFzuO16cVWx", 
+        "ETag": "\"078cb139b093bd14f353bfd313418aa8\"", 
         "ResponseMetadata": {
-            "HTTPStatusCode": 200,
-            "RetryAttempts": 0,
-            "HostId": "CjddPnfUmvNuXZew4/FNRdP8Md7ClP5w7brt8DD3+kKYm9gZ72nU9VBrgnQEQYGWLOi8uw8nujI=",
-            "RequestId": "A5D3ACAEB8286E1F",
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "8F+BqgJpegR4eRO+6P9rIZ+E8cBlpO3z+juiOUxKvnTiwV3dMCI9u0IFEw1GK7zyp9KDdVCkzIk=", 
+            "RequestId": "DBDAF9016240872C", 
             "HTTPHeaders": {
-                "content-length": "0",
-                "x-amz-id-2": "CjddPnfUmvNuXZew4/FNRdP8Md7ClP5w7brt8DD3+kKYm9gZ72nU9VBrgnQEQYGWLOi8uw8nujI=",
-                "server": "AmazonS3",
-                "x-amz-request-id": "A5D3ACAEB8286E1F",
-                "etag": "\"078cb139b093bd14f353bfd313418aa8\"",
-                "date": "Tue, 14 Feb 2017 15:38:44 GMT",
-                "x-amz-version-id": "BVa8ChkAwgBlU6VkWJY4ZoNilqyGdJnB"
+                "content-length": "0", 
+                "x-amz-id-2": "8F+BqgJpegR4eRO+6P9rIZ+E8cBlpO3z+juiOUxKvnTiwV3dMCI9u0IFEw1GK7zyp9KDdVCkzIk=", 
+                "server": "AmazonS3", 
+                "x-amz-request-id": "DBDAF9016240872C", 
+                "etag": "\"078cb139b093bd14f353bfd313418aa8\"", 
+                "date": "Thu, 03 Aug 2017 14:42:56 GMT", 
+                "x-amz-version-id": "QxtC540OoNznYqEeeqKhCfFzuO16cVWx"
             }
         }
     }

@@ -1,0 +1,176 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Functions": [
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "9mFmdf7O07Ned66epNI0nMUxUDPuIpeGXpyMrJn0K4o=", 
+                "FunctionName": "ops-lambda-runtime-checker", 
+                "MemorySize": 128, 
+                "CodeSize": 510078, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-lambda-runtime-checker", 
+                "Handler": "handler.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/ops-lambda-runtime-check-LambdaLambdaRuntimeChecke-1OAY51RYMML39", 
+                "Timeout": 30, 
+                "LastModified": "2017-01-27T12:09:51.411+0000", 
+                "Runtime": "python2.7", 
+                "Description": "checks aws lambda containers for changes\""
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "IdXigmrsmLEbFsYAZI4RMnhPNmunwrQ5f4F0MWDmKD8=", 
+                "FunctionName": "ops-dev-captain-crunch-ooo-ecs-scheduler", 
+                "MemorySize": 128, 
+                "CodeSize": 5913143, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-dev-captain-crunch-ooo-ecs-scheduler", 
+                "Handler": "app.app", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/cc-slack-ooo-LambdaOpsDevCaptainCrunchOooEcsSchedu-6LL32RUF2AIR", 
+                "Timeout": 30, 
+                "LastModified": "2017-05-05T12:40:15.406+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Schedules Captain Crunch OoO Bot"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "qYk2NlQWEG6/7+LwFcWXYfbUkjJ8iYL0kdFuhabFepU=", 
+                "FunctionName": "infra-dev-EBSSnapshotter-1MKTPK7XR1Q6R", 
+                "MemorySize": 128, 
+                "CodeSize": 1863, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:infra-dev-EBSSnapshotter-1MKTPK7XR1Q6R", 
+                "Handler": "ebs_snapshotter.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/infra-dev-LambdaEBSSNapshotRole-162RUV9ITXMKN", 
+                "Timeout": 30, 
+                "LastModified": "2016-11-04T08:25:12.597+0000", 
+                "Runtime": "python2.7", 
+                "Description": "create automatically snapshots of EBS Volumes attached to instances"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "6fUuikwYCnR0AzZq5xeDIMOLIUBm/yq4wWUptpsPKGM=", 
+                "FunctionName": "EnsureDynamoBackup", 
+                "MemorySize": 128, 
+                "CodeSize": 141971, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:EnsureDynamoBackup", 
+                "Handler": "index.event_handler", 
+                "Role": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-DdbLambdaExecRole-1XYJD5YA2OF3M", 
+                "Timeout": 300, 
+                "LastModified": "2016-10-20T12:02:49.007+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Function to ensure DynamoDB tables are configured with continuous backup"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "VTpyqtxu3/KSSFri1qOUcQxGVh837XIod2bbixOMJMc=", 
+                "FunctionName": "ops-dev-captain-crunch-slack-notifier", 
+                "MemorySize": 128, 
+                "CodeSize": 6623517, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-dev-captain-crunch-slack-notifier", 
+                "Handler": "app.app", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/ops-dev-captain-crunch-sl-LambdaCaptainCrunchSlack-1GC3X8EWTDWDO", 
+                "Timeout": 30, 
+                "LastModified": "2017-07-28T13:56:36.620+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Notifies slack about who is Captain Crunch"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "5EMp6XVobuH/YRzSvfxJkIEmZTHUgugOqghR8HrvPUQ=", 
+                "FunctionName": "ops-rds-backup", 
+                "MemorySize": 128, 
+                "CodeSize": 32643649, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-rds-backup", 
+                "Handler": "rdsbackup.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/7f-managed/infra-dev-RdsLambdaExecutionRole-1LPQCASHJALT6", 
+                "Timeout": 180, 
+                "LastModified": "2016-10-26T14:30:53.596+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Lambda function which triggers automated RDS backups"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "DplLIKwJTc9G8Y2qFWGVEY+v40q6oWqXN07eusIN8ZI=", 
+                "FunctionName": "ops-captaincrunch-alexa", 
+                "VpcConfig": {
+                    "SubnetIds": [], 
+                    "SecurityGroupIds": []
+                }, 
+                "MemorySize": 128, 
+                "CodeSize": 6567196, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ops-captaincrunch-alexa", 
+                "Handler": "captain_crunch_alexa.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX", 
+                "Timeout": 10, 
+                "LastModified": "2017-03-23T11:37:44.108+0000", 
+                "Runtime": "python2.7", 
+                "Description": "does stuff"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "RfeDO/2XsLZ3AQhbpYH3eZGDwZucyCGzazy19p1mWck=", 
+                "FunctionName": "infra-dev-lambdaEC2Basics-YP3QMT26FQL5", 
+                "MemorySize": 128, 
+                "CodeSize": 861832, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:infra-dev-lambdaEC2Basics-YP3QMT26FQL5", 
+                "Handler": "EC2Basics.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/7f-selfassign/infra-dev-CommonLambdaRole-CEQQX3SPUTFX", 
+                "Timeout": 30, 
+                "LastModified": "2016-11-04T08:25:06.637+0000", 
+                "Runtime": "python2.7", 
+                "Description": "basic helper function to be used as custom CloudFormation resource"
+            }, 
+            {
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                }, 
+                "Version": "$LATEST", 
+                "CodeSha256": "oBhr9WfGuUF5OmDUM2DZp94+fy0NvHubRHZObv6HfuE=", 
+                "FunctionName": "ecs-host-service-scale", 
+                "MemorySize": 128, 
+                "CodeSize": 5791714, 
+                "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:ecs-host-service-scale", 
+                "Handler": "ecs-host-service-scale.lambda_handler", 
+                "Role": "arn:aws:iam::420189626185:role/lambda/sre-dev-ecs-LambdaSreDevEcsHostServiceScale-FP9OJIIA7LZU", 
+                "Timeout": 180, 
+                "LastModified": "2017-05-10T07:40:15.244+0000", 
+                "Runtime": "python2.7", 
+                "Description": "Extending ECS Auto-scaling for under $2/month with Lambda"
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "013ad04b-785e-11e7-a559-8b4a159c7d09", 
+            "HTTPHeaders": {
+                "date": "Thu, 03 Aug 2017 15:11:19 GMT", 
+                "x-amzn-requestid": "013ad04b-785e-11e7-a559-8b4a159c7d09", 
+                "content-length": "6324", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

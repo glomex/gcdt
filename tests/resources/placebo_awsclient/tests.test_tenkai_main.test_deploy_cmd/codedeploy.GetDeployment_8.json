@@ -1,60 +1,61 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "2100b62a-f2d1-11e6-9087-0fb0c3502690",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "7e603574-785f-11e7-ab2b-95df7650054c", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "2100b62a-f2d1-11e6-9087-0fb0c3502690",
-                "content-length": "999",
+                "x-amzn-requestid": "7e603574-785f-11e7-ab2b-95df7650054c", 
+                "content-length": "1034", 
                 "content-type": "application/x-amz-json-1.1"
             }
-        },
+        }, 
         "deploymentInfo": {
-            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-LH6CX03D08A3",
-            "status": "InProgress",
+            "applicationName": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-143YUEXCXJQQ2", 
+            "status": "InProgress", 
             "deploymentOverview": {
-                "Skipped": 0,
-                "Succeeded": 0,
-                "Failed": 0,
-                "Ready": 0,
-                "InProgress": 1,
+                "Skipped": 0, 
+                "Succeeded": 0, 
+                "Failed": 0, 
+                "Ready": 0, 
+                "InProgress": 1, 
                 "Pending": 0
-            },
-            "description": "deploy with tenkai",
-            "deploymentConfigName": "CodeDeployDefault.AllAtOnce",
-            "creator": "user",
-            "deploymentId": "d-2DWF3L8HK",
-            "ignoreApplicationStopFailures": true,
+            }, 
+            "description": "deploy with tenkai", 
+            "deploymentConfigName": "CodeDeployDefault.AllAtOnce", 
+            "creator": "user", 
+            "deploymentId": "d-BYHSHUCMN", 
+            "ignoreApplicationStopFailures": true, 
             "autoRollbackConfiguration": {
                 "enabled": false
-            },
+            }, 
             "deploymentStyle": {
-                "deploymentType": "IN_PLACE",
+                "deploymentType": "IN_PLACE", 
                 "deploymentOption": "WITHOUT_TRAFFIC_CONTROL"
-            },
-            "updateOutdatedInstancesOnly": false,
-            "instanceTerminationWaitTimeStarted": false,
-            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-ILDV2U3ZFV8Y",
+            }, 
+            "updateOutdatedInstancesOnly": false, 
+            "instanceTerminationWaitTimeStarted": false, 
+            "deploymentGroupName": "gcdt-test-tenkai-deploy-gcdtTestDeploymentGroup-18CQG7HXOYUNN", 
             "createTime": {
-                "hour": 17,
-                "__class__": "datetime",
-                "month": 2,
-                "second": 37,
-                "microsecond": 189000,
-                "year": 2017,
-                "day": 14,
-                "minute": 16
-            },
+                "hour": 17, 
+                "__class__": "datetime", 
+                "month": 8, 
+                "second": 47, 
+                "microsecond": 614000, 
+                "year": 2017, 
+                "day": 3, 
+                "minute": 20
+            }, 
+            "fileExistsBehavior": "DISALLOW", 
             "revision": {
-                "revisionType": "S3",
+                "revisionType": "S3", 
                 "s3Location": {
-                    "bundleType": "tgz",
-                    "version": "2AAJFYs6o_1KRIn8OPJEj3Wt8MKM_xeb",
-                    "bucket": "7finity-infra-dev-deployment",
-                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-LH6CX03D08A3/bundle.tar.gz",
-                    "eTag": "\"c47e3826c1c1aab2445d90c2a3e77c4b\""
+                    "bundleType": "tgz", 
+                    "version": "NouA2DftN1S4UrgfAgI.4QyP0jnCRJnq", 
+                    "bucket": "7finity-infra-dev-deployment", 
+                    "key": "gcdt-test-tenkai-deploy-gcdtTenkaiTestingApp-143YUEXCXJQQ2/bundle.tar.gz", 
+                    "eTag": "\"83235a424930c4fdcd80d206f670ecb1\""
                 }
             }
         }

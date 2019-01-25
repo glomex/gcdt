@@ -8,7 +8,9 @@ import uuid
 from botocore.exceptions import ClientError
 from pybars import Compiler
 from tabulate import tabulate
+from time import sleep
 
+from gcdt.utils import GracefulExit, json2table
 
 SWAGGER_FILE = 'swagger.yaml'
 INVOKE_FUNCTION_ACTION = 'lambda:InvokeFunction'
@@ -32,7 +34,7 @@ def export_to_swagger(awsclient, api_name, stage_name, api_description,
     api = _api_by_name(awsclient, api_name)
     if api is not None:
 
-        print(_json2table(api))
+        print(json2table(api))
         api_id = api['id']
         client_api = awsclient.get_client('apigateway')
         template_variables = _template_variables_to_dict(
@@ -59,19 +61,22 @@ def list_apis(awsclient):
     apis = client_api.get_rest_apis()['items']
 
     for api in apis:
-        print(_json2table(api))
+        print(json2table(api))
 
 
 def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
-               lambdas):
+               lambdas, cache_cluster_enabled, cache_cluster_size, method_settings=None):
     """Deploy API Gateway to AWS cloud.
-    
+
     :param awsclient:
     :param api_name:
     :param api_description:
-    :param stage_name: 
-    :param api_key: 
-    :param lambdas: 
+    :param stage_name:
+    :param api_key:
+    :param lambdas:
+    :param cache_cluster_enabled:
+    :param cache_cluster_size:
+    :param method_settings:
     """
     if not _api_exists(awsclient, api_name):
         if os.path.isfile(SWAGGER_FILE):
@@ -87,7 +92,8 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled, cache_cluster_size)
+            _update_stage(awsclient, api['id'], stage_name, method_settings)
             _wire_api_key(awsclient, api_name, api_key, stage_name)
         else:
             print('API name unknown')
@@ -101,7 +107,8 @@ def deploy_api(awsclient, api_name, api_description, stage_name, api_key,
         api = _api_by_name(awsclient, api_name)
         if api is not None:
             _ensure_lambdas_permissions(awsclient, lambdas, api)
-            _create_deployment(awsclient, api_name, stage_name)
+            _create_deployment(awsclient, api_name, stage_name, cache_cluster_enabled, cache_cluster_size)
+            _update_stage(awsclient, api['id'], stage_name, method_settings)
         else:
             print('API name unknown')
 
@@ -111,19 +118,20 @@ def delete_api(awsclient, api_name):
 
     :param api_name:
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
 
     print('deleting api: %s' % api_name)
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
-        print(_json2table(api))
+        print(json2table(api))
 
         response = client_api.delete_rest_api(
             restApiId=api['id']
         )
 
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -135,6 +143,7 @@ def create_api_key(awsclient, api_name, api_key_name):
     :param api_key_name:
     :return: api_key
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('create api key: %s' % api_key_name)
 
@@ -144,7 +153,7 @@ def create_api_key(awsclient, api_name, api_key_name):
         enabled=True
     )
 
-    print(_json2table(response))
+    #print(json2table(response))
 
     print('Add this api key \'%s\' to your api.conf' % response['id'])
     return response['id']
@@ -155,6 +164,7 @@ def delete_api_key(awsclient, api_key):
 
     :param api_key:
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('delete api key: %s' % api_key)
 
@@ -162,24 +172,25 @@ def delete_api_key(awsclient, api_key):
         apiKey=api_key
     )
 
-    print(_json2table(response))
+    print(json2table(response))
 
 
 def list_api_keys(awsclient):
     """Print the defined API keys.
     """
+    _sleep()
     client_api = awsclient.get_client('apigateway')
     print('listing api keys')
 
     response = client_api.get_api_keys()['items']
 
     for item in response:
-        print(_json2table(item))
+        print(json2table(item))
 
 
-def create_custom_domain(awsclient, api_name, api_target_stage,
+def deploy_custom_domain(awsclient, api_name, api_target_stage,
                          api_base_path, domain_name, route_53_record,
-                         ssl_cert, hosted_zone_id):
+                         cert_name, cert_arn, hosted_zone_id, ensure_cname):
     """Add custom domain to your API.
 
     :param api_name:
@@ -188,6 +199,8 @@ def create_custom_domain(awsclient, api_name, api_target_stage,
     :param domain_name:
     :param route_53_record:
     :param ssl_cert:
+    :param cert_name:
+    :param cert_arn:
     :param hosted_zone_id:
     :return: exit_code
     """
@@ -202,11 +215,11 @@ def create_custom_domain(awsclient, api_name, api_target_stage,
     domain = _custom_domain_name_exists(awsclient, domain_name)
 
     if not domain:
-        response = _create_new_custom_domain(awsclient, domain_name,
-                                             ssl_cert)
+        response = _create_custom_domain(awsclient, domain_name, cert_name, cert_arn)
         cloudfront_distribution = response['distributionDomainName']
     else:
-        cloudfront_distribution = domain['distributionDomainName']
+        response = _update_custom_domain(awsclient, domain_name, cert_name, cert_arn)
+        cloudfront_distribution = response['distributionDomainName']
 
     if _base_path_mapping_exists(awsclient, domain_name, api_base_path):
         _ensure_correct_base_path_mapping(awsclient, domain_name,
@@ -216,19 +229,23 @@ def create_custom_domain(awsclient, api_name, api_target_stage,
         _create_base_path_mapping(awsclient, domain_name, api_base_path,
                                   api_target_stage, api['id'])
 
-    record_exists, record_correct = \
-        _record_exists_and_correct(awsclient, hosted_zone_id,
-                                   route_53_record,
-                                   cloudfront_distribution)
-    if record_correct:
-        print('Route53 record correctly set: %s --> %s' % (route_53_record,
-                                                           cloudfront_distribution))
+    if ensure_cname:
+        record_exists, record_correct = \
+            _record_exists_and_correct(awsclient, hosted_zone_id,
+                                       route_53_record,
+                                       cloudfront_distribution)
+        if record_correct:
+            print('Route53 record correctly set: %s --> %s' % (route_53_record,
+                                                               cloudfront_distribution))
+        else:
+            _ensure_correct_route_53_record(awsclient, hosted_zone_id,
+                                            record_name=route_53_record,
+                                            record_value=cloudfront_distribution)
+            print('Route53 record set: %s --> %s' % (route_53_record,
+                                                     cloudfront_distribution))
     else:
-        _ensure_correct_route_53_record(awsclient, hosted_zone_id,
-                                        record_name=route_53_record,
-                                        record_value=cloudfront_distribution)
-        print('Route53 record set: %s --> %s' % (route_53_record,
-                                                 cloudfront_distribution))
+        print('Skipping creating and checking DNS record')
+
     return 0
 
 
@@ -250,6 +267,7 @@ def get_lambdas(awsclient, config, add_arn=False):
                 'swagger_ref': lambda_entry.get('swaggerRef', None)
             }
             if add_arn:
+                _sleep()
                 response_lambda = client_lambda.get_function(
                     FunctionName=lmbda['name'])
                 lmbda['arn'] = response_lambda['Configuration']['FunctionArn']
@@ -267,7 +285,7 @@ def _import_from_swagger(awsclient, api_name, api_description, stage_name,
 
     api = _api_by_name(awsclient, api_name)
     if api is None:
-        #print(_json2table(api))
+        #print(json2table(api))
         api_id = False
         template_variables = _template_variables_to_dict(
             client_api,
@@ -278,11 +296,12 @@ def _import_from_swagger(awsclient, api_name, api_description, stage_name,
             lambdas)
         swagger_body = _compile_template(SWAGGER_FILE,
                                          template_variables)
+        _sleep()
         response_swagger = client_api.import_rest_api(
             failOnWarnings=True,
             body=swagger_body
         )
-        print(_json2table(response_swagger))
+        print(json2table(response_swagger))
     else:
         print('API already taken')
 
@@ -307,6 +326,7 @@ def _update_from_swagger(awsclient, api_name, api_description, stage_name,
         filled_swagger_file = _compile_template(SWAGGER_FILE,
                                                 template_variables)
 
+        _sleep()
         response_swagger = client_api.put_rest_api(
             restApiId=api['id'],
             mode='overwrite',
@@ -316,7 +336,7 @@ def _update_from_swagger(awsclient, api_name, api_description, stage_name,
     else:
         print('API name unknown')
 
-    print(_json2table(response_swagger))
+    print(json2table(response_swagger))
 
 
 def _create_api(awsclient, api_name, api_description):
@@ -329,7 +349,7 @@ def _create_api(awsclient, api_name, api_description):
         description=api_description
     )
 
-    print(_json2table(response))
+    print(json2table(response))
 
 
 def _wire_api_key(awsclient, api_name, api_key, stage_name):
@@ -339,7 +359,7 @@ def _wire_api_key(awsclient, api_name, api_key, stage_name):
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
-
+        _sleep()
         response = client_api.update_api_key(
             apiKey=api_key,
             patchOperations=[
@@ -351,7 +371,7 @@ def _wire_api_key(awsclient, api_name, api_key, stage_name):
             ]
         )
 
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -360,21 +380,26 @@ def _update_api():
     print('updating api. not supported now')
 
 
-def _create_deployment(awsclient, api_name, stage_name):
+def _create_deployment(awsclient, api_name, stage_name,
+                       cache_cluster_enabled=False, cache_cluster_size='0.5'):
     client_api = awsclient.get_client('apigateway')
     print('create deployment')
 
     api = _api_by_name(awsclient, api_name)
 
     if api is not None:
+        request = {
+            'restApiId': api['id'],
+            'stageName': stage_name,
+            'description': 'TO BE FILLED',
+            'cacheClusterEnabled': cache_cluster_enabled
+        }
+        if cache_cluster_enabled:
+            request['cacheClusterSize'] = cache_cluster_size
+        _sleep()
+        response = client_api.create_deployment(**request)
 
-        response = client_api.create_deployment(
-            restApiId=api['id'],
-            stageName=stage_name,
-            description='TO BE FILLED'
-        )
-
-        print(_json2table(response))
+        print(json2table(response))
     else:
         print('API name unknown')
 
@@ -382,6 +407,7 @@ def _create_deployment(awsclient, api_name, stage_name):
 def _ensure_correct_route_53_record(awsclient, hosted_zone_id, record_name,
                                     record_value, record_type='CNAME'):
     client_route53 = awsclient.get_client('route53')
+    _sleep()
     response = client_route53.change_resource_record_sets(
         HostedZoneId=hosted_zone_id,
         ChangeBatch={
@@ -408,6 +434,7 @@ def _ensure_correct_base_path_mapping(awsclient, domain_name, base_path,
                                       api_id,
                                       target_stage):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     mapping = client_api.get_base_path_mapping(domainName=domain_name,
                                                basePath=base_path)
     operations = []
@@ -424,14 +451,82 @@ def _ensure_correct_base_path_mapping(awsclient, domain_name, base_path,
             'value': api_id
         })
     if operations:
+        _sleep()
         response = client_api.update_base_path_mapping(
             domainName=domain_name,
             basePath='(none)',
             patchOperations=operations)
 
 
+def _update_stage(awsclient, api_id, stage_name, method_settings):
+    """Helper to apply method_settings to stage
+
+    :param awsclient:
+    :param api_id:
+    :param stage_name:
+    :param method_settings:
+    :return:
+    """
+    # settings docs in response: https://botocore.readthedocs.io/en/latest/reference/services/apigateway.html#APIGateway.Client.update_stage
+    client_api = awsclient.get_client('apigateway')
+    operations = _convert_method_settings_into_operations(method_settings)
+    if operations:
+        print('update method settings for stage')
+        _sleep()
+        response = client_api.update_stage(
+            restApiId=api_id,
+            stageName=stage_name,
+            patchOperations=operations)
+
+
+def _resolve_key(key):
+    """Helper to resolve key into /feature/setting
+
+    :param key:
+    :return:
+    """
+    map = {
+        'metricsEnabled': '/metrics/enabled',
+        'loggingLevel': '/logging/loglevel',
+        'dataTraceEnabled': '/logging/dataTrace',
+        'throttlingBurstLimit': '/throttling/burstLimit',
+        'throttlingRateLimit': '/throttling/rateLimit',
+        'cachingEnabled': '/caching/enabled',
+        'cacheTtlInSeconds': '/caching/ttlInSeconds',
+        'cacheDataEncrypted': '/caching/dataEncrypted',
+        'requireAuthorizationForCacheControl': '/caching/requireAuthorizationForCacheControl',
+        'unauthorizedCacheControlHeaderStrategy': '/caching/unauthorizedCacheControlHeaderStrategy'
+    }
+    return map[key]
+
+
+def _convert_method_settings_into_operations(method_settings=None):
+    """Helper to handle the conversion of method_settings to operations
+
+    :param method_settings:
+    :return: list of operations
+    """
+    # operations docs here: https://tools.ietf.org/html/rfc6902#section-4
+    operations = []
+    if method_settings:
+        for method in method_settings.keys():
+            for key, value in method_settings[method].items():
+                if isinstance(value, bool):
+                    if value:
+                        value = 'true'
+                    else:
+                        value = 'false'
+                operations.append({
+                    'op': 'replace',
+                    'path': method + _resolve_key(key),
+                    'value': value
+                })
+    return operations
+
+
 def _base_path_mapping_exists(awsclient, domain_name, base_path):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     base_path_mappings = client_api.get_base_path_mappings(
         domainName=domain_name)
     mapping_exists = False
@@ -445,6 +540,7 @@ def _base_path_mapping_exists(awsclient, domain_name, base_path):
 def _create_base_path_mapping(awsclient, domain_name, base_path, stage,
                               api_id):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     base_path_respone = client_api.create_base_path_mapping(
         domainName=domain_name,
         basePath=base_path,
@@ -457,6 +553,7 @@ def _record_exists_and_correct(awsclient, hosted_zone_id,
                                target_route_53_record_name,
                                cloudfront_distribution):
     client_route53 = awsclient.get_client('route53')
+    _sleep()
     response = client_route53.list_resource_record_sets(
         HostedZoneId=hosted_zone_id
     )
@@ -472,14 +569,38 @@ def _record_exists_and_correct(awsclient, hosted_zone_id,
     return record_exists, record_correct
 
 
-def _create_new_custom_domain(awsclient, domain_name, ssl_cert):
+def _create_custom_domain(awsclient, domain_name, cert_name, cert_arn):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     response = client_api.create_domain_name(
         domainName=domain_name,
-        certificateName=ssl_cert['name'],
-        certificateBody=ssl_cert['body'],
-        certificatePrivateKey=ssl_cert['private_key'],
-        certificateChain=ssl_cert['chain']
+        #certificateName=ssl_cert['name'],
+        #certificateBody=ssl_cert['body'],
+        #certificatePrivateKey=ssl_cert['private_key'],
+        #certificateChain=ssl_cert['chain']
+        certificateName=cert_name,
+        certificateArn=cert_arn
+    )
+    return response
+
+
+def _update_custom_domain(awsclient, domain_name, cert_name, cert_arn):
+    client_api = awsclient.get_client('apigateway')
+    _sleep()
+    response = client_api.update_domain_name(
+        domainName=domain_name,
+        patchOperations=[
+            {
+                'op': 'replace',
+                'path': '/certificateName',
+                'value': cert_name
+            },
+            {
+                'op': 'replace',
+                'path': '/certificateArn',
+                'value': cert_arn
+            },
+        ]
     )
     return response
 
@@ -555,6 +676,7 @@ def _ensure_lambda_permissions(client_lambda, lmbda, api):
 
     print('Adding lambda permission for API Gateway for lambda {}'.format(
         lambda_name))
+    _sleep()
     response = client_lambda.add_permission(
         FunctionName=lambda_name,
         StatementId=str(uuid.uuid1()),
@@ -564,12 +686,13 @@ def _ensure_lambda_permissions(client_lambda, lmbda, api):
         Qualifier=lambda_alias
     )
 
-    print(_json2table(json.loads(response['Statement'])))
+    print(json2table(json.loads(response['Statement'])))
 
 
 def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
     policy_resource_arn = lambda_arn + ':ACTIVE'
     try:
+        _sleep()
         response = client_lambda.get_policy(FunctionName=policy_resource_arn)
     except ClientError:
         return False
@@ -585,22 +708,10 @@ def _invoke_lambda_permission_exists(client_lambda, lambda_arn, source_arn):
         ]
 
 
-# TODO: possible to consolidate this with the one for ramuda?
-def _json2table(data):
-    filter_terms = ['ResponseMetadata']
-    table = []
-    try:
-        for k, v in filter(lambda (k, v): k not in filter_terms,
-                           data.iteritems()):
-            table.append([k, str(v)])
-        return tabulate(table, tablefmt='fancy_grid')
-    except Exception as e:
-        return data
-
-
 def _custom_domain_name_exists(awsclient, domain_name):
     client_api = awsclient.get_client('apigateway')
     try:
+        _sleep()
         domain = client_api.get_domain_name(domainName=domain_name)
     except ClientError as e:
         domain = None
@@ -622,9 +733,10 @@ def _api_exists(awsclient, api_name):
 
 def _api_by_name(awsclient, api_name):
     client_api = awsclient.get_client('apigateway')
+    _sleep()
     filtered_rest_apis = \
-        filter(lambda api: True if api['name'] == api_name else False,
-               client_api.get_rest_apis()['items'])
+        list(filter(lambda api: True if api['name'] == api_name else False,
+               client_api.get_rest_apis()['items']))
     if len(filtered_rest_apis) > 1:
         raise Exception(
             'more than one API with that name found. Clean up manually first')
@@ -663,3 +775,8 @@ def _arn_to_uri(lambda_arn, lambda_alias):
                  ':lambda:path/2015-03-31/functions/'
     arn_suffix = '/invocations'
     return arn_prefix + lambda_arn + ':' + lambda_alias + arn_suffix
+
+
+def _sleep():
+    aws_requests_sleep = float(os.environ.get('AWS_REQUESTS_SLEEP', '0'))
+    sleep(aws_requests_sleep)

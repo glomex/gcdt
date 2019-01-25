@@ -5,7 +5,7 @@ import pytest
 import regex
 
 from gcdt.kumo_main import version_cmd, list_cmd, preview_cmd, dot_cmd, \
-    generate_cmd, deploy_cmd, delete_cmd, load_template
+    generate_cmd, deploy_cmd, delete_cmd, load_template, start_cmd, stop_cmd
 from gcdt.kumo_core import _get_stack_state
 
 from gcdt_testtools.helpers_aws import check_preconditions, get_tooldata
@@ -14,7 +14,7 @@ from gcdt_testtools.helpers_aws import awsclient  # fixtures!
 from .test_kumo_aws import simple_cloudformation_stack  # fixtures!
 from .test_kumo_aws import simple_cloudformation_stack_folder  # fixtures!
 from .test_kumo_aws import sample_ec2_cloudformation_stack_folder  # fixtures!
-from gcdt_testtools.helpers import temp_folder  # fixtures!
+from gcdt_testtools.helpers import temp_folder, logcapture  # fixtures!
 from . import here
 
 
@@ -28,13 +28,18 @@ def test_load_template(capsys):
     with pytest.raises(SystemExit):
         load_template()
     out, err = capsys.readouterr()
-    assert 'no cloudformation.py found, bailing out...\n' in out
+    assert 'could not load cloudformation.py, bailing out...\n' in out
 
 
-def test_version_cmd(capsys):
+def test_version_cmd(logcapture):
     version_cmd()
-    out, err = capsys.readouterr()
-    assert out.startswith('gcdt version')
+    records = list(logcapture.actual())
+
+    assert records[0][1] == 'INFO'
+    assert records[0][2].startswith('gcdt version ')
+    assert records[1][1] == 'INFO'
+    assert (records[1][2].startswith('gcdt plugins:') or
+        records[1][2].startswith('gcdt tools:'))
 
 
 @pytest.mark.aws
@@ -86,11 +91,22 @@ def test_generate_cmd(awsclient, simple_cloudformation_stack_folder):
 
 @pytest.mark.aws
 @check_preconditions
-def test_deploy_delete_cmds(awsclient, simple_cloudformation_stack_folder):
+def test_basic_lifecycle_cmds(awsclient, simple_cloudformation_stack_folder):
+    # note this only covers parts of the lifecycle
+    # a more sorrow lifecycle test using `gcdt-sample-stack` is contained
+    # in the gcdt PR builder lifecycle
+    stack_name = 'infra-dev-kumo-sample-stack'
     tooldata = get_tooldata(awsclient, 'kumo', 'deploy')
     assert deploy_cmd(False, **tooldata) == 0
     assert _get_stack_state(awsclient.get_client('cloudformation'),
-                            'infra-dev-kumo-sample-stack') in ['CREATE_COMPLETE']
+                            stack_name) in ['CREATE_COMPLETE']
+
+    tooldata['context']['command'] = 'stop'
+    assert stop_cmd(stack_name, **tooldata) == 0
+
+    tooldata['context']['command'] = 'start'
+    assert start_cmd(stack_name, **tooldata) == 0
+
     tooldata['context']['command'] = 'delete'
     assert delete_cmd(True, **tooldata) == 0
     assert _get_stack_state(awsclient.get_client('cloudformation'),

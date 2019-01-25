@@ -1,0 +1,25 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "2be03e0e-d5ed-545e-9872-6ff4f4f5f4fb", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "2be03e0e-d5ed-545e-9872-6ff4f4f5f4fb", 
+                "date": "Tue, 01 Aug 2017 06:25:28 GMT", 
+                "content-length": "738", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "Subscriptions": [
+            {
+                "Owner": "420189626185", 
+                "Endpoint": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_ttmtxe:ACTIVE", 
+                "Protocol": "lambda", 
+                "TopicArn": "arn:aws:sns:eu-west-1:420189626185:dvwgzz", 
+                "SubscriptionArn": "arn:aws:sns:eu-west-1:420189626185:dvwgzz:51908bd5-eecd-4c60-aa6c-87f245889dab"
+            }
+        ]
+    }
+}

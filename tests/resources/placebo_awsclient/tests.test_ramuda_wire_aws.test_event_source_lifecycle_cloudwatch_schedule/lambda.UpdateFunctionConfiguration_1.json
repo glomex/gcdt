@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "jsi7jbtHVmgc9pLD9rJLRW8iiNgHcKtAp1zj113EsII=", 
+        "FunctionName": "jenkins_test_sxscku", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "50e9cdc4-c607-11e7-9629-c5a56374bbb3", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 11:07:18 GMT", 
+                "x-amzn-requestid": "50e9cdc4-c607-11e7-9629-c5a56374bbb3", 
+                "content-length": "625", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3471308, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_sxscku", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_sxscku_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-11-10T11:07:18.269+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

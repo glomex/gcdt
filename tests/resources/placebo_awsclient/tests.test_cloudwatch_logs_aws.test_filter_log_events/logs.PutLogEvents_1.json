@@ -1,0 +1,17 @@
+{
+    "status_code": 200, 
+    "data": {
+        "nextSequenceToken": "49574557663294196965218775181264828579709162213156587858", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "9424301a-6e09-11e7-9042-cf208c5066e4", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "9424301a-6e09-11e7-9042-cf208c5066e4", 
+                "date": "Fri, 21 Jul 2017 11:41:47 GMT", 
+                "content-length": "80", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/gcdt-test-tenkai-deploy/01887af0-785e-11e7-aa9b-500c6e859e2b", 
+                "Tags": [], 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 20, 
+                    "microsecond": 616000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 11
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "gcdt-test-tenkai-deploy", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_IN_PROGRESS", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "01c92df6-785e-11e7-a249-316f73f6ff26", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "01c92df6-785e-11e7-a249-316f73f6ff26", 
+                "date": "Thu, 03 Aug 2017 15:11:20 GMT", 
+                "content-length": "882", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

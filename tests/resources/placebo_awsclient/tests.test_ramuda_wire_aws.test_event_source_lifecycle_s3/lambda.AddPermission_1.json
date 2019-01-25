@@ -1,0 +1,18 @@
+{
+    "status_code": 201, 
+    "data": {
+        "Statement": "{\"Sid\":\"7f9a7d3d-4d17-4ca3-a0d2-1324b6667984\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_vvokzs:ACTIVE\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"lambda:InvokeFunction\"],\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:s3:::unittest-lambda-s3-event-source-pycybo\"}}}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "e07025c9-75f6-11e7-8d5c-8d103273597d", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 13:48:04 GMT", 
+                "x-amzn-requestid": "e07025c9-75f6-11e7-8d5c-8d103273597d", 
+                "content-length": "370", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

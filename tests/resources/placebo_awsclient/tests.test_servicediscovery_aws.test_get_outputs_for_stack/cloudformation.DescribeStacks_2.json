@@ -1,45 +1,45 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "Stacks": [
             {
-                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/3b4f65b0-f2cf-11e6-9ca9-50a68645b236",
-                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.",
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/1c4e6050-78e2-11e7-8432-500c44f19ed2", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
                 "Parameters": [
                     {
-                        "ParameterValue": "t2.micro",
+                        "ParameterValue": "t2.micro", 
                         "ParameterKey": "InstanceType"
                     }
-                ],
-                "Tags": [],
-                "StackStatusReason": "User Initiated",
+                ], 
+                "Tags": [], 
+                "StackStatusReason": "User Initiated", 
                 "CreationTime": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 14,
-                    "microsecond": 868000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 4
-                },
+                    "hour": 6, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 59, 
+                    "microsecond": 102000, 
+                    "year": 2017, 
+                    "day": 4, 
+                    "minute": 56
+                }, 
                 "Capabilities": [
                     "CAPABILITY_IAM"
-                ],
-                "StackName": "infra-dev-kumo-sample-stack",
-                "NotificationARNs": [],
-                "StackStatus": "CREATE_IN_PROGRESS",
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_IN_PROGRESS", 
                 "DisableRollback": false
             }
-        ],
+        ], 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "3ba4d8c5-f2cf-11e6-a533-7d27bea21a22",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "1c896d8a-78e2-11e7-a237-71234a963c42", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "3ba4d8c5-f2cf-11e6-a533-7d27bea21a22",
-                "date": "Tue, 14 Feb 2017 16:04:14 GMT",
-                "content-length": "1225",
+                "x-amzn-requestid": "1c896d8a-78e2-11e7-a237-71234a963c42", 
+                "date": "Fri, 04 Aug 2017 06:56:59 GMT", 
+                "content-length": "1225", 
                 "content-type": "text/xml"
             }
         }

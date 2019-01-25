@@ -1,7 +1,9 @@
 {
   "kumo": {
-    "cloudformation": {
-      "StackName": "infra-dev-kumo-sample-stack",
+    "stack": {
+      "StackName": "infra-dev-kumo-sample-stack"
+    },
+    "parameters": {
       "InstanceType": "t2.micro"
     }
   }

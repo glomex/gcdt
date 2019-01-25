@@ -1,0 +1,22 @@
+{
+    "status_code": 400, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "d79dcf6a-785b-11e7-91ec-1df33c07837f", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "d79dcf6a-785b-11e7-91ec-1df33c07837f", 
+                "date": "Thu, 03 Aug 2017 14:55:51 GMT", 
+                "content-length": "313", 
+                "content-type": "text/xml", 
+                "connection": "close"
+            }
+        }, 
+        "Error": {
+            "Message": "Stack with id infra-dev-kumo-sample-stack does not exist", 
+            "Code": "ValidationError", 
+            "Type": "Sender"
+        }
+    }
+}

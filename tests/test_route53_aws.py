@@ -3,11 +3,14 @@ from __future__ import unicode_literals, print_function
 from nose.tools import assert_equal
 from troposphere.ec2 import Instance
 
+import pytest
 from gcdt import route53
 
-from gcdt_testtools.helpers_aws import awsclient
+from gcdt_testtools.helpers_aws import awsclient, check_preconditions
 
 
+@pytest.mark.aws
+@check_preconditions
 def test_create_record_with_given_hostname(awsclient):
     # used in cloudformation!
     result_record = route53.create_record(
@@ -29,6 +32,8 @@ def test_create_record_with_given_hostname(awsclient):
     assert_equal(result_record.TTL, route53.TTL_DEFAULT)
 
 
+@pytest.mark.aws
+@check_preconditions
 def test_create_record_with_given_hostname_cname(awsclient):
     # used in cloudformation!
     result_record = route53.create_record(
@@ -74,6 +79,8 @@ def test_create_record_with_given_hostname_target_instance():
     assert_equal(result_record.TTL, route53.TTL_DEFAULT)
 
 
+@pytest.mark.aws
+@check_preconditions
 def test_retrieve_stack_host_zone_name(awsclient):
     zn = route53._retrieve_stack_host_zone_name(awsclient, 'infra-dev')
     print(zn)

@@ -1,0 +1,38 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Code": {
+            "RepositoryType": "S3", 
+            "Location": "https://awslambda-eu-west-1-tasks.s3-eu-west-1.amazonaws.com/snapshots/420189626185/jenkins_test_lcmtzj-cc75d006-d3cb-4959-9b93-3cbf8e13c726?X-Amz-Security-Token=FQoDYXdzEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDD2ZVb4GlJ%2Fcvmqj7iK3A1JyBSlHT6juV2FlKQ%2BEWj6Y%2FIUZmmbnpb944cqsihcbvxhIeGDrOefFYW%2F2J8bpCKJ9TgfIY%2FSH3nWgXvakBQFwyvB2dYzR6EZr6ftlxP2nl3Yp4DPyRpXlotsXlZgFv5XpMuz%2BtaMmtPwyY3uqlS99m952vaHC57Bc3o1djzAXMqCgyvm6bqST3xmqId0%2Bvylu3eLT4D21oeBNqviNFxoSOBu6tH9MQvKVwjOMZVvZHo8ItZK6ytNcx%2B5oMXejG%2FG0qgxCKaG10%2BwZNfZt4DrOVcNcMIyQd0%2BwUS%2F0oBoDaGuwsWbww7UWtNPMXQ0fOwsMxcBYmghMgmwh4MP9k%2F5xG6N5N2u9MXR%2BP2R66iIw%2B79x6yX%2BRf8kruO7nncNK5lWc2MxzRziDwkH7XHL4ce65VeG8yI7zuWeaoIuL0UqzyYGg7Du1%2BeHoUx0w9%2Fjhsan%2FeMNmBDfvxg3sSgymNtO7sz82POGstj0ArNkPcH7icC5BF%2F5jUSvMt5f0smpuU9kEqM2AolDpx7LBAtx2lc8ewc0Ye%2BxKdbRm75B1vqPbX8oimHj5RUgtt2iu5XylszqvNun77oomfj8ywU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20170731T155827Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=ASIAJ7AZLJY43J5GNL6Q%2F20170731%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=1085fb9e61ecb69dc16a1c517ba46e75ceaa4cf7fd528d7425e5beb9fe6dd516"
+        }, 
+        "Configuration": {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            }, 
+            "Version": "$LATEST", 
+            "CodeSha256": "2sGa0HS5pDJKUN/KpIxJu1Yt9YCshW/TtF+Tyew8WPQ=", 
+            "FunctionName": "jenkins_test_lcmtzj", 
+            "MemorySize": 128, 
+            "CodeSize": 3493688, 
+            "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_lcmtzj", 
+            "Handler": "handler_counter.handle", 
+            "Role": "arn:aws:iam::420189626185:role/unittest_lcmtzj_lambda", 
+            "Timeout": 300, 
+            "LastModified": "2017-07-31T15:57:55.119+0000", 
+            "Runtime": "python2.7", 
+            "Description": "lambda created for unittesting ramuda deployment"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "17633464-7609-11e7-8a74-fb7082ff6cf4", 
+            "HTTPHeaders": {
+                "date": "Mon, 31 Jul 2017 15:58:27 GMT", 
+                "x-amzn-requestid": "17633464-7609-11e7-8a74-fb7082ff6cf4", 
+                "content-length": "1842", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

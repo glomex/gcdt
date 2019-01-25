@@ -15,6 +15,9 @@ initialized = signal('initialized')  # after reading arguments and context
 config_read_init = signal('config_read_init')
 config_read_finalized = signal('config_read_finalized')
 
+check_credentials_init = signal('check_credentials_init')
+check_credentials_finalized = signal('check_credentials_finalized')
+
 lookup_init = signal('lookup_init')
 lookup_finalized = signal('lookup_finalized')
 

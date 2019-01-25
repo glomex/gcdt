@@ -1,0 +1,15 @@
+{
+  "kumo": {
+    "stack": {
+      "StackName": "infra-dev-kumo-sample-stack-with-ec2"
+    },
+    "parameters": {
+      "InstanceType": "t2.micro",
+      "VPCId": "lookup:stack:infra-dev:DefaultVPCId",
+      "HostedZone": "dev.infra.glomex.cloud",
+      "DefaultInstancePolicyARN": "lookup:stack:infra-dev:DefaultInstancePolicyARN",
+      "BaseAMIID": "lookup:secret:ops.dev.base_ami",
+      "EC2SubnetId": "lookup:stack:infra-dev:DefaultSubnetIdb"
+    }
+  }
+}

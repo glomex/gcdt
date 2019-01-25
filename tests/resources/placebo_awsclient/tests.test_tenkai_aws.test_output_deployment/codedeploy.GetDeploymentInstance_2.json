@@ -1,0 +1,216 @@
+{
+    "status_code": 200, 
+    "data": {
+        "instanceSummary": {
+            "instanceId": "arn:aws:ec2:eu-west-1:420189626185:instance/i-063a17dea071f6858", 
+            "status": "Failed", 
+            "deploymentId": "d-WVNFBZKMN", 
+            "lastUpdatedAt": {
+                "hour": 17, 
+                "__class__": "datetime", 
+                "month": 8, 
+                "second": 10, 
+                "microsecond": 558000, 
+                "year": 2017, 
+                "day": 3, 
+                "minute": 16
+            }, 
+            "lifecycleEvents": [
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 0, 
+                        "microsecond": 833000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 0, 
+                        "microsecond": 559000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "ApplicationStop"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 3, 
+                        "microsecond": 93000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 2, 
+                        "microsecond": 817000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "DownloadBundle"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 4, 
+                        "microsecond": 557000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 4, 
+                        "microsecond": 482000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "BeforeInstall"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 6, 
+                        "microsecond": 190000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 6, 
+                        "microsecond": 108000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "Install"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 8, 
+                        "microsecond": 102000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Succeeded", 
+                    "diagnostics": {
+                        "errorCode": "Success", 
+                        "scriptName": "", 
+                        "logTail": "", 
+                        "message": "Succeeded"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 7, 
+                        "microsecond": 991000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "AfterInstall"
+                }, 
+                {
+                    "endTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 9, 
+                        "microsecond": 489000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "status": "Failed", 
+                    "diagnostics": {
+                        "errorCode": "ScriptFailed", 
+                        "scriptName": "appspec.sh", 
+                        "logTail": "LifecycleEvent - ApplicationStart\nScript - appspec.sh\n[stdout]LIFECYCLE_EVENT=ApplicationStart\n[stderr]mv: cannot stat \u2018not-existing-file.txt\u2019: No such file or directory\n", 
+                        "message": "Script at specified location: appspec.sh run as user root failed with exit code 1"
+                    }, 
+                    "startTime": {
+                        "hour": 17, 
+                        "__class__": "datetime", 
+                        "month": 8, 
+                        "second": 9, 
+                        "microsecond": 415000, 
+                        "year": 2017, 
+                        "day": 3, 
+                        "minute": 16
+                    }, 
+                    "lifecycleEventName": "ApplicationStart"
+                }, 
+                {
+                    "status": "Skipped", 
+                    "lifecycleEventName": "ValidateService"
+                }
+            ]
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "b1923f3d-785e-11e7-afd1-8ba8a83761fd", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "b1923f3d-785e-11e7-afd1-8ba8a83761fd", 
+                "content-length": "1750", 
+                "content-type": "application/x-amz-json-1.1"
+            }
+        }
+    }
+}

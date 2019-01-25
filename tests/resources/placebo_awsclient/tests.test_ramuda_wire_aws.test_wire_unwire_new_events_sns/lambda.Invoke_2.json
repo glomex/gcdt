@@ -1,0 +1,25 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Payload": {
+            "body": "0", 
+            "__module__": "botocore.response", 
+            "__class__": "StreamingBody"
+        }, 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "2ff9dec8-7682-11e7-9297-2159010748cc", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "2ff9dec8-7682-11e7-9297-2159010748cc", 
+                "content-length": "1", 
+                "x-amzn-trace-id": "root=1-59801ece-ade4b6fafb4c01c4898d0da5;sampled=0", 
+                "x-amzn-remapped-content-length": "0", 
+                "connection": "keep-alive", 
+                "date": "Tue, 01 Aug 2017 06:25:17 GMT", 
+                "content-type": "application/json"
+            }
+        }, 
+        "StatusCode": 200
+    }
+}

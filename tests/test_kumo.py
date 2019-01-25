@@ -3,17 +3,18 @@ from __future__ import unicode_literals, print_function
 import json
 from tempfile import NamedTemporaryFile
 
-from pyhocon import ConfigFactory
-from pyhocon.exceptions import ConfigMissingException
 from nose.tools import assert_dict_equal
 from nose.tools import assert_equal, assert_true, \
     assert_regexp_matches, assert_list_equal, raises
 import pytest
 
 from gcdt.kumo_core import _generate_parameters, \
-    load_cloudformation_template, generate_template_file, _get_stack_name, \
+    load_cloudformation_template, write_template_to_file, _get_stack_name, \
     _get_stack_policy, _get_stack_policy_during_update, _get_conf_value, \
-    _generate_parameter_entry, _call_hook
+    _generate_parameter_entry, _call_hook, generate_template
+from gcdt.kumo_start_stop import _get_autoscaling_min_max
+from gcdt.utils import fix_old_kumo_config
+from gcdt.gcdt_config_reader import read_json_config
 
 from gcdt_testtools.helpers import cleanup_tempfiles, temp_folder  # fixtures!
 from gcdt_testtools.helpers import Bunch
@@ -49,17 +50,24 @@ def test_simple_cloudformation_stack():
     # read the template
     template_path = here(
         'resources/simple_cloudformation_stack/cloudformation.py')
-    config_path = here(
-        'resources/simple_cloudformation_stack/settings_dev.conf')
+    #config_path = here(
+    #    'resources/simple_cloudformation_stack/settings_dev.conf')
 
     cloudformation, success = load_cloudformation_template(template_path)
     assert_true(success)
-    # read the configuration
-    config = ConfigFactory.parse_file(config_path)
+
+    config = {
+        'stack': {
+            'StackName': "infra-dev-kumo-sample-stack"
+        },
+        'parameters': {
+            'InstanceType': "t2.micro"
+        }
+    }
 
     expected_templ_file_name = '%s-generated-cf-template.json' % \
                                _get_stack_name(config)
-    actual = generate_template_file(config, cloudformation)
+    actual = write_template_to_file(config, generate_template({}, config, cloudformation))
     assert_equal(actual, expected_templ_file_name)
 
 
@@ -121,12 +129,6 @@ def test_simple_cloudformation_stack_during_update_override_default():
 
 
 def test_parameter_substitution():
-    config_string = '''
-    cloudformation {
-        ConfigOne = value1
-        ConfigTwo = [value2, value3]
-    }
-    '''
     expected = [
         {
             'ParameterKey': 'ConfigOne',
@@ -139,20 +141,28 @@ def test_parameter_substitution():
             'UsePreviousValue': False
         }
     ]
-    conf = ConfigFactory.parse_string(config_string)
+    conf = {
+        'parameters': {
+            'ConfigOne': 'value1',
+            'ConfigTwo': ['value2', 'value3']
+        }
+    }
+
     converted_conf = _generate_parameters(conf)
     assert_equal(converted_conf, expected)
 
 
 def test_parameter_substitution_reserved_terms():
-    config_string = '''
-    cloudformation {
-        ConfigOne = value1
-        StackName = value2
-        TemplateBody = value3
-        ArtifactBucket = value4
+    conf = {
+        'parameters': {
+            'ConfigOne': 'value1'
+        },
+        'stack': {
+            'StackName': 'value2',
+            'TemplateBody': 'value3',
+            'artifactBucket': 'value4',
+        }
     }
-    '''
     expected = [
         {
             'ParameterKey': 'ConfigOne',
@@ -160,49 +170,44 @@ def test_parameter_substitution_reserved_terms():
             'UsePreviousValue': False
         }
     ]
-    conf = ConfigFactory.parse_string(config_string)
     converted_conf = _generate_parameters(conf)
     assert_equal(converted_conf, expected)
 
 
 def test_get_conf_value():
-    config_string = '''
-    cloudformation {
-        ConfigOne = value1
+    config = {
+        'parameters': {
+            'ConfigOne': 'value1'
+        }
     }
-    '''
-    config = ConfigFactory.parse_string(config_string)
     assert_equal(_get_conf_value(config, 'ConfigOne'), 'value1')
 
 
 def test_get_conf_value_list():
-    config_string = '''
-    cloudformation {
-        ConfigOne = [a, b, c]
+    config = {
+        'parameters': {
+            'ConfigOne': ['a', 'b', 'c']
+        }
     }
-    '''
-    config = ConfigFactory.parse_string(config_string)
     assert_equal(_get_conf_value(config, 'ConfigOne'), 'a,b,c')
 
 
-@raises(ConfigMissingException)
+@raises(KeyError)
 def test_get_conf_value_unknown():
-    config_string = '''
-    cloudformation {
-        ConfigOne = [a, b, c]
+    config = {
+        'parameters': {
+            'ConfigOne': ['a', 'b', 'c']
+        }
     }
-    '''
-    config = ConfigFactory.parse_string(config_string)
     _get_conf_value(config, 'Unknown')
 
 
 def test_generate_parameter_entry():
-    config_string = '''
-    cloudformation {
-        ConfigOne = value1
+    config = {
+        'parameters': {
+            'ConfigOne': 'value1'
+        }
     }
-    '''
-    config = ConfigFactory.parse_string(config_string)
     assert_dict_equal(_generate_parameter_entry(config, 'ConfigOne'),
                       {
                           'ParameterKey': 'ConfigOne',
@@ -248,3 +253,63 @@ def test_new_cloudformation_template_hooks():
     assert module.COUNTER['register'] == 1
     # currently deregister is not called (but we need that later!)
     #assert module.COUNTER['deregister'] == 1
+
+
+def test_generate_template_no_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation.py')
+    )
+    context = {}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+    expected_template_body = read_json_config(
+        here('resources/simple_cloudformation_stack/expected_template_body.json')
+    )
+    template_body = json.loads(
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    )
+    assert template_body == expected_template_body
+
+
+def test_generate_template_with_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation_with_arguments.py')
+    )
+    context = {'foo': 'bar'}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+    expected_template_body = read_json_config(
+        here('resources/simple_cloudformation_stack/expected_template_body.json')
+    )
+    template_body = json.loads(
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    )
+    assert template_body == expected_template_body
+
+
+def test_generate_template_invalid_arguments():
+    cloudformation_simple_stack, _ = load_cloudformation_template(
+        here('resources/simple_cloudformation_stack/cloudformation_invalid_arguments.py')
+    )
+    context = {'foo': 'bar'}
+    config_simple_stack = fix_old_kumo_config(read_json_config(
+        here('resources/simple_cloudformation_stack/gcdt_dev.json')
+    ))['kumo']
+
+    with pytest.raises(Exception) as einfo:
+        generate_template(context, config_simple_stack, cloudformation_simple_stack)
+    assert einfo.match(r"Arguments of 'generate_template' not as expected: \['invalid_context', 'invalid_config'\]")
+
+
+def test_get_autoscaling_min_max():
+    with open(here('resources/cfn_template/cloudformation.template'), 'r') as tfile:
+        template_json = json.load(tfile)
+
+    parameters = [{'ParameterKey': 'ScaleMinCapacity', 'ParameterValue': '1'},
+                  {'ParameterKey': 'ScaleMaxCapacity', 'ParameterValue': '2'}]
+
+    assert _get_autoscaling_min_max(
+        template_json, parameters, 'SupercarsAutoscalingGroup'
+    ) == (1, 2)

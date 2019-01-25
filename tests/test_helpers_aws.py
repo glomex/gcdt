@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import os
 
+from gcdt import utils
 from gcdt_testtools.helpers_aws import recorder, file_reader, awsclient, \
     check_playback_mode
 from gcdt_testtools.helpers import temp_folder  # fixture!
@@ -36,14 +37,42 @@ def test_file_reader(temp_folder):
         assert reader() == '222'
 
 
+def test_file_reader_with_datatype_int(temp_folder):
+    filename = os.path.join(temp_folder[0], 'fake_data_file')
+    with open(filename, 'w') as dfile:
+        print('111', file=dfile)
+        print('222', file=dfile)
+
+    with open(filename, 'r') as dfile:
+        reader = file_reader(temp_folder[0], 'fake_data_file', 'int')
+        assert reader() == 111
+        assert reader() == 222
+
+
 @check_playback_mode
 def test_random_string_recording(awsclient):
     # record and playback cases are identical for this test
     lines = []
     for i in range(5):
-        lines.append(helpers.random_string())
+        lines.append(utils.random_string())
 
     prefix = 'tests.test_helpers_aws.test_random_string_recording'
+    record_dir = os.path.join(here('./resources/placebo_awsclient'), prefix)
+    random_string_filename = 'random_string.txt'
+    with open(os.path.join(record_dir, random_string_filename), 'r') as rfile:
+        rlines = [l.strip() for l in rfile.readlines()]
+
+        assert lines == rlines
+
+
+@check_playback_mode
+def test_random_string_recording_length10(awsclient):
+    # record and playback cases are identical for this test
+    lines = []
+    for i in range(5):
+        lines.append(utils.random_string(6 + i))
+
+    prefix = 'tests.test_helpers_aws.test_random_string_recording_length10'
     record_dir = os.path.join(here('./resources/placebo_awsclient'), prefix)
     random_string_filename = 'random_string.txt'
     with open(os.path.join(record_dir, random_string_filename), 'r') as rfile:

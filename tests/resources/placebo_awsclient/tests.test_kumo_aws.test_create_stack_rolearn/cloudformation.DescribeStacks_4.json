@@ -1,0 +1,54 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack/aeecd2c0-c60d-11e7-b7f4-500c4240649a", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "t2.micro", 
+                        "ParameterKey": "InstanceType"
+                    }
+                ], 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of S3 bucket", 
+                        "OutputKey": "BucketName", 
+                        "OutputValue": "infra-dev-kumo-sample-stack-s3bucket1-wrlmt1gum6zy"
+                    }
+                ], 
+                "RoleARN": "arn:aws:iam::420189626185:role/unittest_ivppuu_kumo", 
+                "CreationTime": {
+                    "hour": 11, 
+                    "__class__": "datetime", 
+                    "month": 11, 
+                    "second": 53, 
+                    "microsecond": 21000, 
+                    "year": 2017, 
+                    "day": 10, 
+                    "minute": 52
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "c559f175-c60d-11e7-9b4a-a15a34134bb2", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "c559f175-c60d-11e7-9b4a-a15a34134bb2", 
+                "date": "Fri, 10 Nov 2017 11:53:30 GMT", 
+                "content-length": "1614", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

@@ -1,21 +1,21 @@
 {
-    "status_code": 400,
+    "status_code": 400, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 400,
-            "RequestId": "3b1c6edc-f2cf-11e6-93a9-c109c3263a95",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 400, 
+            "RequestId": "1c2aac38-78e2-11e7-b9a1-d9475773ebbf", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "3b1c6edc-f2cf-11e6-93a9-c109c3263a95",
-                "date": "Tue, 14 Feb 2017 16:04:13 GMT",
-                "content-length": "313",
-                "content-type": "text/xml",
+                "x-amzn-requestid": "1c2aac38-78e2-11e7-b9a1-d9475773ebbf", 
+                "date": "Fri, 04 Aug 2017 06:56:58 GMT", 
+                "content-length": "313", 
+                "content-type": "text/xml", 
                 "connection": "close"
             }
-        },
+        }, 
         "Error": {
-            "Message": "Stack with id infra-dev-kumo-sample-stack does not exist",
-            "Code": "ValidationError",
+            "Message": "Stack with id infra-dev-kumo-sample-stack does not exist", 
+            "Code": "ValidationError", 
             "Type": "Sender"
         }
     }

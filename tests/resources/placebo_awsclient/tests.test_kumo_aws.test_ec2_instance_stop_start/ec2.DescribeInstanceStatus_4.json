@@ -1,0 +1,33 @@
+{
+    "status_code": 200, 
+    "data": {
+        "InstanceStatuses": [
+            {
+                "InstanceId": "i-0050336b8ae66cd23", 
+                "InstanceState": {
+                    "Code": 80, 
+                    "Name": "stopped"
+                }, 
+                "AvailabilityZone": "eu-west-1b", 
+                "SystemStatus": {
+                    "Status": "not-applicable"
+                }, 
+                "InstanceStatus": {
+                    "Status": "not-applicable"
+                }
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "150f7dcf-3eda-47b1-90c9-aff8c702a605", 
+            "HTTPHeaders": {
+                "transfer-encoding": "chunked", 
+                "vary": "Accept-Encoding", 
+                "server": "AmazonEC2", 
+                "content-type": "text/xml;charset=UTF-8", 
+                "date": "Wed, 16 Aug 2017 08:21:37 GMT"
+            }
+        }
+    }
+}

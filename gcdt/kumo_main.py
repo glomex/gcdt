@@ -8,15 +8,20 @@ to AWS cloud.
 from __future__ import unicode_literals, print_function
 import os
 import sys
+from collections import OrderedDict
 import json
+import time
 from tempfile import NamedTemporaryFile
 
 from clint.textui import colored
+from pyspin.spin import Default, Spinner
 
 from . import utils
-from .kumo_core import print_parameter_diff, delete_stack, \
-    deploy_stack, generate_template_file, list_stacks, create_change_set, \
-    describe_change_set, load_cloudformation_template, call_pre_hook
+from .kumo_core import get_parameter_diff, delete_stack, \
+    deploy_stack, write_template_to_file, list_stacks, create_change_set, \
+    describe_change_set, load_cloudformation_template, call_pre_hook, \
+    generate_template, info
+from .kumo_start_stop import stop_stack, start_stack
 from .kumo_viz import cfn_viz, svg_output
 from .gcdt_cmd_dispatcher import cmd
 from . import gcdt_lifecycle
@@ -29,11 +34,15 @@ DOC = '''Usage:
         kumo delete -f [-v]
         kumo generate [-v]
         kumo preview [-v]
-        kumo version
         kumo dot [-v]
+        kumo stop <stack_name> [-v]
+        kumo start <stack_name> [-v]
+        kumo info [-v] [--json]
+        kumo version
 
 -h --help           show this
 -v --verbose        show debug messages
+--json              use json format
 '''
 
 
@@ -42,7 +51,7 @@ def load_template():
     """
     cloudformation, found = load_cloudformation_template()
     if not found:
-        print(colored.red('no cloudformation.py found, bailing out...'))
+        print(colored.red('could not load cloudformation.py, bailing out...'))
         sys.exit(1)
     return cloudformation
 
@@ -54,10 +63,13 @@ def version_cmd():
 
 @cmd(spec=['dot'])
 def dot_cmd(**tooldata):
+    context = tooldata.get('context')
     conf = tooldata.get('config')
     cloudformation = load_template()
-    with NamedTemporaryFile(delete=False) as temp_dot:
-        cfn_viz(json.loads(cloudformation.generate_template()),
+    with NamedTemporaryFile(delete=False, mode='w') as temp_dot:
+        cfn_viz(json.loads(
+                generate_template(context, conf, cloudformation),
+                object_pairs_hook=OrderedDict),
                 parameters=conf,
                 out=temp_dot)
         temp_dot.close()
@@ -74,8 +86,20 @@ def deploy_cmd(override, **tooldata):
 
     cloudformation = load_template()
     call_pre_hook(awsclient, cloudformation)
-    print_parameter_diff(awsclient, conf)
-    exit_code = deploy_stack(awsclient, conf, cloudformation,
+
+    if get_parameter_diff(awsclient, conf):
+        print(colored.red('Parameters have changed. Waiting 10 seconds. \n'))
+        print('If parameters are unexpected you might want to exit now: control-c')
+        # Choose a spin style.
+        spin = Spinner(Default)
+        # Spin it now.
+        for i in range(100):
+            print(u'\r{0}'.format(spin.next()), end='')
+            sys.stdout.flush()
+            time.sleep(0.1)
+        print('\n')
+
+    exit_code = deploy_stack(awsclient, context, conf, cloudformation,
                              override_stack_policy=override)
     return exit_code
 
@@ -92,7 +116,7 @@ def delete_cmd(force, **tooldata):
 def generate_cmd(**tooldata):
     conf = tooldata.get('config')
     cloudformation = load_template()
-    generate_template_file(conf, cloudformation)
+    write_template_to_file(conf, generate_template({}, conf, cloudformation))
     return 0
 
 
@@ -109,10 +133,54 @@ def preview_cmd(**tooldata):
     conf = tooldata.get('config')
     awsclient = context.get('_awsclient')
     cloudformation = load_template()
-    print_parameter_diff(awsclient, conf)
-    change_set, stack_name = create_change_set(awsclient, conf,
-                                               cloudformation)
+    get_parameter_diff(awsclient, conf)
+    change_set, stack_name, change_set_type = \
+        create_change_set(awsclient, context, conf, cloudformation)
+    if change_set_type == 'CREATE':
+        print('Stack \'%s\' does not exist.' % stack_name)
+        print('`kumo deploy` would create the following resources:')
+    else:
+        print('`kumo deploy` would update the following resources:')
     describe_change_set(awsclient, change_set, stack_name)
+    if change_set_type == 'CREATE':
+        # we currently do not review stack creations!
+        # so we delete the stack in "REVIEW" state
+        # more details here: https://github.com/glomex/gcdt/issues/73
+        delete_stack(awsclient, conf, feedback=False)
+
+
+@cmd(spec=['stop', '<stack_name>'])
+def stop_cmd(stack_name, **tooldata):
+    context = tooldata.get('context')
+    #conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    exit_code = stop_stack(awsclient, stack_name)
+    return exit_code
+
+
+@cmd(spec=['start', '<stack_name>'])
+def start_cmd(stack_name, **tooldata):
+    context = tooldata.get('context')
+    #conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    exit_code = start_stack(awsclient, stack_name)
+    return exit_code
+
+
+@cmd(spec=['info', '--json'])
+def info_cmd(json, **tooldata):
+    context = tooldata.get('context')
+    if json:
+        context['format'] = 'json'
+    else:
+        context['format'] = 'tabular'
+    conf = tooldata.get('config')
+    awsclient = context.get('_awsclient')
+
+    exit_code = info(awsclient, conf, format=context['format'])
+    return exit_code
 
 
 def main():

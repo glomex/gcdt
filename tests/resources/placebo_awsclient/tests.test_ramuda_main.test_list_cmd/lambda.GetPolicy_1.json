@@ -1,21 +1,21 @@
 {
-    "status_code": 404,
+    "status_code": 404, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 404,
-            "RequestId": "2b267652-f2d7-11e6-86b0-c193d2abf1f7",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 404, 
+            "RequestId": "e9ec2431-60ba-11e7-ba5d-b16f2ba07a21", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "2b267652-f2d7-11e6-86b0-c193d2abf1f7",
-                "content-length": "70",
-                "connection": "keep-alive",
-                "date": "Tue, 14 Feb 2017 17:01:03 GMT",
-                "content-type": "application/json",
+                "x-amzn-requestid": "e9ec2431-60ba-11e7-ba5d-b16f2ba07a21", 
+                "content-length": "70", 
+                "connection": "keep-alive", 
+                "date": "Tue, 04 Jul 2017 13:15:55 GMT", 
+                "content-type": "application/json", 
                 "x-amzn-errortype": "ResourceNotFoundException"
             }
-        },
+        }, 
         "Error": {
-            "Message": "The resource you requested does not exist.",
+            "Message": "The resource you requested does not exist.", 
             "Code": "ResourceNotFoundException"
         }
     }

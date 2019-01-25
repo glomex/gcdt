@@ -1,0 +1,32 @@
+{
+    "status_code": 200, 
+    "data": {
+        "TracingConfig": {
+            "Mode": "PassThrough"
+        }, 
+        "CodeSha256": "OwXMUy649CY47RlYjCrrWJ57STbjE6j+LlkDI6+Ei1Y=", 
+        "FunctionName": "jenkins_test_rdlexf", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "9ba70501-60b9-11e7-9d22-9bc2641b2c5f", 
+            "HTTPHeaders": {
+                "date": "Tue, 04 Jul 2017 13:06:34 GMT", 
+                "x-amzn-requestid": "9ba70501-60b9-11e7-9d22-9bc2641b2c5f", 
+                "content-length": "607", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }, 
+        "CodeSize": 3666371, 
+        "MemorySize": 128, 
+        "FunctionArn": "arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_rdlexf", 
+        "Version": "$LATEST", 
+        "Role": "arn:aws:iam::420189626185:role/unittest_rdlexf_lambda", 
+        "Timeout": 300, 
+        "LastModified": "2017-07-04T13:06:35.475+0000", 
+        "Handler": "handler.handle", 
+        "Runtime": "python2.7", 
+        "Description": "lambda created for unittesting ramuda deployment"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "status_code": 200, 
+    "data": {
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "4ccf7170-8d56-5d98-bd64-2086fc0da2e4", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "4ccf7170-8d56-5d98-bd64-2086fc0da2e4", 
+                "date": "Sat, 29 Jul 2017 11:18:50 GMT", 
+                "content-length": "356", 
+                "content-type": "text/xml"
+            }
+        }, 
+        "SubscriptionArn": "arn:aws:sns:eu-west-1:420189626185:yrlkap:53452833-88ac-4e06-9ef3-97acf497785b"
+    }
+}

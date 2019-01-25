@@ -1,0 +1,18 @@
+{
+    "status_code": 201, 
+    "data": {
+        "Statement": "{\"Sid\":\"b89f091f-5014-4a67-b69a-aa01dfad1a56\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"events.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:eu-west-1:420189626185:function:jenkins_test_paqzni:ACTIVE\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:events:eu-west-1:420189626185:rule/execute_backup\"}}}", 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 201, 
+            "RequestId": "fb8b1c22-c60a-11e7-879a-7d402f0cefde", 
+            "HTTPHeaders": {
+                "date": "Fri, 10 Nov 2017 11:33:33 GMT", 
+                "x-amzn-requestid": "fb8b1c22-c60a-11e7-879a-7d402f0cefde", 
+                "content-length": "378", 
+                "content-type": "application/json", 
+                "connection": "keep-alive"
+            }
+        }
+    }
+}

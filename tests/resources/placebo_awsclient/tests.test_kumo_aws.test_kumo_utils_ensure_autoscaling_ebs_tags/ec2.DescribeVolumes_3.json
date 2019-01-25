@@ -1,62 +1,62 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "cda8dcab-7f58-4662-975d-d95207025c7b",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "6cde2763-3a88-49dd-8fbd-dbf1875f65f0", 
             "HTTPHeaders": {
-                "transfer-encoding": "chunked",
-                "vary": "Accept-Encoding",
-                "server": "AmazonEC2",
-                "content-type": "text/xml;charset=UTF-8",
-                "date": "Tue, 14 Feb 2017 16:26:33 GMT"
+                "transfer-encoding": "chunked", 
+                "vary": "Accept-Encoding", 
+                "server": "AmazonEC2", 
+                "content-type": "text/xml;charset=UTF-8", 
+                "date": "Thu, 03 Aug 2017 14:45:22 GMT"
             }
-        },
+        }, 
         "Volumes": [
             {
-                "AvailabilityZone": "eu-west-1a",
+                "AvailabilityZone": "eu-west-1a", 
                 "Attachments": [
                     {
                         "AttachTime": {
-                            "hour": 16,
-                            "__class__": "datetime",
-                            "month": 2,
-                            "second": 35,
-                            "microsecond": 0,
-                            "year": 2017,
-                            "day": 14,
-                            "minute": 25
-                        },
-                        "InstanceId": "i-05f3b6c02afc2300c",
-                        "VolumeId": "vol-0b02d17196199a468",
-                        "State": "attached",
-                        "DeleteOnTermination": true,
+                            "hour": 14, 
+                            "__class__": "datetime", 
+                            "month": 8, 
+                            "second": 18, 
+                            "microsecond": 0, 
+                            "year": 2017, 
+                            "day": 3, 
+                            "minute": 44
+                        }, 
+                        "InstanceId": "i-098325a80b91f8324", 
+                        "VolumeId": "vol-028ff83e0321d4a5c", 
+                        "State": "attached", 
+                        "DeleteOnTermination": true, 
                         "Device": "/dev/xvda"
                     }
-                ],
+                ], 
                 "Tags": [
                     {
-                        "Value": "version1",
+                        "Value": "version1", 
                         "Key": "kumo-test"
                     }
-                ],
-                "Encrypted": false,
-                "VolumeType": "gp2",
-                "VolumeId": "vol-0b02d17196199a468",
-                "State": "in-use",
-                "Iops": 100,
-                "SnapshotId": "snap-0c1e86f8",
+                ], 
+                "Encrypted": false, 
+                "VolumeType": "gp2", 
+                "VolumeId": "vol-028ff83e0321d4a5c", 
+                "State": "in-use", 
+                "Iops": 100, 
+                "SnapshotId": "snap-0c1e86f8", 
                 "CreateTime": {
-                    "hour": 16,
-                    "__class__": "datetime",
-                    "month": 2,
-                    "second": 35,
-                    "microsecond": 586000,
-                    "year": 2017,
-                    "day": 14,
-                    "minute": 25
-                },
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 18, 
+                    "microsecond": 553000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 44
+                }, 
                 "Size": 8
             }
         ]

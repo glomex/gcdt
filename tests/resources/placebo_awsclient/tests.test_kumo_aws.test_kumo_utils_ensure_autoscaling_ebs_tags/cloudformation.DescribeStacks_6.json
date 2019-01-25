@@ -1,0 +1,48 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-gcdt-test-ensure-ebs-for-autoscaling/3299cee0-785a-11e7-8afd-500c423358d2", 
+                "Description": "Configures autoscaling group for api app", 
+                "Tags": [], 
+                "Outputs": [
+                    {
+                        "Description": "Name of the autoscaling group", 
+                        "OutputKey": "AutoScalingGroupName", 
+                        "OutputValue": "infra-dev-gcdt-test-ensure-ebs-for-autoscaling-AutoscalingGroup-1D1EI1FECEB5T"
+                    }
+                ], 
+                "StackStatusReason": "User Initiated", 
+                "CreationTime": {
+                    "hour": 14, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 4, 
+                    "microsecond": 952000, 
+                    "year": 2017, 
+                    "day": 3, 
+                    "minute": 44
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-gcdt-test-ensure-ebs-for-autoscaling", 
+                "NotificationARNs": [], 
+                "StackStatus": "DELETE_IN_PROGRESS", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "61e3d438-785a-11e7-978f-73a11545b817", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "61e3d438-785a-11e7-978f-73a11545b817", 
+                "date": "Thu, 03 Aug 2017 14:45:24 GMT", 
+                "content-length": "1322", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

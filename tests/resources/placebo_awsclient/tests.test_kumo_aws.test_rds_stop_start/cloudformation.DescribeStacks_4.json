@@ -1,0 +1,58 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Stacks": [
+            {
+                "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-kumo-sample-stack-with-rds/3ba99030-8104-11e7-b8b6-503ac9eaaa99", 
+                "Description": "AWS CloudFormation Sample Template S3_Bucket: template showing how to create a publicly accessible S3 bucket.", 
+                "Parameters": [
+                    {
+                        "ParameterValue": "infra-dev-opsdefaultrdsubnetgroup-1k55vj7tlvxo1", 
+                        "ParameterKey": "RDSSubnetGroupName"
+                    }, 
+                    {
+                        "ParameterValue": "****", 
+                        "ParameterKey": "DBPassword"
+                    }, 
+                    {
+                        "ParameterValue": "vpc-88d2a7ec", 
+                        "ParameterKey": "VPCId"
+                    }, 
+                    {
+                        "ParameterValue": "asdf", 
+                        "ParameterKey": "DBUser"
+                    }
+                ], 
+                "Tags": [], 
+                "CreationTime": {
+                    "hour": 15, 
+                    "__class__": "datetime", 
+                    "month": 8, 
+                    "second": 23, 
+                    "microsecond": 898000, 
+                    "year": 2017, 
+                    "day": 14, 
+                    "minute": 21
+                }, 
+                "Capabilities": [
+                    "CAPABILITY_IAM"
+                ], 
+                "StackName": "infra-dev-kumo-sample-stack-with-rds", 
+                "NotificationARNs": [], 
+                "StackStatus": "CREATE_COMPLETE", 
+                "DisableRollback": false
+            }
+        ], 
+        "ResponseMetadata": {
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "83a222c2-8105-11e7-a8d8-c35d7d01525c", 
+            "HTTPHeaders": {
+                "x-amzn-requestid": "83a222c2-8105-11e7-a8d8-c35d7d01525c", 
+                "date": "Mon, 14 Aug 2017 15:30:33 GMT", 
+                "content-length": "1645", 
+                "content-type": "text/xml"
+            }
+        }
+    }
+}

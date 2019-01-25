@@ -1,15 +1,15 @@
 {
-    "status_code": 200,
+    "status_code": 200, 
     "data": {
-        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-gcdt-test-ensure-ebs-for-autoscaling/2df2ce40-f2d2-11e6-a3e3-50faea5d48d2",
+        "StackId": "arn:aws:cloudformation:eu-west-1:420189626185:stack/infra-dev-gcdt-test-ensure-ebs-for-autoscaling/3299cee0-785a-11e7-8afd-500c423358d2", 
         "ResponseMetadata": {
-            "RetryAttempts": 0,
-            "HTTPStatusCode": 200,
-            "RequestId": "2deb06ae-f2d2-11e6-b568-85a1b669fc09",
+            "RetryAttempts": 0, 
+            "HTTPStatusCode": 200, 
+            "RequestId": "32911c8b-785a-11e7-978f-73a11545b817", 
             "HTTPHeaders": {
-                "x-amzn-requestid": "2deb06ae-f2d2-11e6-b568-85a1b669fc09",
-                "date": "Tue, 14 Feb 2017 16:25:20 GMT",
-                "content-length": "416",
+                "x-amzn-requestid": "32911c8b-785a-11e7-978f-73a11545b817", 
+                "date": "Thu, 03 Aug 2017 14:44:05 GMT", 
+                "content-length": "416", 
                 "content-type": "text/xml"
             }
         }

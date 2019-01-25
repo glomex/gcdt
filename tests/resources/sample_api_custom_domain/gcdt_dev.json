@@ -1,0 +1,19 @@
+{
+  "yugen": {
+    "api": {
+      "apiKey": "zivgv017jf",
+      "description": "Gcdt sample API based on dp api-mock",
+      "name": "unittest-gcdt-sample-api-dev",
+      "targetStage": "mock"
+    },
+
+    "customDomain": {
+      "basePath": "",
+      "certificateName": "wildcard.glomex.com-2017-3-2",
+      "certificateArn": "lookup:acm:*.infra.glomex.cloud",
+      "domainName": "unittest-gcdt-sample-api-dev-eu-west-1.dev.mes.glomex.cloud",
+      "hostedDomainZoneId": "lookup:stack:infra-dev:internalDomainHostedZoneID",
+      "route53Record": "unittest-gcdt-sample-api-dev-eu-west-1.dev.infra.glomex.cloud"
+    }
+  }
+}

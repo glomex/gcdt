@@ -1,0 +1,20 @@
+{
+    "status_code": 200, 
+    "data": {
+        "Location": "http://unittest-lambda-s3-event-source-pycybo.s3.amazonaws.com/", 
+        "ResponseMetadata": {
+            "HTTPStatusCode": 200, 
+            "RetryAttempts": 0, 
+            "HostId": "p7Mo2r28Vjsi+8wow0uNcxmCsMGDr8A4+lrZKlFd9Ov4artLgRKV3fimz84ef1UENkez0CYVbjs=", 
+            "RequestId": "20C28DDE0D55F40B", 
+            "HTTPHeaders": {
+                "content-length": "0", 
+                "x-amz-id-2": "p7Mo2r28Vjsi+8wow0uNcxmCsMGDr8A4+lrZKlFd9Ov4artLgRKV3fimz84ef1UENkez0CYVbjs=", 
+                "server": "AmazonS3", 
+                "x-amz-request-id": "20C28DDE0D55F40B", 
+                "location": "http://unittest-lambda-s3-event-source-pycybo.s3.amazonaws.com/", 
+                "date": "Mon, 31 Jul 2017 13:48:04 GMT"
+            }
+        }
+    }
+}

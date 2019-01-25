@@ -18,11 +18,22 @@ hardcoded values.
 }
 '''
 
-
+# note: as a convention this does NOT go into config!
 DEFAULT_CONFIG = {
-    'reposerver': 'https://reposerver-prod-eu-west-1.infra.glomex.cloud/pypi/packages',
     'ramuda': {
-        'settings_file': 'settings.json'
+        'settings_file': 'settings.json',
+        'runtime': ['python2.7', 'python3.6', 'nodejs4.3', 'nodejs6.10', 'nodejs8.10'],
+        'python_bundle_venv_dir': '.gcdt/venv',
+        'keep': False,
+        'non_config_commands': ['logs', 'invoke']  # this commands do not require config
+    },
+    'tenkai': {
+        'settings_file': 'settings.json',
+        'stack_output_file': 'stack_output.yml',
+        'log_group': '/var/log/messages'  # conf from baseami (glomex specific)
+    },
+    'kumo': {
+        'non_config_commands': ['start', 'stop', 'list']  # this commands do not require config
     }
 }
 
@@ -30,15 +41,13 @@ DEFAULT_CONFIG = {
 # note this config is used in the config_reader to "overlay" the
 # gcdt_defaults of gcdt.
 CONFIG_READER_CONFIG = {
-    'lookups': ['secret', 'ssl', 'stack', 'baseami'],
+    # TODO remove baseami
+    'lookups': ['secret', 'ssl', 'stack', 'baseami', 'acm'],
     'plugins': {
-        'datadog_integration': {
-            'datadog_api_key': 'lookup:secret:datadog.api_key'
+        'gcdt_slack_integration': {
+            'slack_webhook': 'lookup:secret:slack.webhook:CONTINUE_IF_NOT_FOUND'
         },
-        'slack_integration': {
-            'slack_webhook': 'http://localhost/'
-        },
-        'glomex_lookups': {
+        'gcdt_lookups': {
             'ami_accountid': '569909643510'
         }
     }
