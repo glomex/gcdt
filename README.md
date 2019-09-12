@@ -2,7 +2,7 @@
 [![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/glomex/glomex-cloud-deployment-tools.svg?maxAge=2592000)](https://github.com/glomex/glomex-cloud-deployment-tools/issues)
 
-# glomex-cloud-deployment-tools (gcdt)
+# glomex-cloud-deployment-tools
 
 gcdt CLI tools make it easy for you to code, automate, and deploy your AWS infrastructure.
 
